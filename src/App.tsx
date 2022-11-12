@@ -1,24 +1,15 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import './stylotron/src/styles.css'
+import styles from './stylotron/src/styles.json'
+import stringify from "json-stringify-pretty-compact";
+import Project from './core';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ whiteSpace: 'pre-wrap'}}>
+      <Project/>
+      {stringify(styles)}
     </div>
   );
 }
