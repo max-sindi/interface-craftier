@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="App" style={{ whiteSpace: 'pre-wrap'}}>
       <Project/>
-      {stringify(styles)}
+      {/*{stringify(styles)}*/}
     </div>
   );
 }

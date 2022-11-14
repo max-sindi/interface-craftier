@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import _ from 'lodash';
 import EachTagManager from './TagManager/EachTagManager';
-import { Fragment, RootFragment } from './Tag';
 import { GlobalState, ProjectContext } from './Project';
 // import {useRecoilState} from 'recoil'
 // import {popupState} from './hook/popup'
@@ -47,9 +46,8 @@ const HtmlManager = () => {
 
   // const unselectCurrentNode = () => updateSelectedNode(undefined);
   // const save = (template: RootFragment) => update(prev => ({...prev, template}))
-  console.log(template);
   return (
-    <div id="toolbar" className={'fixed w-400 b-20 l-50-p transform-left-center'}>
+    <div id="toolbar" className={'fixed b-20 l-50-p transform-left-center'} style={{ width: 500 }}>
       {!selectedNode ? (
         <img
           src="https://cdn2.iconfinder.com/data/icons/visual-empty-state/32/No_Data_Found_Not_Found_Lost_Searching_Search-1024.png"
@@ -65,13 +63,18 @@ const HtmlManager = () => {
           fragment={template}
           // key={0}
           indexInLevel={0}
-          parentXpath={``}
-          xpath={``}
+          parentXpath={`template`}
+          xpath={`template`}
           // selectedNode={selectedNode}
           // unselectCurrentNode={unselectCurrentNode}
           // update={update}
           deepLevel={0}
           lastInLevel={true}
+          parentNode={template}
+          transformParent={(updater) => {
+            currentState.template = updater(template)
+            update(currentState)
+          }}
           // popup={popup}
           // setPopup={setPopup}
         />

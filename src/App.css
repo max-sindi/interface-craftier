@@ -1,5 +1,5 @@
 .tag_hover {
-    box-shadow: 10px 10px 10px 10px black;
+    box-shadow: 0px 0px 5px 5px #00000030;
     cursor: pointer;
 }
 
@@ -28,4 +28,132 @@
     height: 100%;
     top: 0;
     left: 0;
+}
+
+/*.react-resizable-handle {*/
+/*    display: block;*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    cursor: pointer;*/
+/*}*/
+
+/* resize css */
+.layoutRoot {
+    display: flex;
+    background: #eee;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.absoluteLayout {
+    height: 600px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+}
+.scaledLayout {
+    width: 125%;
+    left: -12.5%;
+    transform: scale(0.75);
+    margin-top: -7.5%;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: #ccc;
+    border: 1px solid black;
+    text-align: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    max-width: 60px;
+    max-height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+}
+.box .text {
+    text-align: center;
+}
+
+.hover-handles .react-resizable-handle {
+    display: none;
+}
+.hover-handles:hover .react-resizable-handle {
+    display: block;
+}
+.absolutely-positioned {
+    position: absolute !important;
+}
+.left-aligned {
+    left: 0;
+}
+.right-aligned {
+    right: 0;
+}
+.top-aligned {
+    top: 0;
+}
+.bottom-aligned {
+    bottom: 0;
+}
+
+.custom-box {
+    overflow: visible;
+}
+.custom-handle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #1153aa;
+    opacity: 0.75;
+    border-radius: 4px;
+}
+.custom-handle-sw {
+    bottom: -4px;
+    left: -4px;
+    cursor: sw-resize;
+}
+.custom-handle-se {
+    bottom: -4px;
+    right: -4px;
+    cursor: se-resize;
+}
+.custom-handle-nw {
+    top: -4px;
+    left: -4px;
+    cursor: nw-resize;
+}
+.custom-handle-ne {
+    top: -4px;
+    right: -4px;
+    cursor: ne-resize;
+}
+.custom-handle-w,
+.custom-handle-e {
+    top: 50%;
+    margin-top: -4px;
+    cursor: ew-resize;
+}
+.custom-handle-w {
+    left: -4px;
+}
+.custom-handle-e {
+    right: -4px;
+}
+.custom-handle-n,
+.custom-handle-s {
+    left: 50%;
+    margin-left: -4px;
+    cursor: ns-resize;
+}
+.custom-handle-n {
+    top: -4px;
+}
+.custom-handle-s {
+    bottom: -4px;
+}
+.custom-resize-handle-component {
+    background-color: red;
 }

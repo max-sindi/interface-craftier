@@ -17,44 +17,62 @@ import Resize from './Resize';
 import { GlobalState, ProjectContext } from '../Project';
 import cc from 'classnames';
 import { attrsExisting, stylesExisting, tags } from './config';
-import { Fragment } from '../Tag';
 import { BsArrowsCollapse, BsArrowsExpand, BsArrowBarDown, BsArrowBarRight, BsFillPenFill } from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
-import { IoMdSquareOutline } from 'react-icons/io';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { IoMdSquareOutline, IoMdReturnLeft, IoMdAdd } from 'react-icons/io';
+import { TbPlaylistAdd } from 'react-icons/tb';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import EditMode from './EditMode';
+import { Fragment } from '../Fragment';
+import EditableField from './EditableField';
+import TagChildMenu from './TagChildMenu';
+import IconButton from './IconButton';
 
-type Props = {
+import classNames from '../../stylotron/src/styles.json'
+import DimensionsResize from './DimensionsResize';
+
+export type IEachTagManagerProps = {
   fragment: Fragment;
   deepLevel: number;
   indexInLevel: number;
-  first: boolean;
+  first?: boolean;
   lastInLevel: boolean;
   xpath: string;
   parentXpath: string;
-  // selectedNode? : Fragment | undefined;
-  // unselectCurrentNode : () => void;
-  // id : string;
-  // update : (arg1: GlobalState) => void;
-  // currentState: GlobalState
+  parentNode: Fragment;
+  transformParent: (updater: (fragment: Fragment) => Fragment) => void;
 };
 
-// type State = {
-//   pastedData: string
-// }
+const cloneDeepWithUniqueId = (data: Fragment): Fragment =>
+  _.cloneDeepWith(data, (target: Fragment) =>
+    Array.isArray(target.children)
+      ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
+      : target
+  );
+
+export const createDeleter =
+  (indexInLevel: number) =>
+  (prev: Fragment): Fragment => {
+    return {
+      ...prev,
+      children: prev.children.filter((i, index) => index !== indexInLevel),
+    };
+  };
 
 function EachTagManager({
-  fragment,
+  fragment: fragmentOriginal,
   first,
   lastInLevel,
   parentXpath,
   indexInLevel,
   deepLevel,
   xpath,
+  parentNode,
+  transformParent,
   ...props
-}: Props) {
+}: IEachTagManagerProps) {
   const {
     updateSelectedNode,
     currentState,
@@ -65,40 +83,10 @@ function EachTagManager({
     updateHoveredNode,
     hoveredNode,
   } = useContext(ProjectContext);
-  // console.log(currentState);
+
   const unselectCurrentNode = () => updateSelectedNode(undefined);
-  // state = {
-  //   isOpened: true, // @todo false
-  //   pastedData: '',
-  //   localFragmentState: null, // local state for improving performance
-  // };
 
-  // get breadcrumbsInTree() {
-  //   return breadcrumbs;
-  // }
-
-  // get fragment() {
-  //   return fragment;
-  // }
-
-  // get isObject() {
-  //   return _.isObject(fragment);
-  // }
-
-  // componentDidMount() {
-  // console.log('Mounted')
-  // setState(old => ({...old, localFragmentState: fragment}))
-  // }
-
-  // componentDidUpdate() {
-  // set opened
-  // if(
-  //   _.get(props, 'popup.fragmentState.id', true) === fragmentState.id
-  //   && state.isOpened === false
-  // ) setState(state => ({...state, isOpened: true}))
-  // }
-
-  const createFieldUpdater = (path: 'style' | 'attrs') => {
+  const createObjectFieldUpdater = (path: 'style' | 'attrs') => {
     return (mutator: (record: Record<string, string>) => Record<string, string>) => {
       transform((old) => {
         return { ...old, [path]: mutator(old[path]) };
@@ -106,31 +94,20 @@ function EachTagManager({
     };
   };
 
-  // toggleVisibility = () => setState((state) => ({ isOpened: !state.isOpened }));
-
-  const addNewChild = async (creator = () => createFragment()) => {
-    const newFragment = creator();
-    if (!newFragment.children) {
-      debugger;
-    }
-    transform((node) => {
-      return { ...node, children: [...(node as Fragment).children, newFragment] };
-    });
+  const createHtmlChangeHandler = (path: keyof Fragment) => {
+    return (evt: any) => transform((old) => ({ ...old, [path]: evt.target.value }));
   };
 
-  const transformParent = (updater: (arg1: Fragment) => Fragment) => transform(updater, parentXpath);
+  // const transformParent = (updater: (arg1: Fragment) => Fragment) => transform(updater, parentXpath);
+  // const deleteElement = () =>
+  // transformParent();
+  // };
 
-  const deleteElement = () =>
-    transformParent((parent) => ({
-      ...parent,
-      children: (parent as Fragment).children.filter((i, index) => index !== indexInLevel),
-    }));
+  // const deleteElement = () => transformParent(createDeleter(indexInLevel))
 
   // makeItText = () => transform('');
 
   const makeItDiv = () => transform(() => createFragment());
-
-  const changeText = (evt: any) => transform(evt.target.value);
 
   const changeTextPastedData = (evt: any) => {
     evt.persist();
@@ -150,13 +127,14 @@ function EachTagManager({
   //     transform((node) => ({ ...node, children: [...node.children, cloneDeepWithUniqueId(parsedData)] }));
   // };
 
-  const changeClassName = (evt: any) => transform((val) => ({ ...val, className: evt.target.value }));
+  const changeText = createHtmlChangeHandler('text');
+  const changeClassName = createHtmlChangeHandler('className');
 
   const changeClassNamesList = (className: string) => transform((val) => ({ ...val, className }));
 
   const wrapWithDiv = () => transform((node) => ({ ...createFragment(), children: [node] }));
 
-  const wrapChildren = () => transform((node) => ({ ...node, children: [createFragment(fragmentState.children)] }));
+  const wrapChildren = () => transform((node) => ({ ...node, children: [createFragment(fragment.children)] }));
 
   const setOnParent = () =>
     transformParent((node: Fragment) => ({
@@ -179,29 +157,26 @@ function EachTagManager({
       return { ...parent, children };
     });
 
-  const selectParent = () => updateSelectedNode(_.get(currentState, `template${parentXpath}`));
+  const selectParent = () => updateSelectedNode(parentNode);
   const selectChild = (child: Fragment) => updateSelectedNode(child);
-  const onHighlight = () => updateHoveredNode(hoveredNode?.id === fragment.id ? undefined : fragment);
-  const [textEditModeIndex, setTextEditModeIndex] = useState(-1);
-  const closeTextEditMode = () => setTextEditModeIndex(-1)
-  // const selectTextEditMode = (index: number) => textEditMode(fragment.children[index])
+  const onHighlight = (hoveringFragment = fragment) =>
+    updateHoveredNode(hoveredNode?.id === hoveringFragment.id ? undefined : hoveringFragment);
+  const addBlockNode = (evt: any) => addChild();
+  const addTextNode = (evt: any) => addChild(() => new Fragment({ isText: true }));
 
-  // cloneDeepWithUniqueId = (data: Fragment) =>
-  //   _.cloneDeepWith(data, (target: Fragment) =>
-  //     Array.isArray(target.children)
-  //       ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
-  //       : target
-  //   );
+  const createFragment = (children?: Fragment['children']): Fragment =>
+    new Fragment({
+      children,
+    });
 
-  const createFragment = (children: Fragment['children'] = []): Fragment => ({
-    children,
-    tag: 'div',
-    className: '',
-    name: '',
-    attrs: {},
-    style: {},
-    id: uuid(),
-  });
+  const addChild = async (creator = createFragment) => {
+    const newFragment = creator();
+    transform((node) => {
+      return { ...node, children: [...node.children, newFragment] };
+    });
+    /* Preset newly added child*/
+    // updateSelectedNode(newFragment)
+  };
 
   // duplicateFragment = () =>
   //   transformParent((parent) => ({
@@ -209,46 +184,26 @@ function EachTagManager({
   //     children: [...parent.children, cloneDeepWithUniqueId(parent.children[indexInLevel])],
   //   }));
 
-  const onNameChange = ({ target: { value: name } }: any) => transform((node) => ({ ...node, name }));
-
-  const onAttrsChange = ({ target: { value: attrs } }: any) => transform((node) => ({ ...node, attrs }));
-
-  const onTagSelect = ({ target: { value: tag } }: any) => transform((node) => ({ ...node, tag }));
+  const changeName = createHtmlChangeHandler('name');
+  const changeTag = createHtmlChangeHandler('tag');
 
   // local fragment copy for better performance
-  const [fragmentState, setFragmentState] = useState(fragment);
-  // console.log(fragmentState);
-  // const setCurrentState = _.debounce((...args) => _.setWith.apply(null, args), 1000);
+  const [fragment, setFragmentState] = useState(fragmentOriginal);
 
   const save = _.debounce((newValue) => {
-    _.setWith(currentState, `template.${xpath}`, newValue);
+    _.setWith(currentState, `${xpath}`, newValue);
     update(currentState);
-  }, 1200);
+  }, 1300);
 
-  const transform = (updater: (arg1: Fragment) => Fragment, xpathForUpdate = xpath) => {
-    // const isParentTransform = xpathForUpdate === parentXpath;
-    // const firstTwoArgs: [Fragment, string] = [currentState.template, `${xpathForUpdate ? `.${xpathForUpdate}` : ''}`];
-
-    const newValue = updater(fragmentState);
+  const transform = (updater: (arg1: Fragment) => Fragment) => {
+    const newValue = updater(fragment);
     setFragmentState(newValue);
     save(newValue);
-
-    // const setStateCb = (old) => {
-    //   return { ...old, localFragmentState: newValue };
-    // };
-
-    // if (isParentTransform) {
-    //   parentSetState(setStateCb);
-    // } else {
-    //   setState(setStateCb);
-    // }
-
-    // setCurrentState(...firstTwoArgs, newValue, undefined);
-    // save();
+    return newValue;
   };
 
   const rendererTagSelect = () => (
-    <select value={(fragment as Fragment).tag} onChange={onTagSelect}>
+    <select value={fragment.tag} onChange={changeTag}>
       {tags.map((tag) => (
         <option value={tag} label={tag} key={tag} />
       ))}
@@ -256,140 +211,160 @@ function EachTagManager({
   );
 
   const recursiveRenderChildren = () => {
-    return fragmentState.children.map((child, index, arr) =>
-      typeof child !== 'string' ? (
+    return fragment.children.map((child, index, arr) =>
+      typeof !child.isText ? (
         <div key={index} className={``}>
           <EachTagManager
             {...props}
-            first={false}
             fragment={child}
-            key={(_.isObject(child) && child.id) || String(deepLevel) + String(indexInLevel)}
+            key={child.id}
             deepLevel={deepLevel + 1}
             indexInLevel={index}
             parentXpath={xpath}
             lastInLevel={index === arr.length - 1}
             xpath={`${xpath}${xpath ? '.' : ''}children[${index}]`}
-
-            // parentSetState={setState.bind(this)}
-            // isParentOpened={state.isOpened}
+            parentNode={fragment}
+            transformParent={transform}
           />
         </div>
       ) : null
-    ); // @todo create component for texts
+    );
   };
 
-  // render() {
-  console.log('render tag manager ');
-  // if (_.isNull(fragment)) return null;
+  const onMouseOut = (event: any) => {
+    event.stopPropagation();
+    updateHoveredNode(undefined);
+  };
+  const onMouseOver = (event: any) => {
+    event.stopPropagation();
+    updateHoveredNode(fragment);
+  };
 
-  // const { deepLevel, indexInLevel, first, lastInLevel, parentXpath, selectedNode, unselectCurrentNode } = props;
-  // const { fragment, isObject } = this;
-  const isVisible = selectedNode && selectedNode.id === fragmentState.id;
-  // const {isOpened} = state
-  // if(!isOpened && !isParentOpened) {
-  //     return recursiveRenderChildren() || null
-  // }
-
+  const isVisible = selectedNode && selectedNode.id === fragment.id;
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
-    <div className={'relative min-h-20'}>
+    <div className={cc(isVisible && 'relative min-h-20')}>
       {/* render children */}
       {recursiveRenderChildren()}
 
       {/* Toggle or Expand menu */}
-      <div className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
-        {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
-      </div>
+      {isVisible && (
+        <div className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
+          {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
+        </div>
+      )}
 
       {/* hide all nodes from inspecting except selected  */}
       <div className={isVisible && !toolbarCollapsed ? '' : 'd-none'}>
-        <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)} forceRenderTabPanel>
+        <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)} forceRenderTabPanel  onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
           {/* 1 - General */}
           <TabPanel>
             <div className={'tabPanel'}>
-              {/* Deep level */}
-              <Tooltip overlay={'Deep level'} placement={'top'}>
-                <div onClick={selectParent} className={'d-inline-flex align-center pointer'}>
-                  <BiLayer /> <span>{deepLevel + 1}</span>
+              <div className="flex">
+                <Tooltip overlay={'Level Up'} placement={'top'}>
+                  <div onClick={selectParent} className={cc(deepLevel !== 0 && 'pointer', 'flex align-center pr-5')}>
+                    <IoMdReturnLeft />
+                  </div>
+                </Tooltip>
+                {/* Deep level */}
+                <Tooltip overlay={'Deep level'} placement={'top'}>
+                  <div className={'d-inline-flex align-center pointer'}>
+                    <BiLayer /> <span>{deepLevel + 1}</span>
+                  </div>
+                </Tooltip>
+                {/* Child level */}
+                <Tooltip overlay={'Child level'} placement={'top'}>
+                  <div className={'d-inline-flex align-center ml-5'}>
+                    <BiLayer className={'rotate-90'} /> <span>{indexInLevel + 1}</span>
+                  </div>
+                </Tooltip>
+                {/* Tag */}
+                <div className={`flex align-center ml-10`}>
+                  <div className={``}>Tag:</div>
+                  {rendererTagSelect()}
                 </div>
-              </Tooltip>
-              {/* Child level */}
-              <Tooltip overlay={'Child level'}>
-                <div className={'d-inline-flex align-center ml-15'}>
-                  <BiLayer className={'rotate-90'} /> <span>{indexInLevel + 1}</span>
+                {/*Highlight*/}
+                <div>
+                  <button onClick={() => onHighlight()} className={`ml-20 black pointer fz-13`}>
+                    {'Highlight'}
+                  </button>
                 </div>
-              </Tooltip>
-              {/*Highlight*/}
-              <button onClick={onHighlight} className={`ml-20 black pointer fz-13`}>
-                {'Highlight'}
-              </button>
-              {/* Close Popup */}
-              <Tooltip overlay={'Unselect'}>
-                <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5`} />
-              </Tooltip>
-              {/* Tag */}
-              <div className={`flex align-center`}>
-                <div className={`mr-5 ml-5`}>Tag:</div>
-                {rendererTagSelect()}
+
+                 {/* Resize  */}
+                <DimensionsResize changeClassNamesList={changeClassNamesList} classNameList={fragment.className} />
+
+                {/* Close Popup */}
+                <Tooltip overlay={'Unselect'} placement={'top'}>
+                  <FaRegWindowClose
+                    onClick={unselectCurrentNode}
+                    size={20}
+                    className={`r-3 t-3 z-index-5 ml-a pointer`}
+                  />
+                </Tooltip>
               </div>
               {/* Name */}
-              <div className="w-100-p flex align-center mt-5">
-                {'Name:'}
-                <textarea value={fragmentState.name || ''} onChange={onNameChange} rows={1} className={`grow-1 ml-5`} />
+              <div className="flex">
+                <div>{'Name: '}</div>
+                <EditableField
+                  notEditElement={fragment.name || '-'}
+                  editElement={<input type="text" value={fragment.name} onChange={changeName} autoFocus={true} />}
+                />
               </div>
-              {/* Child Navigation */}
+              {/* Text */}
               <div data-name={'children-navigation'} className={'flex mt-5'}>
-                <div>{'Children: '}</div>
-                {fragment.children.map((child, index) => {
-                  const editModeEnabled = textEditModeIndex === index;
-                  const setEditMode = () => setTextEditModeIndex(index)
-
-                  return (
-                    <EditMode active={editModeEnabled} closeTextEditMode={closeTextEditMode} activateEditMode={setEditMode}>
-                      {typeof child === 'string' ? (
-                        !editModeEnabled ? (
-                          /* select text child for edit */
-                          <div className={'pointer'} onClick={setEditMode}>
-                            <BsFillPenFill />
-                            {child}
-                          </div>
-                        ) : (
-                          <div className={'relative'}>
-                            <input type='text' autoFocus={true} value={child} on />
-                          </div>
-                        ) 
-                      ) : (
-                        /* select block child */
-                        <div className={'flex align-center pointer'} onClick={() => selectChild(child)}>
-                          <IoMdSquareOutline />
-                          {child.tag}
+                {fragment.isText ? (
+                  <>
+                    <div>{'Text: '}</div>
+                    <EditableField
+                      notEditElement={fragment.text}
+                      editElement={
+                        <div>
+                          <input type="text" value={fragment.text} onChange={changeText} autoFocus={true} />
                         </div>
-                      )}
-                    </EditMode>
-                  )
-
-                  // return (
-                  //   <div className={'flex mr-5'}>
-                      {/*<div className={''}>*/}
-                      {/*  {typeof child === 'string' ? (*/}
-                      {/*    editModeEnabled ? (*/}
-                      {/*    ) : (*/}
-                      {/*      // <div className={'pointer'} onClick={() => setTextEditModeIndex(index)}>*/}
-                      {/*      //   <BsFillPenFill />*/}
-                      {/*      //   {child}*/}
-                      {/*      // </div>*/}
-                      {/*    )*/}
-                      {/*  // ) : (*/}
-                      {/*  //   <div className={'flex align-center pointer'} onClick={() => selectChild(child)}>*/}
-                      {/*  //     <IoMdSquareOutline />*/}
-                      {/*  //     {child.tag}*/}
-                      {/*  //   </div>*/}
-                      {/*  // )}*/}
-                      {/*</div>*/}
-                    {/*</div>*/}
-                  {/*);*/}
-                })}
+                      }
+                    />
+                  </>
+                ) : (
+                  /* Children */
+                  <div className={'flex align-center '}>
+                    <div>{'Children: '}</div>
+                    <div className="flex flex-column">
+                      <IconButton centering>
+                        {/*<Tooltip overlay={'Add block child'} placement={'top'}>*/}
+                          <IoMdAdd className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
+                        {/*</Tooltip>*/}
+                      </IconButton>
+                      <IconButton centering>
+                        {/*<Tooltip overlay={'Add text child'} placement={'top'}>*/}
+                          <TbPlaylistAdd className={'pointer'} onClick={addTextNode} title={'Add text child'} />
+                        {/*</Tooltip>*/}
+                      </IconButton>
+                    </div>
+                    {/* Map children */}
+                    <div className={'flex flex-wrap'}>
+                      {fragment.children.map((child, index) => (
+                        <Tooltip
+                          placement={'top'}
+                          // onVisibleChange={(visible: boolean) => visible && onHighlight(child)}
+                          overlay={() => <TagChildMenu index={index} transform={transform} key={child.id} />}
+                        >
+                          <div
+                            className={'flex align-center pointer ml-5 mb-5'}
+                            onClick={() => selectChild(child)}
+                            onMouseOver={(event: any) => {
+                              event.stopPropagation();
+                              updateHoveredNode(child);
+                            }}
+                          >
+                            {child.isText ? <BsFillPenFill /> : <IoMdSquareOutline />}
+                            {child.isText ? child.text?.slice(0, 6) + '...' : child.tag}
+                          </div>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </TabPanel>
@@ -397,9 +372,9 @@ function EachTagManager({
           {/*2 Classes */}
           <TabPanel>
             <div className={'tabPanel'}>
-              <ClassNamesSelector onChange={changeClassNamesList} value={fragmentState.className} />
+              <ClassNamesSelector onChange={changeClassNamesList} value={fragment.className} />
               <textarea
-                value={fragmentState.className}
+                value={fragment.className}
                 onChange={changeClassName}
                 rows={2}
                 className={`grow-1 max-w-120 ml-a`}
@@ -411,8 +386,8 @@ function EachTagManager({
           <TabPanel>
             <div className={'tabPanel'}>
               <ObjectEditor
-                onChange={createFieldUpdater('style')}
-                value={fragmentState.style}
+                onChange={createObjectFieldUpdater('style')}
+                value={fragment.style}
                 fields={stylesExisting}
                 title={'Styles: '}
               />
@@ -423,8 +398,8 @@ function EachTagManager({
           <TabPanel>
             <div className={'tabPanel'}>
               <ObjectEditor
-                onChange={createFieldUpdater('attrs')}
-                value={fragmentState.attrs}
+                onChange={createObjectFieldUpdater('attrs')}
+                value={fragment.attrs}
                 fields={attrsExisting}
                 title={'Attri-butes: '}
               />
@@ -437,205 +412,9 @@ function EachTagManager({
             <Tab>Attributes</Tab>
           </TabList>
         </Tabs>
-
-        {/*<div className={cc([`relative flex-wrap align-center w-100-p fz-15`])}>*/}
-        {/*  <div className={``}>*/}
-        {/*{parentXpath && (*/}
-        {/*  <button className={`ml-20 black pointer fz-13`} onClick={onParentClick}>*/}
-        {/*    Parent*/}
-        {/*  </button>*/}
-        {/*)}*/}
-        {/*<button className={`ml-20 black pointer fz-13`} onClick={onFocusInspectClick}>*/}
-        {/*  Focus*/}
-        {/*</button>*/}
-        {/*<CopyToClipboard text={JSON.stringify(fragment)} onCopy={() => alert('Copied')}>*/}
-        {/*  <button className={`black pointer fz-13 `} style={{ background: 'transparent', border: 0 }}>*/}
-        {/*    <img src={process.env.PUBLIC_URL + '/copy-icon.svg'} className={'pointer mr-5 ml-5 w-30 h-30'} />*/}
-        {/*  </button>*/}
-        {/*</CopyToClipboard>*/}
-        {/*</div>*/}
-
-        {/* Object elements */}
-        {/*{!first && (*/}
-        {/*  <>*/}
-        {/* Make text */}
-        {/*<Tooltip overlay={'Make it text'} placement={`top`}>*/}
-        {/*<SVGBlockToText*/}
-        {/*  onClick={makeItText}*/}
-        {/*  color={'#fff'}*/}
-        {/*  className={'pointer ml-15'}*/}
-        {/*  title={'Make it text'}*/}
-        {/*/>*/}
-        {/*</Tooltip>*/}
-
-        {/*<div className={`w-100-p flex align-center`}>*/}
-        {/*    <div className="mr-15">Attrs: </div>*/}
-        {/*    <textarea value={fragmentState.attrs || ''} onChange={onAttrsChange} className={`w-200 grow-1`} rows={1}/>*/}
-        {/*</div>*/}
-        {/*_____________________________________________*/}
-
-        {/*<div className={`flex align-flex-end h-40`}>*/}
-        {/*<Tooltip overlay={'Add block'} placement={`top`}>*/}
-        {/*  <AiOutlineFileAdd*/}
-        {/*    size={22}*/}
-        {/*    onClick={() => addNewChild(() => createFragment())}*/}
-        {/*    title={'Add block +'}*/}
-        {/*    className={`mr-10 pointer`}*/}
-        {/*    style={{ marginBottom: 2 }}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/*<Tooltip*/}
-        {/*  overlay={*/}
-        {/*    <textarea*/}
-        {/*      rows={10}*/}
-        {/*      placeholder={'Add Child by Paste'}*/}
-        {/*      value={state.pastedData}*/}
-        {/*      onChange={changeTextPastedData}*/}
-        {/*    />*/}
-        {/*  }*/}
-        {/*  placement={`top`}*/}
-        {/*>*/}
-        {/*  <AiOutlineFileAdd*/}
-        {/*    size={22}*/}
-        {/*    onClick={addNewChildFromPasted}*/}
-        {/*    className={`mr-10 pointer`}*/}
-        {/*    style={{ marginBottom: 2 }}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/*<Tooltip overlay={'Add text'} placement={`top`}>*/}
-        {/*  <div*/}
-        {/*    onClick={() => addNewChild(() => '')}*/}
-        {/*    title={'Add text +'}*/}
-        {/*    className={`mr-10 pointer`}*/}
-        {/*    style={{ marginBottom: 2 }}*/}
-        {/*  >*/}
-        {/*    + A*/}
-        {/*  </div>*/}
-        {/*</Tooltip>*/}
-
-        {/*<Tooltip overlay={`Duplicate`} placement={`top`}>*/}
-        {/*  <img*/}
-        {/*    src={process.env.PUBLIC_URL + '/duplicate-node.svg'}*/}
-        {/*    onClick={duplicateFragment}*/}
-        {/*    className={'pointer mr-5 ml-5 w-30 h-30'}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/*</div>*/}
-
-        {/*<div className={`w-100-p flex align-center`}>*/}
-        {/*  Padding:*/}
-        {/*  <Resize />*/}
-        {/*</div>*/}
-        {/*</>*/}
-        {/*)}*/}
-
-        {/* text elements */}
-        {/*{!first && !isObject && (*/}
-        {/*  <>*/}
-        {/*    /!* Make it div *!/*/}
-        {/*    <SVGBlockToText*/}
-        {/*      onClick={makeItDiv}*/}
-        {/*      className={`pointer mr-10 ml-10`}*/}
-        {/*      style={{ transform: 'scaleX(-1' }}*/}
-        {/*      color={'#fff'}*/}
-        {/*    />*/}
-        {/*    <textarea onChange={changeText} className={`h-60`} rows={1} value={fragment} />*/}
-        {/*  </>*/}
-        {/*)}*/}
-
-        {/* general actions */}
-        {/*{!first && (*/}
-        {/*  <div className={`flex align-flex-end h-40`}>*/}
-        {/* Delete */}
-
-        {/*<Tooltip overlay={'Delete'} placement={`top`}>*/}
-        {/*  <img*/}
-        {/*    src={process.env.PUBLIC_URL + '/trash.svg'}*/}
-        {/*    className={'pointer mr-5 ml-5 w-35 h-35'}*/}
-        {/*    onClick={deleteElement}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/* Wrap with div */}
-        {/*<Tooltip overlay={'Wrap with div'} placement={`top`}>*/}
-        {/*  <img*/}
-        {/*    src={process.env.PUBLIC_URL + '/wrap-with-div.svg'}*/}
-        {/*    onClick={wrapWithDiv}*/}
-        {/*    className={'pointer mr-5 ml-5 w-25 h-25'}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/* Wrap children */}
-        {/*<Tooltip overlay={'Wrap children'} placement={`top`}>*/}
-        {/*  <img*/}
-        {/*    src={process.env.PUBLIC_URL + '/wrap-children.svg'}*/}
-        {/*    onClick={wrapChildren}*/}
-        {/*    className={'pointer mr-5 ml-5 w-25 h-25'}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-
-        {/* Set on parent */}
-        {/*<Tooltip overlay={'Set on parent'} placement={`top`}>*/}
-        {/*  <img*/}
-        {/*    src={process.env.PUBLIC_URL + '/set-on-parent.svg'}*/}
-        {/*    onClick={setOnParent}*/}
-        {/*    className={'pointer mr-5 ml-5 w-25 h-25'}*/}
-        {/*  />*/}
-        {/*</Tooltip>*/}
-        {/* Move upward in level */}
-        {/*{indexInLevel > 0 && (*/}
-        {/*  <Tooltip overlay={`Move Upward`} placement={`top`}>*/}
-        {/*    <MdArrowUpward onClick={moveUpward} title={`Move Upward`} size={25} />*/}
-        {/*  </Tooltip>*/}
-        {/*)}*/}
-        {/* Move downward in level */}
-        {/*{lastInLevel === false && (*/}
-        {/*  <Tooltip overlay={`Move Downward`} placement={`top`}>*/}
-        {/*    <MdArrowDownward onClick={moveDownward} title={`Move Downward`} size={25} />*/}
-        {/*  </Tooltip>*/}
-        {/*)}*/}
-        {/*</div>*/}
-        {/*)}*/}
-        {/*</div>*/}
-        {/*  {!first && (*/}
-        {/*    <>*/}
-        {/*      <div className={``}>*/}
-        {/*        <div className={`flex`}>*/}
-        {/*          <ClassNamesSelector onChange={changeClassNamesList} value={fragmentState.className} />*/}
-        {/*          <textarea*/}
-        {/*            value={fragmentState.className}*/}
-        {/*            onChange={changeClassName}*/}
-        {/*            rows={2}*/}
-        {/*            className={`grow-1 max-w-120 ml-a`}*/}
-        {/*          />*/}
-        {/*        </div>*/}
-        {/*        <ObjectEditor*/}
-        {/*          onChange={createFieldUpdater('style')}*/}
-        {/*          value={fragmentState.style}*/}
-        {/*          fields={stylesExisting}*/}
-        {/*          title={'Styles: '}*/}
-        {/*        />*/}
-        {/*        <ObjectEditor*/}
-        {/*          onChange={createFieldUpdater('attrs')}*/}
-        {/*          value={fragmentState.attrs}*/}
-        {/*          fields={attrsExisting}*/}
-        {/*          title={'Attri-butes: '}*/}
-        {/*        />*/}
-
-        {/*        /!* Toggle expand *!/*/}
-        {/*        /!*<div className={'ml-a mr-20 w-20'}>*!/*/}
-        {/*        /!*    {_.isArray(fragmentState.children) && !_.isEmpty(fragmentState.children) && (isOpened*!/*/}
-        {/*        /!*        ? <aiIcons.AiOutlineMinusSquare onClick={toggleVisibility} size={25}/>*!/*/}
-        {/*        /!*        : <aiIcons.AiOutlinePlusSquare onClick={toggleVisibility} size={25}/>*!/*/}
-        {/*        /!*    )}*!/*/}
-        {/*        /!*</div>*!/*/}
-        {/*      </div>*/}
-        {/*    </>*/}
-        {/*  )}*/}
       </div>
-      {/* Children  */}
-      {/*{first &&  && recursiveRenderChildren()}*/}
     </div>
   );
-  // }
 }
 
 export default EachTagManager;

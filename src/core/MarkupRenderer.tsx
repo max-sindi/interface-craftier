@@ -1,5 +1,5 @@
 import React , { useContext } from 'react';
-import Tag , { Fragment } from './Tag';
+import Tag  from './Tag';
 import { ProjectContext } from './Project';
 // import _ from "lodash"
 // import { GlobalState } from './Project';
