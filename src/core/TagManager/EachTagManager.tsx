@@ -25,7 +25,7 @@ import { TbPlaylistAdd } from 'react-icons/tb';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { Fragment } from '../Fragment';
+import { ClassNameRecord , Fragment } from '../Fragment';
 import EditableField from './EditableField';
 import TagChildMenu from './TagChildMenu';
 import IconButton from './IconButton';
@@ -130,7 +130,7 @@ function EachTagManager({
   const changeText = createHtmlChangeHandler('text');
   const changeClassName = createHtmlChangeHandler('className');
 
-  const changeClassNamesList = (className: string) => transform((val) => ({ ...val, className }));
+  const changeClassNamesList = (className: ClassNameRecord) => transform((val) => ({ ...val, className }));
 
   const wrapWithDiv = () => transform((node) => ({ ...createFragment(), children: [node] }));
 
@@ -193,7 +193,7 @@ function EachTagManager({
   const save = _.debounce((newValue) => {
     _.setWith(currentState, `${xpath}`, newValue);
     update(currentState);
-  }, 1300);
+  }, 300);
 
   const transform = (updater: (arg1: Fragment) => Fragment) => {
     const newValue = updater(fragment);
@@ -213,7 +213,7 @@ function EachTagManager({
   const recursiveRenderChildren = () => {
     return fragment.children.map((child, index, arr) =>
       typeof !child.isText ? (
-        <div key={index} className={``}>
+        <div key={child.id} className={``}>
           <EachTagManager
             {...props}
             fragment={child}
@@ -286,13 +286,13 @@ function EachTagManager({
                 </div>
                 {/*Highlight*/}
                 <div>
-                  <button onClick={() => onHighlight()} className={`ml-20 black pointer fz-13`}>
+                  <button onClick={() => onHighlight()} className={`ml-20 pointer fz-13`}>
                     {'Highlight'}
                   </button>
                 </div>
 
                  {/* Resize  */}
-                <DimensionsResize changeClassNamesList={changeClassNamesList} classNameList={fragment.className} />
+                <DimensionsResize changeClassName={changeClassNamesList} className={fragment.className} />
 
                 {/* Close Popup */}
                 <Tooltip overlay={'Unselect'} placement={'top'}>
@@ -345,6 +345,7 @@ function EachTagManager({
                     <div className={'flex flex-wrap'}>
                       {fragment.children.map((child, index) => (
                         <Tooltip
+                          key={child.id}
                           placement={'top'}
                           // onVisibleChange={(visible: boolean) => visible && onHighlight(child)}
                           overlay={() => <TagChildMenu index={index} transform={transform} key={child.id} />}
@@ -372,13 +373,13 @@ function EachTagManager({
           {/*2 Classes */}
           <TabPanel>
             <div className={'tabPanel'}>
-              <ClassNamesSelector onChange={changeClassNamesList} value={fragment.className} />
-              <textarea
-                value={fragment.className}
-                onChange={changeClassName}
-                rows={2}
-                className={`grow-1 max-w-120 ml-a`}
-              />
+              {/*<ClassNamesSelector onChange={changeClassNamesList} value={fragment.className} />*/}
+              {/*<textarea*/}
+              {/*  value={fragment.className}*/}
+              {/*  onChange={changeClassName}*/}
+              {/*  rows={2}*/}
+              {/*  className={`grow-1 max-w-120 ml-a`}*/}
+              {/*/>*/}
             </div>
           </TabPanel>
 

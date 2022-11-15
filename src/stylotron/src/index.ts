@@ -1,49 +1,53 @@
-import CssUnitClassBranch from "./CssUnitClassBranch"
-import CssSimpleClassBranch from './CssSimpleClassBranch'
-import * as fs from 'fs'
-import classBranches from "./classNames"
+import CssUnitClassBranch from './CssUnitClassBranch';
+import CssSimpleClassBranch from './CssSimpleClassBranch';
+import * as fs from 'fs';
+import classBranches from './classNames';
+import Unit, { UnitName } from './Unit';
+import CssClass from './CssClass';
 
 class ClassesStorage {
-  private readonly classBranches: (CssUnitClassBranch | CssSimpleClassBranch)[]
-  private readonly pathRoot: string
+  private readonly classBranches: (CssUnitClassBranch | CssSimpleClassBranch)[];
+  private readonly pathRoot: string;
 
   constructor(classBranches: (CssUnitClassBranch | CssSimpleClassBranch)[]) {
-    this.classBranches = classBranches
-    this.pathRoot = './src/'
+    this.classBranches = classBranches;
+    this.pathRoot = './src/';
   }
 
   generateCss() {
-    const path = this.pathRoot + 'styles.css'
+    const path = this.pathRoot + 'styles.css';
     const content = this.classBranches
-      .map(classBranch => classBranch.classes
-        .map(cssClass =>
-            cssClass.createCssRule()
-        )
-        .join('\n')
-      ).join('\n')
+      .map((classBranch) => classBranch.classes.map((cssClass) => cssClass.createCssRule()).join('\n'))
+      .join('\n');
 
-    fs.writeFileSync(path, content)
+    fs.writeFileSync(path, content);
   }
 
   generateJson() {
-    const path = this.pathRoot + 'styles.json'
+    const path = this.pathRoot + 'styles.json';
     const content = JSON.stringify({
-      classBranches: this.classBranches.map(branch => ({
-        name: branch.className,
-        classNames: branch.classes
-      }))
-    })
+      classBranches: this.classBranches.map((branch) =>
+        ({
+          name: branch.className,
+          units: [...((branch as CssUnitClassBranch).units || [])].reduce(
+            (acc, unit) => ({
+              ...acc,
+              [unit.unit]: unit.classNames,
+            }),
+            {} as Record<UnitName, CssClass>
+          )
+        })
 
-    fs.writeFileSync(path, content)
+      ),
+    });
+
+    fs.writeFileSync(path, content);
   }
 }
 
-
-
-const classesStorage = new ClassesStorage(classBranches)
-classesStorage.generateCss()
-classesStorage.generateJson()
-
+const classesStorage = new ClassesStorage(classBranches);
+classesStorage.generateCss();
+classesStorage.generateJson();
 
 // const mediaConfig = [
 //   { name: 'lg', p: '1440', result: '' },
@@ -52,8 +56,6 @@ classesStorage.generateJson()
 //   { name: 'smd', p: '580' , result: '' },
 //   { name: 'sm', p: '411' , result: '' },
 // ];
-
-
 
 // let result = ''
 // let mediaResult = {
@@ -167,6 +169,5 @@ classesStorage.generateJson()
 // @ts-ignore
 // fs.writeFileSync('./classNames.json', JSON.stringify({classNames}))
 // console.log(styleNames)
-
 
 // module.exports.styleNames = styleNames

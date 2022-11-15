@@ -1,10 +1,22 @@
-.tag_hover {
+html {
+    background: #7d9707;
+}
+
+._tag_hover {
     box-shadow: 0px 0px 5px 5px #00000030;
     cursor: pointer;
 }
 
+input, select, button, textarea {
+    background: #449147;
+    color: #fff;
+    border: 1px solid #fff;
+    font-weight: 600;
+    padding: 7px;
+}
+
 #toolbar {
-    background: #fff;
+    background: #ff5830;
     border-radius: 5px;
     box-shadow: 3px 3px 10px 5px #a3bce350;
     padding: 5px;

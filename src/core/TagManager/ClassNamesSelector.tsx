@@ -28,31 +28,31 @@ const classGroupsExist = [
   { name: "Other", classNames: []}
 ]
 
-const classGroups = classNames.classBranches.reduce((acc: Record<string, { name: string, classNames: { name: string }[]}[]>, classNameBranch) => {
-  const group = classGroupsExist.find(({ classNames }) => classNames.includes(classNameBranch.name))
-    || _.last(classGroupsExist)
-
-  return !group ? acc : {
-    ...acc,
-    [group.name]: !acc[group.name] ? [classNameBranch] : [...acc[group.name], classNameBranch]
-  }
-}, {})
-
-const options = {
-    placeholder: "Class menu: ",
-    options:  classGroupsExist.map(({ name }) => ({
-      label: name,
-      options: classGroups[name].map(branch => ({
-        label: branch.name,
-        options: branch.classNames.map(className => ({
-          value: className.name,
-          label: className.name,
-          key: className.name
-        })),
-        key: branch.name
-      }))
-    }))
-}
+// const classGroups = classNames.classBranches.reduce((acc: Record<string, { name: string, classNames: { name: string }[]}[]>, classNameBranch) => {
+//   const group = classGroupsExist.find(({ classNames }) => classNames.includes(classNameBranch.name))
+//     || _.last(classGroupsExist)
+//
+//   return !group ? acc : {
+//     ...acc,
+//     [group.name]: !acc[group.name] ? [classNameBranch] : [...acc[group.name], classNameBranch]
+//   }
+// }, {})
+//
+// const options = {
+//     placeholder: "Class menu: ",
+//     options:  classGroupsExist.map(({ name }) => ({
+//       label: name,
+//       options: classGroups[name].map(branch => ({
+//         label: branch.name,
+//         options: branch.classNames.map(className => ({
+//           value: className.name,
+//           label: className.name,
+//           key: className.name
+//         })),
+//         key: branch.name
+//       }))
+//     }))
+// }
 
 const ClassNamesSelector = ({ value = '', onChange }: { value: string, onChange: (value: string) => void }) => {
   const deconstructed = value.trim().split(' ')

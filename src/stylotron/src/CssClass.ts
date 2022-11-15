@@ -1,10 +1,12 @@
 export default class CssClass {
-    private readonly name: string
-    private readonly value: string
+    public readonly name: string
+    public readonly value: string
+    public readonly integer: number
 
-    constructor({ name = '!noName!', value = '!noValue!' }) {
+    constructor({ name = '!noName!', value = '!noValue!', integer = 0 }) {
         this.name = name;
         this.value = value;
+        this.integer = integer;
     }
 
     createCssRule() {

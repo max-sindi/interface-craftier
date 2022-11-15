@@ -1,4 +1,24 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 exports.__esModule = true;
 var fs = require("fs");
 var classNames_1 = require("./classNames");
@@ -10,20 +30,22 @@ var ClassesStorage = /** @class */ (function () {
     ClassesStorage.prototype.generateCss = function () {
         var path = this.pathRoot + 'styles.css';
         var content = this.classBranches
-            .map(function (classBranch) { return classBranch.classes
-            .map(function (cssClass) {
-            return cssClass.createCssRule();
-        })
-            .join('\n'); }).join('\n');
+            .map(function (classBranch) { return classBranch.classes.map(function (cssClass) { return cssClass.createCssRule(); }).join('\n'); })
+            .join('\n');
         fs.writeFileSync(path, content);
     };
     ClassesStorage.prototype.generateJson = function () {
         var path = this.pathRoot + 'styles.json';
         var content = JSON.stringify({
-            classBranches: this.classBranches.map(function (branch) { return ({
-                name: branch.className,
-                classNames: branch.classes
-            }); })
+            classBranches: this.classBranches.map(function (branch) {
+                return ({
+                    name: branch.className,
+                    units: __spreadArray([], (branch.units || []), true).reduce(function (acc, unit) {
+                        var _a;
+                        return (__assign(__assign({}, acc), (_a = {}, _a[unit.unit] = unit.classNames, _a)));
+                    }, {})
+                });
+            })
         });
         fs.writeFileSync(path, content);
     };

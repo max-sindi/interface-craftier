@@ -26,14 +26,14 @@ function Tag({ deepLevel, indexInLevel, node, text }: Props) {
     !node.isText
       ? node.children.map((child, index) => <Tag node={child} deepLevel={deepLevel + 1} indexInLevel={index} />)
       : node.text;
-
+  // console.log(node.className);
   const attrs = {
     'data-name': node.name || '',
     'data-deep-level': deepLevel + 1,
     'data-index-in-level': indexInLevel,
     'data-id': node.id,
     title: _.capitalize(node.name || ''),
-    className: classNames(node.className, isHovered && 'tag_hover'),
+    className: classNames(Object.values(node.className).join(' '), isHovered && '_tag_hover', '_rendered_tag'),
     ...(node.attrs || {}),
     style: node.style || {},
     onMouseOut: (event: any) => {

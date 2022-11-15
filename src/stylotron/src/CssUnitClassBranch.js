@@ -33,10 +33,10 @@ var CssUnitClassBranch = /** @class */ (function (_super) {
         _this.classNameCreator = classNameCreator;
         // todo units can (and should) be declared explicitly, right in Class instantiating
         _this.units = [
-            px && new Unit_1["default"]({ unit: 'px', limit: eachValueLimit, step: 1, minus: minus }, _this),
-            px && new Unit_1["default"]({ unit: 'px', limit: each5ValuesLimit, step: 5, minus: minus }, _this),
-            percent && new Unit_1["default"]({ unit: "%", prefix: "p", limit: percent, step: 5, minus: minus }, _this),
-            percent && new Unit_1["default"]({ unit: "vh", prefix: "vh", limit: vh, step: 5, minus: false }, _this),
+            // px && new Unit({ unit: 'px', limit: eachValueLimit, step: 1, minus }, this),
+            px && new Unit_1["default"]({ unit: 'px', ranges: [{ limit: eachValueLimit, step: 2 }, { limit: each5ValuesLimit, step: 5 }], minus: minus }, _this),
+            percent && new Unit_1["default"]({ unit: "%", prefix: "p", ranges: [{ limit: percent, step: 5 }], minus: minus }, _this),
+            percent && new Unit_1["default"]({ unit: "vh", prefix: "vh", ranges: [{ limit: vh, step: 5 }], minus: false }, _this),
         ].filter(Boolean);
         // todo move media to separate class
         // this.media = !media ? [] : [

@@ -7,7 +7,7 @@ import Media from "./Media"
 export default class CssUnitClassBranch extends Media {
     private readonly property: string
     // private readonly media: boolean
-    private readonly units: Unit[]
+    public readonly units: Unit[]
     public readonly className: string
     public readonly classNameCreator: (arg0: string) => string
     public readonly classes: CssClass[]
@@ -34,10 +34,10 @@ export default class CssUnitClassBranch extends Media {
         this.classNameCreator = classNameCreator
         // todo units can (and should) be declared explicitly, right in Class instantiating
         this.units = [
-            px && new Unit({ unit: 'px', limit: eachValueLimit, step: 1, minus }, this),
-            px && new Unit({ unit: 'px', limit: each5ValuesLimit, step: 5, minus }, this),
-            percent && new Unit({ unit: "%", prefix: "p", limit: percent, step: 5, minus }, this),
-            percent && new Unit({ unit: "vh", prefix: "vh", limit: vh, step: 5, minus: false }, this),
+            // px && new Unit({ unit: 'px', limit: eachValueLimit, step: 1, minus }, this),
+            px && new Unit({ unit: 'px', ranges: [{ limit: eachValueLimit, step: 2 }, { limit : each5ValuesLimit , step : 5 }], minus }, this),
+            percent && new Unit({ unit: "%", prefix: "p", ranges: [ { limit : percent , step : 5 }], minus }, this),
+            percent && new Unit({ unit: "vh", prefix: "vh", ranges: [ { limit : vh , step : 5 }], minus: false }, this),
         ].filter(Boolean) as Unit[]
 
         // todo move media to separate class

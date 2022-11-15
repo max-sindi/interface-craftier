@@ -2,10 +2,12 @@ import { v4 as uuid } from 'uuid';
 
 type Attrs = {};
 
+export type ClassNameRecord = Record<string , string>
+
 export class Fragment {
   name: string;
   id: string;
-  className: string;
+  className: ClassNameRecord;
   attrs: Attrs;
   style: { [key: string]: string };
   tag: string;
@@ -17,7 +19,7 @@ export class Fragment {
     this.name = params.name || ''
     this.id = params.id || uuid()
     this.children = params.children || []
-    this.className = params.className || ''
+    this.className = params.className || {}
     this.attrs = params.attrs || {}
     this.style = params.style || {}
     this.tag = params.tag || params.isText ? 'span' : 'div'

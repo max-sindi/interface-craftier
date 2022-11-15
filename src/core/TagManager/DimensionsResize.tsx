@@ -8,6 +8,7 @@ const DimensionsResize = (props: ClassNameChange) => {
       heightClassNameCreator={(value: string | number) => `h-${value}`}
       widthClassNameRoot={'w'}
       heightClassNameRoot={'h'}
+      unit={'px'}
       {...props}
     />
   );

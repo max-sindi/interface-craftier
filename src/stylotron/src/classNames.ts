@@ -7,7 +7,7 @@ import CssSimpleClassBranch from './CssSimpleClassBranch';
       media: true,
       percent: 200,
       each5ValuesLimit: 400,
-      eachValueLimit: 50,
+      eachValueLimit: 20,
       px: true,
       vh: 100,
     })
@@ -17,7 +17,7 @@ import CssSimpleClassBranch from './CssSimpleClassBranch';
     property: 'height',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 500,
     eachValueLimit: 50,
     px: true,
     vh: 100,
@@ -281,7 +281,7 @@ const classNames = [
   new CssSimpleClassBranch({ className: 'flex', fast: 'display: flex', media: true }),
   new CssSimpleClassBranch({ className: 'flex-center', fast: 'justify-content: center; align-items: center' }),
   new CssSimpleClassBranch({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
-  new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: wrap', media: true }),
+  new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
   new CssSimpleClassBranch({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
   new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
   new CssSimpleClassBranch({ className: 'pointer', fast: 'cursor: pointer' }),
@@ -307,15 +307,15 @@ const classNames = [
   }),
   new CssSimpleClassBranch({
     className: 'ff-primary',
-    fast: `font-family: "Maitree"`,
+    fast: `font-family: "Maitree, serif"`,
   }),
   new CssSimpleClassBranch({
     className: 'ff-secondary',
-    fast: `font-family: "Raleway"`,
+    fast: `font-family: "Raleway, serif"`,
   }),
   new CssSimpleClassBranch({
     className: 'ff-thirdly',
-    fast: `font-family: "Circe"`,
+    fast: `font-family: "Circe, serif"`,
   }),
   new CssSimpleClassBranch({
     className: 'black',
