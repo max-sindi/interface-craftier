@@ -1,14 +1,14 @@
 import CssClass from "./CssClass"
-// import * as _ from "lodash"
 
 export default class CssSimpleClassBranch {
     private readonly fast: string
     private readonly property: string
     private readonly classNameCreator: ((arg: string) => string)
-    private readonly values: string[]
+    public readonly values: string[]
     // private readonly media: []
     public readonly className: string
     public readonly classes: CssClass[]
+    public readonly units: false
 
     constructor({
         className = '',
@@ -24,6 +24,7 @@ export default class CssSimpleClassBranch {
         this.values = values
         this.classNameCreator = classNameCreator
         this.classes = []
+        this.units = false
 
         this.populateEnumerates()
         this.populateFast()

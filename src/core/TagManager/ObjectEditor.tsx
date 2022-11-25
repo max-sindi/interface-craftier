@@ -1,12 +1,8 @@
-import React from 'react'
-import Tooltip from 'rc-tooltip'
-import 'rc-tooltip/assets/bootstrap_white.css'
-import FileSelector from './FileSelector'
-import {FaRegWindowClose} from 'react-icons/fa'
-import VariableSelector from './VariableSelector'
-import _ from 'lodash'
-
-// { name: '', withFile: false, fileValueCreator }
+import React from 'react';
+import Tooltip from 'rc-tooltip';
+import 'rc-tooltip/assets/bootstrap_white.css';
+import { FaRegWindowClose } from 'react-icons/fa';
+import VariableSelector from './VariableSelector';
 
 const ObjectEditor: React.FunctionComponent<{
   fields: {
@@ -29,10 +25,6 @@ const ObjectEditor: React.FunctionComponent<{
   };
   const onNewFieldSelect = ({ target: { value: fieldValue } }: any) =>
     onChange((old) => ({ ...old, [fieldValue]: value[fieldValue] || '' }));
-  //   onChange({
-  //   ...value,
-  //   [fieldValue]: value[fieldValue] || ''
-  // })
 
   return (
     <div className={`flex align-center flex-wrap`}>
@@ -41,6 +33,7 @@ const ObjectEditor: React.FunctionComponent<{
         {Object.entries(value)
           .map(([name]) => {
             const custom = !fields.map((i) => i.name).includes(name);
+
             return {
               ...(custom ? {} : fields.find((field) => name === field.name)),
               name,
@@ -124,7 +117,7 @@ const ObjectEditor: React.FunctionComponent<{
             }
           )}
 
-        {!_.isEmpty(fields) && (
+        {fields.length && (
           <div className={`w-100-p`}>
             <select className={`ml-10 min-w-60`} onChange={onNewFieldSelect} value={``}>
               {[{ name: ' ' }, ...fields.filter(({ name }) => value[name] === undefined)].map(({ name }) => (
@@ -153,4 +146,4 @@ const ObjectEditor: React.FunctionComponent<{
   );
 };
 
-export default ObjectEditor
+export default ObjectEditor;

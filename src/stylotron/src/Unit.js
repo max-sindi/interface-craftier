@@ -2,65 +2,57 @@
 exports.__esModule = true;
 var CssClass_1 = require("./CssClass");
 var Unit = /** @class */ (function () {
-    // step: number
-    // name: string
     function Unit(_a, classBranch) {
-        var _b = _a.unit, unit = _b === void 0 ? 'px' : _b, _c = _a.prefix, prefix = _c === void 0 ? "" : _c, _d = _a.ranges, ranges = _d === void 0 ? [] : _d, 
-        // limit = 1000,
-        // step = 1,
-        _e = _a.minus, 
-        // limit = 1000,
-        // step = 1,
-        minus = _e === void 0 ? false : _e;
+        var _b = _a.unit, unit = _b === void 0 ? 'px' : _b, _c = _a.prefix, prefix = _c === void 0 ? '' : _c, _d = _a.ranges, ranges = _d === void 0 ? [] : _d, _e = _a.minus, minus = _e === void 0 ? false : _e, _f = _a.decoratorAfter, decoratorAfter = _f === void 0 ? true : _f, _g = _a.decoratorBefore, decoratorBefore = _g === void 0 ? true : _g;
         this.unit = unit;
         this.prefix = prefix;
         this.ranges = ranges;
-        // this.step = step
         this.minus = minus;
-        // this.name = name
+        this.decoratorAfter = decoratorAfter;
+        this.decoratorBefore = decoratorBefore;
         this.classBranch = classBranch;
         this.classNames = [];
     }
     Unit.prototype.createClassName = function (integer, minus) {
         if (minus === void 0) { minus = false; }
-        var prefixes = [
-            this.prefix,
-            minus && 'minus'
-        ].filter(Boolean);
+        var prefixes = [this.prefix, minus && 'minus'].filter(Boolean);
         var prefix = !prefixes.length ? '' : '-' + prefixes.join('-');
         var name = "".concat(this.classBranch.className, "-").concat(integer).concat(prefix);
-        var value = this.classBranch.createValue(String("".concat(integer * (minus ? -1 : 1)) // - or +
-            +
-                "".concat(integer === 0 ? '' : this.unit) // omit redundant unit for 0 value
+        var value = this.classBranch.createValue(String("".concat(integer * (minus ? -1 : 1)) + // - or +
+            "".concat(integer === 0 ? '' : this.unit) // omit redundant unit for 0 value
         ));
-        return new CssClass_1["default"]({ name: name, value: value, integer: integer });
+        return new CssClass_1["default"]({
+            name: name,
+            value: value,
+            integer: integer,
+            decoratorAfter: this.decoratorAfter,
+            decoratorBefore: this.decoratorBefore
+        });
     };
     Unit.prototype.populateClasses = function () {
         var _this = this;
-        this.ranges.forEach(function (_a) {
-            var limit = _a.limit, step = _a.step;
-            // create negative values
-            if (_this.minus) {
-                for (var value = limit; value >= 0; value -= step) {
+        // firstly fill negative values
+        if (this.minus) {
+            this.ranges
+                .sort(function (range1, range2) { return range2.limit - range1.limit; })
+                .forEach(function (range, index, arr) {
+                var nextRange = arr[index + 1];
+                for (var value = range.limit; value >= (nextRange ? nextRange.limit : 0); value -= range.step) {
                     var negativeClassName = _this.createClassName(value, true);
                     _this.classBranch.classes.push(negativeClassName);
                     _this.classNames.push(negativeClassName);
                 }
-            }
-            var _loop_1 = function (value) {
+            });
+        }
+        // then fill positive values
+        this.ranges
+            .sort(function (range1, range2) { return range1.limit - range2.limit; })
+            .forEach(function (range, index, arr) {
+            var prevRange = arr[index - 1];
+            for (var value = prevRange ? prevRange.limit : 0; value <= range.limit; value += range.step) {
                 var positiveClassName = _this.createClassName(value);
-                var alreadyExist = _this.classBranch.classes.find(function (_a) {
-                    var name = _a.name;
-                    return name === positiveClassName.name;
-                });
-                if (!alreadyExist) {
-                    _this.classBranch.classes.push(positiveClassName);
-                    _this.classNames.push(positiveClassName);
-                }
-            };
-            // create positive values
-            for (var value = 0; value <= limit; value += step) {
-                _loop_1(value);
+                _this.classBranch.classes.push(positiveClassName);
+                _this.classNames.push(positiveClassName);
             }
         });
     };

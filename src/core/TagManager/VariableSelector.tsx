@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
-import { ProjectContext } from '../Project';
+import React  from 'react';
+import { useSelector } from 'react-redux';
+import { variablesSelector } from 'src/core/store/modules/template/selector';
 
 const VariableSelector = ( { onChange }: { onChange: (value: string) => void}) => {
-  const { currentState: { variables }} = useContext(ProjectContext)
+  const variables = useSelector(variablesSelector)
 
   return (
     <div>

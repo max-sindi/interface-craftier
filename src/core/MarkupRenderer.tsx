@@ -1,30 +1,12 @@
-import React , { useContext } from 'react';
-import Tag  from './Tag';
-import { ProjectContext } from './Project';
-// import _ from "lodash"
-// import { GlobalState } from './Project';
-// import {useRecoilState} from 'recoil'
-// import {popupState} from './hook/popup'
+import React  from 'react';
+import Tag from './Tag';
+import { useSelector } from 'react-redux';
+import { templateSelector } from 'src/core/store/modules/template/selector';
 
 const MarkupRenderer: React.FunctionComponent = () => {
-  const { currentState: { template }} = useContext(ProjectContext)
-  // const [popup, setPopup] = useRecoilState(popupState)
-  // const template = te
+  const template = useSelector(templateSelector);
 
-  return !template ? null : (
-    <>
-      {/* start of tool */}
-      <Tag
-        key={0}
-        indexInLevel={0}
-        deepLevel={0}
-        node={template}
+  return <Tag key={0} indexInLevel={0} deepLevel={0} nodeId={template.id} />;
+};
 
-        // popup={popup}
-        // setPopup={setPopup}
-      />
-    </>
-  )
-}
-
-export default MarkupRenderer
+export default MarkupRenderer;

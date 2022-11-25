@@ -1,21 +1,16 @@
-import React , { useContext , useMemo } from 'react';
-// import {observer} from 'mobx-react'
-// import project from '../../mobX/project'
+import React from 'react';
 import ObjectEditor from './TagManager/ObjectEditor'
-import { ProjectContext } from './Project';
-// import _ from 'lodash'
-
-export type IVariables = {
-  [key: string]: string
-}
+import { useDispatch , useSelector } from 'react-redux';
+import { variablesSelector } from 'src/core/store/modules/template/selector';
+import { IVariables } from 'src/core/store/modules/template/reducer';
+import { updateVariablesAction } from 'src/core/store/modules/template/actions';
 
 const Variables = () => {
-  const { currentState, currentState: { variables }, update } = useContext(ProjectContext)
+  const variables = useSelector(variablesSelector)
+  const dispatch = useDispatch()
 
   const onChange = (cb: (variables: IVariables) => IVariables) => {
-    currentState.variables = cb(variables)
-    update(currentState)
-    // update({...currentState, variables: cb(variables)})
+    dispatch(updateVariablesAction(cb(variables)))
   }
 
   return (

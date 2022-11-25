@@ -1,23 +1,25 @@
 import CssUnitClassBranch from './CssUnitClassBranch';
 import CssSimpleClassBranch from './CssSimpleClassBranch';
 
- const widthClassNameInstance = new CssUnitClassBranch({
-      className: 'w',
-      property: 'width',
-      media: true,
-      percent: 200,
-      each5ValuesLimit: 400,
-      eachValueLimit: 20,
-      px: true,
-      vh: 100,
-    })
+ export const widthClassNameInstance = new CssUnitClassBranch({
+   className: 'w',
+   property: 'width',
+   media: true,
+   percent: 200,
+   each5ValuesLimit: 1200,
+   eachValueLimit: 20,
+   px: true,
+   vh: 100,
+   // decoratorAfter: false,
+   // decoratorBefore: false,
+ });
 
  const heightClassNameInstance = new CssUnitClassBranch({
     className: 'h',
     property: 'height',
     media: true,
     percent: 200,
-    each5ValuesLimit: 500,
+    each5ValuesLimit: 1000,
     eachValueLimit: 50,
     px: true,
     vh: 100,
@@ -53,7 +55,7 @@ const classNames = [
     property: 'max-height',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     px: true,
     vh: 100,
   }),
@@ -168,7 +170,7 @@ const classNames = [
     property: 'left',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     eachValueLimit: 15,
     px: true,
     minus: true,
@@ -178,7 +180,7 @@ const classNames = [
     property: 'right',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     eachValueLimit: 15,
     px: true,
     minus: true,
@@ -188,7 +190,7 @@ const classNames = [
     property: 'top',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     eachValueLimit: 15,
     px: true,
     minus: true,
@@ -198,7 +200,7 @@ const classNames = [
     property: 'bottom',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     eachValueLimit: 15,
     px: true,
     minus: true,
@@ -220,8 +222,6 @@ const classNames = [
     property: 'order',
     media: true,
     eachValueLimit: 10,
-    after: false,
-    before: false,
   }),
 
   new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto', media: true }),
@@ -260,6 +260,7 @@ const classNames = [
     classNameCreator: (mdf) => `text-${mdf}`,
     values: ['center', 'left', 'right'],
   }),
+
   new CssSimpleClassBranch({
     className: 'bg-cover',
     fast: 'background-size: cover',

@@ -1,21 +1,22 @@
 import { v4 as uuid } from 'uuid';
+import { Uuid } from 'src/core/store/modules/template/reducer';
 
-type Attrs = {};
+export type ClassNameRecord = Partial<Record<'w' | 'h' | 'pt' | 'pb' | 'pl' | 'pr' | 'mt' | 'mr' | 'mb' | 'ml' | 't' | 'b' | 'r' | 'l' | string, string>>
+export type StyleRecord = Record<string , string>
+export type Attrs = Record<string , string>
 
-export type ClassNameRecord = Record<string , string>
-
-export class Fragment {
+export class Node {
   name: string;
-  id: string;
+  id: Uuid;
   className: ClassNameRecord;
   attrs: Attrs;
-  style: { [key: string]: string };
+  style: StyleRecord;
   tag: string;
-  children: Fragment[] | never[];
-  isText?: boolean
-  text?: string
+  children: Node[] | never[];
+  isText: boolean
+  text: string
 
-  constructor(params: Partial<Fragment>) {
+  constructor(params: Partial<Node>) {
     this.name = params.name || ''
     this.id = params.id || uuid()
     this.children = params.children || []

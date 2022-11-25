@@ -1,7 +1,6 @@
 "use strict";
 exports.__esModule = true;
 var CssClass_1 = require("./CssClass");
-// import * as _ from "lodash"
 var CssSimpleClassBranch = /** @class */ (function () {
     function CssSimpleClassBranch(_a) {
         var _b = _a.className, className = _b === void 0 ? '' : _b, _c = _a.fast, fast = _c === void 0 ? '' : _c, _d = _a.property, property = _d === void 0 ? '' : _d, _e = _a.values, values = _e === void 0 ? [] : _e, _f = _a.media, media = _f === void 0 ? false : _f, _g = _a.classNameCreator, classNameCreator = _g === void 0 ? function (str) { return str; } : _g;
@@ -11,6 +10,7 @@ var CssSimpleClassBranch = /** @class */ (function () {
         this.values = values;
         this.classNameCreator = classNameCreator;
         this.classes = [];
+        this.units = false;
         this.populateEnumerates();
         this.populateFast();
     }

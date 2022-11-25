@@ -1,16 +1,20 @@
 import React from 'react';
-import './App.css';
-import './stylotron/src/styles.css'
-import styles from './stylotron/src/styles.json'
-import stringify from "json-stringify-pretty-compact";
+import './App.scss';
+import './stylotron/src/styles.css';
 import Project from './core';
+import { Provider } from 'react-redux';
+import makeStore from 'src/core/store';
+
+const store = makeStore();
 
 function App() {
   return (
-    <div className="App" style={{ whiteSpace: 'pre-wrap'}}>
-      <Project/>
-      {/*{stringify(styles)}*/}
-    </div>
+    <Provider store={store}>
+      <div className="App" style={{ whiteSpace: 'pre-wrap' }}>
+        <Project />
+        {/*{stringify(styles)}*/}
+      </div>
+    </Provider>
   );
 }
 

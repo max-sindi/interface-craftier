@@ -1,13 +1,14 @@
 "use strict";
 exports.__esModule = true;
+exports.widthClassNameInstance = void 0;
 var CssUnitClassBranch_1 = require("./CssUnitClassBranch");
 var CssSimpleClassBranch_1 = require("./CssSimpleClassBranch");
-var widthClassNameInstance = new CssUnitClassBranch_1["default"]({
+exports.widthClassNameInstance = new CssUnitClassBranch_1["default"]({
     className: 'w',
     property: 'width',
     media: true,
     percent: 200,
-    each5ValuesLimit: 400,
+    each5ValuesLimit: 1200,
     eachValueLimit: 20,
     px: true,
     vh: 100
@@ -17,7 +18,7 @@ var heightClassNameInstance = new CssUnitClassBranch_1["default"]({
     property: 'height',
     media: true,
     percent: 200,
-    each5ValuesLimit: 500,
+    each5ValuesLimit: 1000,
     eachValueLimit: 50,
     px: true,
     vh: 100
@@ -27,7 +28,7 @@ var classNames = [
         className: 'container',
         fast: 'max-width: 1200px; box-sizing: content-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 90px; padding-right: 90px'
     }),
-    widthClassNameInstance,
+    exports.widthClassNameInstance,
     new CssUnitClassBranch_1["default"]({
         className: 'w-calc',
         property: 'width',
@@ -52,7 +53,7 @@ var classNames = [
         property: 'max-height',
         media: true,
         percent: 200,
-        each5ValuesLimit: 200,
+        each5ValuesLimit: 1000,
         px: true,
         vh: 100
     }),
@@ -167,7 +168,7 @@ var classNames = [
         property: 'left',
         media: true,
         percent: 200,
-        each5ValuesLimit: 200,
+        each5ValuesLimit: 1000,
         eachValueLimit: 15,
         px: true,
         minus: true
@@ -177,7 +178,7 @@ var classNames = [
         property: 'right',
         media: true,
         percent: 200,
-        each5ValuesLimit: 200,
+        each5ValuesLimit: 1000,
         eachValueLimit: 15,
         px: true,
         minus: true
@@ -187,7 +188,7 @@ var classNames = [
         property: 'top',
         media: true,
         percent: 200,
-        each5ValuesLimit: 200,
+        each5ValuesLimit: 1000,
         eachValueLimit: 15,
         px: true,
         minus: true
@@ -197,7 +198,7 @@ var classNames = [
         property: 'bottom',
         media: true,
         percent: 200,
-        each5ValuesLimit: 200,
+        each5ValuesLimit: 1000,
         eachValueLimit: 15,
         px: true,
         minus: true
@@ -218,9 +219,7 @@ var classNames = [
         className: 'order',
         property: 'order',
         media: true,
-        eachValueLimit: 10,
-        after: false,
-        before: false
+        eachValueLimit: 10
     }),
     new CssSimpleClassBranch_1["default"]({ className: 't-a', fast: 'top: auto', media: true }),
     new CssSimpleClassBranch_1["default"]({ className: 'ml-a', fast: 'margin-left: auto', media: true }),
