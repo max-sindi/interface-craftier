@@ -43,11 +43,11 @@ const ObjectEditor: React.FunctionComponent<{
           .map(
             ({
               name = '',
-              withFile = false,
-              fileValueCreator = (value) => value,
+              // withFile = false,
+              // fileValueCreator = (value) => value,
               withVariable = false,
               variableValueCreator = (value) => value,
-              textable = false,
+              // textable = false,
               custom = false,
             }) => {
               const fieldValue = value[name] || '';
@@ -63,6 +63,16 @@ const ObjectEditor: React.FunctionComponent<{
 
               const onFieldChange = ({ target: { value: fieldValue } }: any) =>
                 onChange((prev) => ({ ...prev, [name]: fieldValue }));
+
+              const onFieldNameChange = (evt: any) => {
+                const value = evt.target.value
+                onChange(prev => {
+                  const freshState = { ...prev }
+                  const oldValue = prev[name]
+                  delete freshState[name]
+                  return { ...freshState, [value]: oldValue }
+                })
+              }
 
               const _delete = () => {
                 const clone = { ...value };
@@ -81,7 +91,7 @@ const ObjectEditor: React.FunctionComponent<{
                 <div key={name} className={`flex align-center pt-5 pb-5`}>
                   <div className={`flex align-center w-100-p`}>
                     {custom ? (
-                      <textarea rows={1} disabled value={name} />
+                      <textarea rows={1} value={name} onChange={onFieldNameChange} />
                     ) : (
                       <select value={name} className={`ml-10`} onChange={onFieldSelect}>
                         {fields.map(({ name: fieldName }) => (
@@ -117,7 +127,7 @@ const ObjectEditor: React.FunctionComponent<{
             }
           )}
 
-        {fields.length && (
+        {fields.length ? (
           <div className={`w-100-p`}>
             <select className={`ml-10 min-w-60`} onChange={onNewFieldSelect} value={``}>
               {[{ name: ' ' }, ...fields.filter(({ name }) => value[name] === undefined)].map(({ name }) => (
@@ -125,10 +135,10 @@ const ObjectEditor: React.FunctionComponent<{
               ))}
             </select>
           </div>
-        )}
+        ) : null}
 
         {enableCreating && (
-          <div className={`flex align-center`}>
+          <div className={`flex align-center pt-15`}>
             New field:
             <textarea
               rows={1}

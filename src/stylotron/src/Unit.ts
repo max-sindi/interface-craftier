@@ -1,7 +1,7 @@
 import CssUnitClassBranch from './CssUnitClassBranch';
 import CssClass from './CssClass';
 
-type Range = { step: number; limit: number };
+export type Range = { step: number; limit: number };
 export type UnitName = 'px' | '%' | 'vh';
 
 export default class Unit {

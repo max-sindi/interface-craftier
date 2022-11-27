@@ -25,7 +25,6 @@ export default class MultiSwitch extends Component {
       bgColor,
       eachSwitchWidth,
       fontColor,
-      selectedFontColor,
       fontSize,
       fontWeight,
       height,
@@ -50,15 +49,14 @@ export default class MultiSwitch extends Component {
     const switches = texts.map((text, index) => {
       const labelStyles = {
         width: labelWidth,
-        color: fontColor,
-        // lineHeight: height,
+        color: text[0] === '#' ? text : fontColor,
         fontSize,
         fontWeight,
       };
 
       if (selectedSwitch === index) {
         classSwitchContent = `${classSwitchContent} multi-switch-handle-color`;
-        labelStyles.color = selectedFontColor;
+        // labelStyles.color = selectedFontColor;
       }
 
       return (
@@ -69,7 +67,7 @@ export default class MultiSwitch extends Component {
           style={labelStyles}
           onClick={this.onToggle.bind(this)}
         >
-          {texts[index]}
+          {text}
         </label>
       );
     });

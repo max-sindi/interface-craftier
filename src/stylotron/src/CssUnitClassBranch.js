@@ -24,7 +24,7 @@ var CssUnitClassBranch = /** @class */ (function (_super) {
         // todo move pseudo and media  to separate js class
         _k = _a.decoratorAfter, 
         // todo move pseudo and media  to separate js class
-        decoratorAfter = _k === void 0 ? true : _k, _l = _a.decoratorBefore, decoratorBefore = _l === void 0 ? true : _l, _m = _a.media, media = _m === void 0 ? false : _m, _o = _a.classNameCreator, classNameCreator = _o === void 0 ? function (str) { return str; } : _o;
+        decoratorAfter = _k === void 0 ? true : _k, _l = _a.decoratorBefore, decoratorBefore = _l === void 0 ? true : _l, _m = _a.media, media = _m === void 0 ? false : _m, _o = _a.noUnit, noUnit = _o === void 0 ? false : _o, _p = _a.classNameCreator, classNameCreator = _p === void 0 ? function (str) { return str; } : _p;
         var _this = _super.call(this, media) || this;
         _this.className = className;
         _this.property = property;
@@ -38,9 +38,9 @@ var CssUnitClassBranch = /** @class */ (function (_super) {
                 new Unit_1["default"]({
                     unit: 'px',
                     ranges: [
-                        { limit: eachValueLimit, step: 1 },
-                        { limit: each5ValuesLimit, step: 5 },
-                    ],
+                        eachValueLimit && { limit: eachValueLimit, step: 1 },
+                        each5ValuesLimit && { limit: each5ValuesLimit, step: 5 },
+                    ].filter(Boolean),
                     minus: minus,
                     decoratorAfter: decoratorAfter,
                     decoratorBefore: decoratorBefore

@@ -1,66 +1,44 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { AiOutlineFileAdd } from 'react-icons/ai';
+// import { AiOutlineFileAdd } from 'react-icons/ai';
 import { FaRegWindowClose } from 'react-icons/fa';
-import { MdArrowDownward, MdArrowUpward } from 'react-icons/md';
+// import { MdArrowDownward, MdArrowUpward } from 'react-icons/md';
 import ClassNamesSelector from './ClassNamesSelector';
 import ObjectEditor from './ObjectEditor';
-import SVGBlockToText from '../UI/svg/BlockToText';
+// import SVGBlockToText from '../UI/svg/BlockToText';
 import Tooltip from 'rc-tooltip';
-import { v4 as uuid } from 'uuid';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+// import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ProjectContext } from '../Project';
 import cc from 'classnames';
 import { attrsExisting, stylesExisting, tags } from './config';
-import { BsArrowsCollapse, BsArrowsExpand, BsArrowBarDown, BsArrowBarRight, BsFillPenFill } from 'react-icons/bs';
+import { BsArrowsCollapse, BsArrowsExpand, /*BsArrowBarDown, BsArrowBarRight, */ BsFillPenFill } from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdSquareOutline, IoMdReturnLeft, IoMdAdd } from 'react-icons/io';
 import { TbPlaylistAdd } from 'react-icons/tb';
-
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { ClassNameRecord, Node } from '../Node';
+import { Node } from '../Node';
 import EditableField from './EditableField';
 import TagChildMenu from './TagChildMenu';
 import IconButton from './IconButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNodeSelector, hoveredNodeSelector } from 'src/core/store/modules/template/selector';
+import { createNodeSelector } from 'src/core/store/modules/template/selector';
 import {
-  addChildToNodeAction,
-  resetHoveredNodeAction,
   updateHoveredNodeAction,
   updateInspectedNodeAction,
   updateNodeAction,
 } from 'src/core/store/modules/template/actions';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import Resizers from 'src/core/TagManager/Resize/Resizers';
-import { cloneDeepWith } from 'lodash';
 
 export type IEachTagManagerProps = {
   nodeId: Uuid;
 };
 
-const cloneDeepWithUniqueId = (data: Node): Node =>
-  cloneDeepWith(data, (target: Node) =>
-    Array.isArray(target.children)
-      ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
-      : target
-  );
-
-export const createDeleter =
-  (indexInLevel: number) =>
-  (prev: Node): Node => {
-    return {
-      ...prev,
-      children: prev.children.filter((i, index) => index !== indexInLevel),
-    };
-  };
-
 function EachTagManager({ nodeId }: IEachTagManagerProps) {
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
   const [tabIndex, setTabIndex] = useState(0);
   const dispatch = useDispatch();
-  const hoveredNode = useSelector(hoveredNodeSelector);
   const nodeSelector = useCallback(createNodeSelector(nodeId), [nodeId]);
   const nodeState = useSelector(nodeSelector);
   const parentNodeSelector = useMemo(
@@ -68,44 +46,46 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
     [nodeState.parentId]
   );
   const parentNodeState = useSelector(parentNodeSelector);
-
   const updateInspectedNode = (node?: Node) => dispatch(updateInspectedNodeAction(node?.id));
   const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));
-  const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
-  const transformField = (field: keyof Node, value: any) => dispatch(updateNodeAction({ id: nodeId, field, value }));
-  const transformParentField = (field: keyof Node, value: any) =>
-    parentNodeState && dispatch(updateNodeAction({ id: parentNodeState.id, field, value }));
+  const transformField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
+    dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
+  const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
+    parentNodeState && dispatch(updateNodeAction({ id: parentNodeState.id, field, value, withTreeDestructing }));
   const selectParent = () => updateInspectedNode(parentNodeState);
   const selectChild = (child: Node) => updateInspectedNode(child);
   const onHighlight = (hoveringNode = nodeState) => updateHoveredNode(hoveringNode);
-
-  // const createObjectFieldUpdater = (field: 'style' | 'attrs') => {
-  //   return (value) => {
-  //     transformField(field, value);
-  //   };
-  // };
-
   const createHtmlChangeHandler = (path: keyof Node) => (evt: any) => transformField(path, evt.target.value);
   const createChangeHandler = (path: keyof Node) => (value: any) => {
     value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
   };
 
-  // const transformParent = (updater: (arg1: Node) => Node) => transformField(updater, parentXpath);
-  // const deleteElement = () =>
-  // transformParent();
-  // };
+  const deleteThisNode = () => {
+    if (parentNodeState) {
+      transformParentField(
+        'children',
+        parentNodeState.children.filter((item, index) => index !== nodeState.childIndex),
+        true
+      );
 
-  // const deleteElement = () => transformParent(createDeleter(indexInLevel))
+      selectChild(parentNodeState);
+    }
+  };
 
   // makeItText = () => transformField('');
 
   // const makeItDiv = () => transformField(() => createNode());
-
-  const changeTextPastedData = (evt: any) => {
-    evt.persist();
-    // setState((state) => ({ ...state, pastedData: evt.target.value }));
-  };
+  const deleteChild = (indexToDelete: number) =>
+    transformField(
+      'children',
+      nodeState.children.filter((item, index) => index !== indexToDelete),
+      true
+    );
+  // const changeTextPastedData = (evt: any) => {
+  //   evt.persist();
+  //   // setState((state) => ({ ...state, pastedData: evt.target.value }));
+  // };
 
   // addNewChildFromPasted = () => {
   //   const parsedData = (() => {
@@ -121,9 +101,8 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
   // };
 
   const changeText = createHtmlChangeHandler('text');
-  // const changeClassName = createHtmlChangeHandler('className');
-
   const changeClassNamesList = createChangeHandler('className');
+  const changeStyles = createChangeHandler('style');
 
   // const wrapWithDiv = () => transformField((node) => ({ ...createNode(), children: [node] }));
 
@@ -150,16 +129,12 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
   //     return { ...parent, children };
   //   });
 
-  const addChild = async (creator = createNode) => {
-    dispatch(addChildToNodeAction({ id: nodeId, newChild: creator() }));
-    // const newNode = creator();
-    // transformField((node) => {
-    //   node.children.push(newNode)
-    // });
+  const addChild = (creator = createNode) => {
+    transformField('children', [...nodeState.children, creator()], true);
   };
 
-  const addBlockNode = (evt: any) => addChild();
-  const addTextNode = (evt: any) => addChild(() => new Node({ isText: true }));
+  const addBlockNode = () => addChild();
+  const addTextNode = () => addChild(() => new Node({ isText: true }));
 
   const createNode = (children?: Node['children']): Node =>
     new Node({
@@ -175,18 +150,6 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
   const changeName = createHtmlChangeHandler('name');
   const changeTag = createHtmlChangeHandler('tag');
 
-  // const save = _.debounce((newValue) => {
-  //   _.setWith(currentState, `${xpath}`, newValue);
-  //   update(currentState);
-  // }, 300);
-
-  // const transformField = (updater: (arg1: Node) => Node) => {
-  //   const newValue = updater(fragment);
-  //   setNodeState(newValue);
-  //   save(newValue);
-  //   return newValue;
-  // };
-
   const rendererTagSelect = () => (
     <select value={nodeState.tag} onChange={changeTag}>
       {tags.map((tag: string) => (
@@ -194,28 +157,6 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
       ))}
     </select>
   );
-  //
-  // const recursiveRenderChildren = () => {
-  //   return nodeState.children.map((child, index, arr) =>
-  //     typeof !child.isText ? (
-  //       <div key={child.id} className={``}>
-  //         <EachTagManager
-  //           {...props}
-  //           fragment={child}
-  //           key={child.id}
-  //           deepLevel={deepLevel + 1}
-  //           indexInLevel={index}
-  //           lastInLevel={index === arr.length - 1}
-  //           parentXpath={xpath}
-  //           grandParentXpath={parentXpath}
-  //           xpath={`${xpath}${xpath ? '.' : ''}children[${index}]`}
-  //           parentNode={fragment}
-  //           transformParent={transformField}
-  //         />
-  //       </div>
-  //     ) : null
-  //   );
-  // };
 
   // const onMouseLeave = (event: any) => {
   //   event.stopPropagation();
@@ -257,6 +198,8 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
             <div className={`pr-5`}>Tag:</div>
             {rendererTagSelect()}
           </div>
+          {/* Delete */}
+          <RiDeleteBin6Line onClick={deleteThisNode} />
           {/*Highlight*/}
           <div>
             <button onClick={() => onHighlight()} className={`ml-20 pointer fz-13`}>
@@ -265,11 +208,7 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
           </div>
           {/* Close Popup */}
           <Tooltip overlay={'Unselect'} placement={'top'}>
-            <FaRegWindowClose
-              onClick={unselectCurrentNode}
-              size={20}
-              className={`r-3 t-3 z-index-5 ml-a pointer`}
-            />
+            <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5 ml-a pointer`} />
           </Tooltip>
         </div>
         {/* Children */}
@@ -309,8 +248,7 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
                   <Tooltip
                     key={child.id}
                     placement={'top'}
-                    // onVisibleChange={(visible: boolean) => visible && onHighlight(child)}
-                    overlay={() => <TagChildMenu key={child.id} />}
+                    overlay={() => <TagChildMenu key={child.id} deleteChild={() => deleteChild(index)} />}
                   >
                     <div
                       className={'flex align-center pointer ml-5 mb-5'}
@@ -340,7 +278,6 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
           {/* 1 - Tree */}
           <TabPanel>
             <div className={'tabPanel'}>
-
               {/* Name */}
               <div className="flex">
                 <div>{'Name: '}</div>
@@ -354,17 +291,20 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
 
           {/* Layout */}
           <TabPanel>
-            <div className='tabPanel'>
-              {/* Resizers */}
+            <div className="tabPanel">
               <Resizers changeClassName={changeClassNamesList} classNameRecord={nodeState.className} nodeId={nodeId} />
-
             </div>
           </TabPanel>
 
           {/*2 Classes */}
           <TabPanel>
             <div className={'tabPanel'}>
-              <ClassNamesSelector changeClassName={changeClassNamesList} classNameRecord={nodeState.className} />
+              <ClassNamesSelector
+                changeClassName={changeClassNamesList}
+                classNameRecord={nodeState.className}
+                styleRecord={nodeState.style}
+                changeStyles={changeStyles}
+              />
               {/*<textarea*/}
               {/*  value={nodeState.className}*/}
               {/*  onChange={changeClassName}*/}
@@ -379,7 +319,7 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
             <div className={'tabPanel'}>
               <ObjectEditor
                 onChange={createChangeHandler('style')}
-                value={nodeState.style}
+                value={nodeState.style as Record<string, string>}
                 fields={stylesExisting}
                 title={'Styles: '}
               />
@@ -406,8 +346,6 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
           </TabList>
         </Tabs>
       </div>
-      {/*</>*/}
-      {/*)}*/}
     </div>
   );
 }

@@ -2,8 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { Node } from 'src/core/Node';
 import {
-  addChildToNodeAction ,
-  resetHoveredNodeAction , resetStateAction ,
+  resetHoveredNodeAction , resetStateAction , selectRootAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
   updateNodeAction ,
@@ -99,7 +98,7 @@ export default createReducer(initialState(), (builder) => {
         state.hoveredNode = action.payload;
       // }
     })
-    .addCase(resetStateAction, state => {
+    .addCase(resetStateAction, () => {
       return initialState(initialGlobalState)
     })
     .addCase(resetHoveredNodeAction, (state) => {
@@ -108,16 +107,18 @@ export default createReducer(initialState(), (builder) => {
     .addCase(updateInspectedNodeAction, (state, action) => {
       state.inspectedNode = action.payload;
     })
-    .addCase(updateNodeAction, (state, { payload: { id, field, value } }) => {
+    .addCase(selectRootAction, (state) => {
+      state.inspectedNode = state.currentState.template.id
+    })
+    .addCase(updateNodeAction, (state, { payload: { id, field, value, withTreeDestructing } }) => {
       (state.nodesMap[id] as any)[field] = value;
       updateNodeInTree(state, id);
+      if(withTreeDestructing) {
+        const destructed = destructTree(state.currentState)
+        state.nodesMap = destructed.nodesMap
+        state.currentState = destructed.currentState
+      }
     })
-    .addCase(addChildToNodeAction, (state, action) => {
-      // const newNode = action.payload.creator()
-      // @todo check is it working
-      // state.nodesMap[action.payload.id].children.push(newNode as NodeIntern)
-      // const updatedTree =
-    });
 });
 
 function updateNodeInTree(state: Reducer, id: Uuid) {

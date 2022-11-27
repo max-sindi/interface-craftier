@@ -213,10 +213,15 @@ const classNames = [
     eachValueLimit: 50,
     px: true,
   }),
+  new CssSimpleClassBranch({
+    classNameCreator: (mdf) => `fw-${mdf}`,
+    property: `font-weight`,
+    values: ['300', '400', '500', '600', '700', '800', '900'],
+  }),
   new CssUnitClassBranch({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, px: true }),
   new CssUnitClassBranch({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
   new CssUnitClassBranch({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),
-  new CssUnitClassBranch({ className: 'z-index', property: 'z-index', media: true, eachValueLimit: 40, minus: true }),
+  new CssSimpleClassBranch({ classNameCreator: (mdf) => `z-index-${mdf}`, property: 'z-index', media: true, values: ['-1', '0', '1', '2', '3'] }),
   new CssUnitClassBranch({
     className: 'order',
     property: 'order',
@@ -284,11 +289,11 @@ const classNames = [
   new CssSimpleClassBranch({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
   new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
   new CssSimpleClassBranch({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
-  new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
+  // new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
   new CssSimpleClassBranch({ className: 'pointer', fast: 'cursor: pointer' }),
-  new CssSimpleClassBranch({ className: 'fw-bold', fast: 'font-weight: 700' }),
-  new CssSimpleClassBranch({ className: 'ls-027', fast: 'letter-spacing: 0.27px' }),
-  new CssSimpleClassBranch({ className: 'ls-05', fast: 'letter-spacing: 0.54px' }),
+  // new CssSimpleClassBranch({ className: 'fw-bold', fast: 'font-weight: 700' }),
+  // new CssSimpleClassBranch({ className: 'ls-027', fast: 'letter-spacing: 0.27px' }),
+  // new CssSimpleClassBranch({ className: 'ls-05', fast: 'letter-spacing: 0.54px' }),
   new CssSimpleClassBranch({ className: 'transform-left-top-center', fast: 'transform: translate(-50%, -50%)' }), // both edges
   new CssSimpleClassBranch({ className: 'transform-right-top-center', fast: 'transform: translate(50%, -50%)' }), // useful transform values
   new CssSimpleClassBranch({ className: 'transform-left-bottom-center', fast: 'transform: translate(-50%, 50%)' }),
@@ -325,11 +330,6 @@ const classNames = [
   new CssSimpleClassBranch({
     className: 'flex-column',
     fast: 'flex-direction: column',
-  }),
-  new CssSimpleClassBranch({
-    classNameCreator: (mdf) => `fw-${mdf}`,
-    property: `font-weight`,
-    values: ['300', '400', '500', '600', '700', '800', '900'],
   }),
   new CssSimpleClassBranch({
     property: `text-transform`,

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React , { useEffect , useState } from 'react';
 import RenderState from './MarkupRenderer';
 import Manager from './StateTreeManager';
+import { useDispatch } from 'react-redux';
 
 type IProjectContext = {
   toolbarCollapsed: boolean;
@@ -12,6 +13,12 @@ export const ProjectContext = React.createContext<IProjectContext>({} as IProjec
 function Project() {
   const [toolbarCollapsed, setToolbarCollapsed] = useState(false);
   const toggleToolbarVisibility = () => setToolbarCollapsed((prev) => !prev);
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // @ts-ignore
+    window.reduxDispatch = dispatch
+  })
 
   return (
     <ProjectContext.Provider

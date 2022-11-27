@@ -1,37 +1,14 @@
 import React from 'react';
 import { Resizable, ResizableProps } from 'react-resizable';
 import 'react-resizable/css/styles.css';
-import { ClassNameRecord } from 'src/core/Node';
-import styles from 'src/stylotron/src/styles.json';
 import clsx from 'classnames';
 import UnitSelector from 'src/core/TagManager/Resize/UnitSelector';
-import { ClassNameChange , ClassNameInterface } from 'src/utils';
+import { ClassNameChange , ClassNameInterface , findNewClassName } from 'src/utils';
 
 type Props = ClassNameChange & {
   heightClassNameInterface: ClassNameInterface;
   widthClassNameInterface: ClassNameInterface;
 };
-
-export const findNewClassName = (
-  className: ClassNameRecord,
-  classNameInterface: ClassNameInterface,
-  changeClassName: ClassNameChange['changeClassName'],
-  delta: number,
-) => {
-  const { classNameRoot, defaultClassName, unit } = classNameInterface
-  const classBranch = styles.classBranches.find((branch) => branch.name === classNameRoot);
-  if (classBranch) {
-    const units = classBranch.units && classBranch.units[unit];
-    if (units) {
-      const prevClassNameIndex = units.findIndex(({ name }) => name === (className[classNameRoot] || defaultClassName));
-      const nextClassName = units[prevClassNameIndex + delta];
-      if (nextClassName) {
-        changeClassName({ ...className, [classNameRoot]: nextClassName.name });
-      }
-    }
-  }
-};
-
 const Resize = ({
   widthClassNameInterface,
   heightClassNameInterface,
@@ -39,7 +16,7 @@ const Resize = ({
   changeClassName,
 }: Props) => {
 
-  const onResize: ResizableProps['onResize'] = (event: any, { size, handle }) => {
+  const onResize: ResizableProps['onResize'] = (event: any, { size }) => {
     const widthDelta = size.width - widthClassNameInterface.integer;
     const heightDelta = size.height - heightClassNameInterface.integer;
 

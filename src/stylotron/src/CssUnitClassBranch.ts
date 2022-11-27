@@ -1,5 +1,5 @@
 import CssClass from './CssClass';
-import Unit from './Unit';
+import Unit, { Range } from './Unit';
 import Media from './Media';
 
 export default class CssUnitClassBranch extends Media {
@@ -11,6 +11,7 @@ export default class CssUnitClassBranch extends Media {
   public readonly classes: CssClass[];
   public readonly decoratorAfter: boolean;
   public readonly decoratorBefore: boolean;
+  // public readonly noUnit?: boolean;
 
   constructor({
     className = '',
@@ -25,6 +26,7 @@ export default class CssUnitClassBranch extends Media {
     decoratorAfter = true,
     decoratorBefore = true,
     media = false,
+    // noUnit = false,
     classNameCreator = (str: string) => str,
   }) {
     super(media);
@@ -41,9 +43,9 @@ export default class CssUnitClassBranch extends Media {
           {
             unit: 'px',
             ranges: [
-              { limit: eachValueLimit, step: 1 },
-              { limit: each5ValuesLimit, step: 5 },
-            ],
+              eachValueLimit && { limit: eachValueLimit, step: 1 },
+              each5ValuesLimit && { limit: each5ValuesLimit, step: 5 },
+            ].filter(Boolean) as Range[],
             minus,
             decoratorAfter,
             decoratorBefore,

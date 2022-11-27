@@ -211,10 +211,15 @@ var classNames = [
         eachValueLimit: 50,
         px: true
     }),
+    new CssSimpleClassBranch_1["default"]({
+        classNameCreator: function (mdf) { return "fw-".concat(mdf); },
+        property: "font-weight",
+        values: ['300', '400', '500', '600', '700', '800', '900']
+    }),
     new CssUnitClassBranch_1["default"]({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),
-    new CssUnitClassBranch_1["default"]({ className: 'z-index', property: 'z-index', media: true, eachValueLimit: 40, minus: true }),
+    new CssSimpleClassBranch_1["default"]({ classNameCreator: function (mdf) { return "z-index-".concat(mdf); }, property: 'z-index', media: true, values: ['-1', '0', '1', '2', '3'] }),
     new CssUnitClassBranch_1["default"]({
         className: 'order',
         property: 'order',
@@ -280,11 +285,11 @@ var classNames = [
     new CssSimpleClassBranch_1["default"]({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
     new CssSimpleClassBranch_1["default"]({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
     new CssSimpleClassBranch_1["default"]({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
-    new CssSimpleClassBranch_1["default"]({ className: 'bold', fast: 'font-weight: 700' }),
+    // new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
     new CssSimpleClassBranch_1["default"]({ className: 'pointer', fast: 'cursor: pointer' }),
-    new CssSimpleClassBranch_1["default"]({ className: 'fw-bold', fast: 'font-weight: 700' }),
-    new CssSimpleClassBranch_1["default"]({ className: 'ls-027', fast: 'letter-spacing: 0.27px' }),
-    new CssSimpleClassBranch_1["default"]({ className: 'ls-05', fast: 'letter-spacing: 0.54px' }),
+    // new CssSimpleClassBranch({ className: 'fw-bold', fast: 'font-weight: 700' }),
+    // new CssSimpleClassBranch({ className: 'ls-027', fast: 'letter-spacing: 0.27px' }),
+    // new CssSimpleClassBranch({ className: 'ls-05', fast: 'letter-spacing: 0.54px' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-left-top-center', fast: 'transform: translate(-50%, -50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-right-top-center', fast: 'transform: translate(50%, -50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-left-bottom-center', fast: 'transform: translate(-50%, 50%)' }),
@@ -320,11 +325,6 @@ var classNames = [
     new CssSimpleClassBranch_1["default"]({
         className: 'flex-column',
         fast: 'flex-direction: column'
-    }),
-    new CssSimpleClassBranch_1["default"]({
-        classNameCreator: function (mdf) { return "fw-".concat(mdf); },
-        property: "font-weight",
-        values: ['300', '400', '500', '600', '700', '800', '900']
     }),
     new CssSimpleClassBranch_1["default"]({
         property: "text-transform",

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Resizable, ResizableProps } from 'react-resizable';
 import 'react-resizable/css/styles.css';
-import { ClassNameChange, ClassNameInterface, extractNumber, lastArrayItem } from 'src/utils';
-import { findNewClassName } from 'src/core/TagManager/Resize/Resize';
+import { ClassNameChange , ClassNameInterface , extractNumber , findNewClassName , lastArrayItem } from 'src/utils';
 import clsx from 'classnames';
 import UnitSelector from 'src/core/TagManager/Resize/UnitSelector';
 

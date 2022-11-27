@@ -1,12 +1,12 @@
 import React from 'react';
 import { ExtendedNode } from 'src/core/ExtendedNode';
-import clsx from 'classnames';
+// import clsx from 'classnames';
 
 interface ILiveTagManagerProps {
   nodeState: ExtendedNode;
 }
 
-const LiveTagManager = ({ nodeState }: ILiveTagManagerProps) => {
+const LiveTagManager = (props : ILiveTagManagerProps) => {
   return (
     <>
 

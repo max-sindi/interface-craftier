@@ -1,8 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { Uuid } from 'src/core/store/modules/template/reducer';
+import { StandardLonghandProperties } from 'csstype';
 
 export type ClassNameRecord = Partial<Record<'w' | 'h' | 'pt' | 'pb' | 'pl' | 'pr' | 'mt' | 'mr' | 'mb' | 'ml' | 't' | 'b' | 'r' | 'l' | string, string>>
-export type StyleRecord = Record<string , string>
+export type StyleRecord = StandardLonghandProperties
+// export type StyleRecord = Record<string , string>
 export type Attrs = Record<string , string>
 
 export class Node {
