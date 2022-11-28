@@ -42,8 +42,9 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     !nodeState.isText
       ? nodeState.children.map((child, index) => (
           <>
-            {isThisInspectingNode && <LiveTagManager nodeState={nodeState} />}
             {/* @todo: make sure that Tag is not with position: static  */}
+            {isThisInspectingNode && <LiveTagManager nodeState={nodeState} />}
+
             <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
           </>
         ))

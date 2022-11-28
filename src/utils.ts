@@ -2,7 +2,7 @@ import { UnitName } from 'src/stylotron/src/Unit';
 import { ClassNameRecord, Node, StyleRecord } from 'src/core/Node';
 import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
 import styles from 'src/stylotron/src/styles.json';
-import { cloneDeepWith, flatten } from 'lodash';
+import { capitalize, cloneDeepWith, flatten } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { GlobalState } from 'src/core/store/modules/template/reducer';
 const hyperscript = require('hyperscript');
@@ -106,9 +106,14 @@ export const compileStateToProduction = (state: GlobalState) => {
 
   const tagProcessor = (node: Node): ReturnType<typeof hyperscript> => {
     const classNameConfig = ((): ClassNameForCompile => {
-      const name = node.name.trim().replaceAll(' ', '-').toLocaleLowerCase() || node.id;
       const classNamesExisting = node.className;
       const classNamesVariabled = node.style;
+      const name =
+        node.name
+          .trim()
+          .split(' ')
+          .map((word, index) => (index === 0 ? word.toLowerCase() : capitalize(word)))
+          .join('') || 'id-' + node.id;
 
       return { name, classNamesExisting, classNamesVariabled };
     })();
@@ -125,10 +130,8 @@ export const compileStateToProduction = (state: GlobalState) => {
   const parsedTemplate = tagProcessor(state.template);
 
   return `
-    ${
-      Object.entries(state.variables).map(([key, value]) => `$${key}: ${value}`).join(`;
-`) /* todo check is the trailing semicolon ; required */
-    }
+    ${Object.entries(state.variables).map(([key, value]) => `$${key}: ${value}`).join(`;
+`)}${Object.keys(state.variables).length ? ';' : ''}
     ${classNamesForCreating
       .map(
         (config) => `
@@ -152,10 +155,15 @@ export const compileStateToProduction = (state: GlobalState) => {
       }
     }, []),
     ...Object.entries(config.classNamesVariabled)
-      .filter(([key, value]) => !!value)
+      .filter(([, value]) => !!value)
       .map(
         ([key, value]) =>
-          `${key}: $${(Object.entries(state.variables).find(([key2, value2]) => value === value2) || ['unset'])[0]}`
+          `${key
+            .split('')
+            .map((letter) => (letter.toLowerCase() === letter ? letter : `-${letter.toLowerCase()}`))
+            .join('')}: $${
+            (Object.entries(state.variables).find(([, value2]) => value === value2) || ['unset'])[0]
+          }`
       ),
   ].join(`;
   `)}
