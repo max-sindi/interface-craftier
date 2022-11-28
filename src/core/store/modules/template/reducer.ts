@@ -2,11 +2,13 @@ import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { Node } from 'src/core/Node';
 import {
-  resetHoveredNodeAction , resetStateAction , selectRootAction ,
-  updateHoveredNodeAction ,
-  updateInspectedNodeAction ,
-  updateNodeAction ,
-  updateVariablesAction ,
+  resetHoveredNodeAction,
+  resetStateAction,
+  selectRootAction,
+  updateHoveredNodeAction,
+  updateInspectedNodeAction,
+  updateNodeAction,
+  updateVariablesAction,
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
@@ -49,11 +51,19 @@ const initialGlobalState: GlobalState = {
   }),
 };
 
+export const cleanupTree = (state: GlobalState): GlobalState => {
+  const observer = (node: ExtendedNode): Node => {
+    return new Node({ ...node, children: node.children.map(observer) });
+  };
+
+  return { ...state, template: observer(state.template as ExtendedNode) };
+};
+
 const destructTree = (state: GlobalState) => {
   const nodesMap: Reducer['nodesMap'] = {};
 
   const observer = (node: Node, deepIndex: number, levelIndex: number, xPath: string, parentNode?: Node) => {
-    const extendedNode: ExtendedNode = ({
+    const extendedNode: ExtendedNode = {
       ...node,
       xPath,
       childIndex: levelIndex,
@@ -62,8 +72,9 @@ const destructTree = (state: GlobalState) => {
       children: node.children.map((childNode, index) =>
         observer(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
       ),
-    });
+    };
 
+    // add node to map
     nodesMap[extendedNode.id] = extendedNode;
 
     return extendedNode;
@@ -78,9 +89,9 @@ const destructTree = (state: GlobalState) => {
   return { nodesMap, currentState: { ...state, template: updatedTemplate } };
 };
 
-
 const initialState = (initialGlobalState?: GlobalState): Reducer => {
   const currentState = initialGlobalState || readStorageState();
+
   return {
     ...destructTree(currentState),
     hoveredNode: undefined,
@@ -94,12 +105,14 @@ export default createReducer(initialState(), (builder) => {
       state.currentState.variables = action.payload;
     })
     .addCase(updateHoveredNodeAction, (state, action) => {
-      // if(state.hoveredNode !== action.payload) {
-        state.hoveredNode = action.payload;
-      // }
+      state.hoveredNode = action.payload;
+      // update state to be sure in up to date
+      const destructed = destructTree(state.currentState);
+      state.nodesMap = destructed.nodesMap;
+      state.currentState = destructed.currentState;
     })
     .addCase(resetStateAction, () => {
-      return initialState(initialGlobalState)
+      return initialState(initialGlobalState);
     })
     .addCase(resetHoveredNodeAction, (state) => {
       state.hoveredNode = undefined;
@@ -108,17 +121,17 @@ export default createReducer(initialState(), (builder) => {
       state.inspectedNode = action.payload;
     })
     .addCase(selectRootAction, (state) => {
-      state.inspectedNode = state.currentState.template.id
+      state.inspectedNode = state.currentState.template.id;
     })
     .addCase(updateNodeAction, (state, { payload: { id, field, value, withTreeDestructing } }) => {
       (state.nodesMap[id] as any)[field] = value;
       updateNodeInTree(state, id);
-      if(withTreeDestructing) {
-        const destructed = destructTree(state.currentState)
-        state.nodesMap = destructed.nodesMap
-        state.currentState = destructed.currentState
+      if (withTreeDestructing) {
+        const destructed = destructTree(state.currentState);
+        state.nodesMap = destructed.nodesMap;
+        state.currentState = destructed.currentState;
       }
-    })
+    });
 });
 
 function updateNodeInTree(state: Reducer, id: Uuid) {

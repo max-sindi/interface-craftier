@@ -19,8 +19,8 @@ const ClassNameMultiSwitch = ({ texts, onToggle, selectedSwitch }: IClassNameMul
       fontColor={'white'}
       selectedFontColor={'#1e311b'}
       eachSwitchWidth={75}
-      height={'30px'}
-      fontSize={'13px'}
+      height={'24px'}
+      fontSize={'12px'}
     />
   );
 };

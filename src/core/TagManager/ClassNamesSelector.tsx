@@ -41,10 +41,10 @@ const ClassNamesSelector = ({
       >
         {/* 1 - Ranged */}
         <TabPanel>
-          <div>
+          <div className={`max-h-200 overflow-auto`}>
             {withRanges.map(({ name, ...branch }) => {
-              const values = ['-', ...(branch.values || [])]
-              const range = ['-', ...(branch.range || [])]
+              const values = ['', ...(branch.values || [])]
+              const range = ['', ...(branch.range || [])]
 
               return (
                 <div key={name} className={'flex'}>

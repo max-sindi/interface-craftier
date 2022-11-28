@@ -19,12 +19,17 @@ var Unit_1 = require("./Unit");
 var Media_1 = require("./Media");
 var CssUnitClassBranch = /** @class */ (function (_super) {
     __extends(CssUnitClassBranch, _super);
+    // public readonly noUnit?: boolean;
     function CssUnitClassBranch(_a) {
         var _b = _a.className, className = _b === void 0 ? '' : _b, _c = _a.property, property = _c === void 0 ? '' : _c, _d = _a.each5ValuesLimit, each5ValuesLimit = _d === void 0 ? 0 : _d, _e = _a.px, px = _e === void 0 ? false : _e, _f = _a.vh, vh = _f === void 0 ? 100 : _f, _g = _a.eachValueLimit, eachValueLimit = _g === void 0 ? 50 : _g, _h = _a.percent, percent = _h === void 0 ? 0 : _h, _j = _a.minus, minus = _j === void 0 ? false : _j, 
         // todo move pseudo and media  to separate js class
         _k = _a.decoratorAfter, 
         // todo move pseudo and media  to separate js class
-        decoratorAfter = _k === void 0 ? true : _k, _l = _a.decoratorBefore, decoratorBefore = _l === void 0 ? true : _l, _m = _a.media, media = _m === void 0 ? false : _m, _o = _a.noUnit, noUnit = _o === void 0 ? false : _o, _p = _a.classNameCreator, classNameCreator = _p === void 0 ? function (str) { return str; } : _p;
+        decoratorAfter = _k === void 0 ? true : _k, _l = _a.decoratorBefore, decoratorBefore = _l === void 0 ? true : _l, _m = _a.media, media = _m === void 0 ? false : _m, 
+        // noUnit = false,
+        _o = _a.classNameCreator, 
+        // noUnit = false,
+        classNameCreator = _o === void 0 ? function (str) { return str; } : _o;
         var _this = _super.call(this, media) || this;
         _this.className = className;
         _this.property = property;

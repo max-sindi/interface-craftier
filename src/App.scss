@@ -30,26 +30,29 @@ $margin-color: #ffc06e;
   z-index: -1;
 }
 
-input,
-select,
-button,
-textarea {
-  background: #449147;
-  color: #fff;
-  border: 0 solid #fff;
-  font-weight: 300;
-  padding: 7px;
-}
+.html-manager {
+  input,
+  select,
+  button,
+  textarea {
+    background: #449147;
+    color: #fff;
+    border: 0 solid #fff;
+    font-weight: 300;
+    padding: 7px;
+    border-radius: 5px;
+  }
 
-input, textarea {
-  background: #44914730;
-  color: #111111;
-  outline: 2px solid #FF9A00;
+  input, textarea {
+    background: #44914730;
+    color: #111111;
+    outline: 2px solid #FF9A00;
+  }
 }
 
 #toolbar {
   background: #fff;
-  min-width: 740px;
+  min-width: 800px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 5px #a3bce350;
   padding: 5px;
@@ -61,7 +64,7 @@ input, textarea {
 }
 
 .tabPanel {
-  padding: 10px 15px 20px;
+  padding: 10px 15px 10px;
 }
 
 .edit-mode-enabled {
@@ -246,6 +249,10 @@ input, textarea {
   .react-resizable-resize-handle-component {
     background-color: red;
   }
+}
+
+.react-tabs__tab-list.react-tabs__tab-list {
+  margin-bottom: 0;
 }
 //.resizeBoxReverse .react-resizable-handle-w {
 //  transform: rotate(-45deg);

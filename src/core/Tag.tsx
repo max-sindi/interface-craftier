@@ -3,9 +3,9 @@ import clsx from 'classnames';
 import { Node } from './Node';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  createNodeSelector ,
-  hoveredNodeSelector ,
-  inspectedNodeSelector
+  createNodeSelector,
+  hoveredNodeSelector,
+  inspectedNodeSelector,
 } from 'src/core/store/modules/template/selector';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import {
@@ -16,9 +16,6 @@ import {
 import LiveTagManager from 'src/core/LiveTagManager';
 const hyperscript = require('react-hyperscript');
 
-//todo move to utils
-// const logObjectFields = (object: any) => Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
-
 type Props = {
   deepLevel: number;
   indexInLevel: number;
@@ -28,14 +25,14 @@ type Props = {
 
 function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const hoveredNodeId = useSelector(hoveredNodeSelector);
-  const inspectedNodeId = useSelector(inspectedNodeSelector)
-  const isHovered = hoveredNodeId === nodeId || inspectedNodeId ===  nodeId;
-  const isThisInspectingNode = inspectedNodeId === nodeId
+  const inspectedNodeId = useSelector(inspectedNodeSelector);
+  const isHovered = hoveredNodeId === nodeId || inspectedNodeId === nodeId;
+  const isThisInspectingNode = inspectedNodeId === nodeId;
   const canTagHaveChildren = (tag: Node['tag']) => !['input', 'img'].includes(tag);
   const dispatch = useDispatch();
   const nodeSelector = useCallback(createNodeSelector(nodeId), [nodeId]);
   const nodeState = useSelector(nodeSelector);
-  const { className } = nodeState
+  const { className } = nodeState;
 
   const updateInspectedNode = (node: Node) => dispatch(updateInspectedNodeAction(node.id));
   const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));

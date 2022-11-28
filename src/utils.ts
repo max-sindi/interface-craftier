@@ -1,9 +1,11 @@
 import { UnitName } from 'src/stylotron/src/Unit';
-import { ClassNameRecord , Node , StyleRecord } from 'src/core/Node';
+import { ClassNameRecord, Node, StyleRecord } from 'src/core/Node';
 import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
 import styles from 'src/stylotron/src/styles.json';
-import { cloneDeepWith } from 'lodash';
+import { cloneDeepWith, flatten } from 'lodash';
 import { v4 as uuid } from 'uuid';
+import { GlobalState } from 'src/core/store/modules/template/reducer';
+const hyperscript = require('hyperscript');
 
 export type ClassNameChange = {
   changeClassName: (newClassRecord: ClassNameRecord) => void;
@@ -11,9 +13,9 @@ export type ClassNameChange = {
 };
 
 export type StyleChange = {
-  changeStyles: (newStyleRecord: Partial<StyleRecord>) => void
-  styleRecord: StyleRecord
-}
+  changeStyles: (newStyleRecord: Partial<StyleRecord>) => void;
+  styleRecord: StyleRecord;
+};
 
 export interface ClassNameInterface {
   classNameRoot: keyof ClassNameRecord;
@@ -52,9 +54,9 @@ export const findNewClassName = (
   className: ClassNameRecord,
   classNameInterface: ClassNameInterface,
   changeClassName: ClassNameChange['changeClassName'],
-  delta: number,
+  delta: number
 ) => {
-  const { classNameRoot, defaultClassName, unit } = classNameInterface
+  const { classNameRoot, defaultClassName, unit } = classNameInterface;
   const classBranch = styles.classBranches.find((branch) => branch.name === classNameRoot);
   if (classBranch) {
     const units = classBranch.units && classBranch.units[unit];
@@ -68,20 +70,23 @@ export const findNewClassName = (
   }
 };
 
-export const deleteField = (obj: Record<any , any>, field: string) => {
-  const freshState = { ...obj }
-  delete freshState[field]
-  return freshState
-}
+export const deleteField = (obj: Record<any, any>, field: string) => {
+  const freshState = { ...obj };
+  delete freshState[field];
+  return freshState;
+};
 
 export const createDeleter =
   (indexInLevel: number) =>
-    (prev: Node): Node => {
-      return {
-        ...prev,
-        children: prev.children.filter((i, index) => index !== indexInLevel),
-      };
+  (prev: Node): Node => {
+    return {
+      ...prev,
+      children: prev.children.filter((i, index) => index !== indexInLevel),
     };
+  };
+
+export const logObjectFields = (object: any) =>
+  Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
 
 export const cloneDeepWithUniqueId = (data: Node): Node =>
   cloneDeepWith(data, (target: Node) =>
@@ -89,3 +94,75 @@ export const cloneDeepWithUniqueId = (data: Node): Node =>
       ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
       : target
   );
+
+interface ClassNameForCompile {
+  name: string;
+  classNamesExisting: ClassNameRecord;
+  classNamesVariabled: StyleRecord;
+}
+
+export const compileStateToProduction = (state: GlobalState) => {
+  const classNamesForCreating: ClassNameForCompile[] = [];
+
+  const tagProcessor = (node: Node): ReturnType<typeof hyperscript> => {
+    const classNameConfig = ((): ClassNameForCompile => {
+      const name = node.name.trim().replaceAll(' ', '-').toLocaleLowerCase() || node.id;
+      const classNamesExisting = node.className;
+      const classNamesVariabled = node.style;
+
+      return { name, classNamesExisting, classNamesVariabled };
+    })();
+
+    classNamesForCreating.push(classNameConfig);
+
+    return hyperscript(
+      node.tag,
+      { ...node.attrs, className: classNameConfig.name },
+      node.isText ? node.text : node.children.map(tagProcessor)
+    );
+  };
+
+  const parsedTemplate = tagProcessor(state.template);
+
+  return `
+    ${
+      Object.entries(state.variables).map(([key, value]) => `$${key}: ${value}`).join(`;
+`) /* todo check is the trailing semicolon ; required */
+    }
+    ${classNamesForCreating
+      .map(
+        (config) => `
+.${config.name} {
+  ${[
+    ...Object.values(config.classNamesExisting).reduce((acc, className) => {
+      if (className) {
+        let classNameValue;
+
+        styles.classBranches.forEach((branch) =>
+          (branch.units ? flatten(Object.values(branch.units)) : branch.classes)?.forEach((classNameConfig) => {
+            if (classNameConfig.name === className) {
+              classNameValue = classNameConfig.value; // set found className
+            }
+          })
+        );
+
+        return !classNameValue ? acc : [...acc, classNameValue];
+      } else {
+        return acc;
+      }
+    }, []),
+    ...Object.entries(config.classNamesVariabled)
+      .filter(([key, value]) => !!value)
+      .map(
+        ([key, value]) =>
+          `${key}: $${(Object.entries(state.variables).find(([key2, value2]) => value === value2) || ['unset'])[0]}`
+      ),
+  ].join(`;
+  `)}
+}
+`
+      )
+      .join('')}
+    ${parsedTemplate.outerHTML}
+  `;
+};

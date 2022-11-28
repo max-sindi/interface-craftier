@@ -1,8 +1,14 @@
 import React , { useCallback } from 'react';
 import EachTagManager from './TagManager/EachTagManager';
 import { useDispatch, useSelector } from 'react-redux';
-import { createNodeSelector , inspectedNodeSelector } from 'src/core/store/modules/template/selector';
+import {
+  createNodeSelector ,
+  globalStateSelector ,
+  inspectedNodeSelector
+} from 'src/core/store/modules/template/selector';
 import { resetStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
+import { compileStateToProduction } from 'src/utils';
+import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
@@ -12,8 +18,9 @@ const HtmlManager = () => {
   const resetState = () => dispatch(resetStateAction());
   const selectRoot = () => dispatch(selectRootAction())
 
+
   return (
-    <>
+    <div className={'html-manager'}>
       <div id="toolbar" className={'fixed b-20 l-50-p transform-left-center'}>
         {(!inspectedNodeId || !nodeState) ? (
           <div>
@@ -32,10 +39,12 @@ const HtmlManager = () => {
       </div>
 
       {/* Reset State button */}
-      <button className="fixed t-30 r-30 pointer" onClick={resetState}>
-        Reset state
-      </button>
-    </>
+      {/*<button className="fixed t-30 r-30 pointer" onClick={resetState}>*/}
+      {/*  Reset state*/}
+      {/*</button>*/}
+      <CopyToClipboardToolbar />
+
+    </div>
   );
 };
 

@@ -55,6 +55,7 @@ class ClassesStorage {
             name: branch.className,
             range: branch.classes.map(({ name }) => name),
             values: branch.values,
+            classes: branch.classes,
           }
         }
       }),

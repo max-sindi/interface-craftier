@@ -4,7 +4,6 @@ import { StandardLonghandProperties } from 'csstype';
 
 export type ClassNameRecord = Partial<Record<'w' | 'h' | 'pt' | 'pb' | 'pl' | 'pr' | 'mt' | 'mr' | 'mb' | 'ml' | 't' | 'b' | 'r' | 'l' | string, string>>
 export type StyleRecord = StandardLonghandProperties
-// export type StyleRecord = Record<string , string>
 export type Attrs = Record<string , string>
 
 export class Node {
@@ -25,7 +24,7 @@ export class Node {
     this.className = params.className || {}
     this.attrs = params.attrs || {}
     this.style = params.style || {}
-    this.tag = params.tag || params.isText ? 'span' : 'div'
+    this.tag = params.tag || (params.isText ? 'span' : 'div')
     this.isText = params.isText || false
     this.text = params.text || ''
   }

@@ -58,7 +58,8 @@ var ClassesStorage = /** @class */ (function () {
                             var name = _a.name;
                             return name;
                         }),
-                        values: branch.values
+                        values: branch.values,
+                        classes: branch.classes
                     };
                 }
             })
