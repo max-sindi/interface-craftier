@@ -24,38 +24,44 @@ import { Uuid } from 'src/core/store/modules/template/reducer';
 import Resizers from 'src/core/TagManager/Resize/Resizers';
 import { useTagApi } from 'src/core/TagManager/useTagApi';
 import TagLabel from 'src/core/TagManager/TagLabel';
+import TreeNavigation from 'src/core/TagManager/TreeNavigation';
+import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 
 export type IEachTagManagerProps = {
-  nodeId: Uuid;
+  // nodeId: Uuid;
 };
 
-function EachTagManager({ nodeId }: IEachTagManagerProps) {
-  const tagApi = useTagApi(nodeId);
+function EachTagManager({ }: IEachTagManagerProps) {
+  // const nodeApi = useTagApi(nodeId);
   const {
-    nodeState,
-    unselectCurrentNode,
-    selectParent,
-    selectChild,
-    onHighlight,
-    createChangeHandler,
-    deleteChild,
-    changeText,
-    changeClassNamesList,
-    changeStyles,
-    addBlockNode,
-    addTextNode,
-    changeName,
-    onMouseEnter,
-    rendererTagSelect,
-  } = tagApi;
+    parentNodeApi,
+    nodeApi: {
+      nodeState,
+      unselectCurrentNode,
+      selectParent,
+      // selectChild,
+      onHighlight,
+      createChangeHandler,
+      // deleteChild,
+      // changeText,
+      changeClassNamesList,
+      changeStyles,
+      // addBlockNode,
+      // addTextNode,
+      // changeName,
+      onMouseEnter,
+      rendererTagSelect,
+    },
+  } = useContext(EachTagManagerProviderContext);
 
+  const nodeId = nodeState.id
   const { parentId } = nodeState;
-  const parentNodeApi = useTagApi(parentId || '0');
+  // const parentNodeApi = useTagApi(parentId || '0');
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
   const [tabIndex, setTabIndex] = useState(0);
 
   const deleteThisNode = () => {
-    parentNodeApi.deleteChild(nodeState.childIndex);
+    parentNodeApi && parentNodeApi.deleteChild(nodeState.childIndex);
     selectParent();
   };
   // addNewChildFromPasted = () => {
@@ -75,7 +81,6 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
 
   return (
     <div className={cc('relative min-h-20')} key={nodeId}>
-
       {/* Toggle or Expand menu */}
       <div className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
@@ -182,62 +187,7 @@ function EachTagManager({ nodeId }: IEachTagManagerProps) {
             <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5 ml-a pointer`} />
           </Tooltip>
         </div>
-        {/* Name */}
-        <div className="flex pt-10 pb-5">
-          <div>{'Name: '}</div>
-          <EditableField
-            notEditElement={nodeState.name || '-'}
-            editElement={<input type="text" value={nodeState.name} onChange={changeName} autoFocus={true} />}
-          />
-        </div>
-        {/* Children */}
-        {/* Text */}
-        <div data-name={'children-navigation'} className={'flex'}>
-          {nodeState.isText ? (
-            <>
-              <div>{'Text: '}</div>
-              <EditableField
-                notEditElement={nodeState.text}
-                editElement={
-                  <div>
-                    <input type="text" value={nodeState.text} onChange={changeText} autoFocus={true} />
-                  </div>
-                }
-              />
-            </>
-          ) : (
-            /* Children */
-            <div className={'flex align-center '}>
-              <div>{'Children: '}</div>
-              <div className="flex flex-column">
-                <IconButton centering>
-                  <IoMdAdd className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
-                </IconButton>
-                <IconButton centering>
-                  <TbPlaylistAdd className={'pointer'} onClick={addTextNode} title={'Add text child'} />
-                </IconButton>
-              </div>
-              {/* Map children */}
-              <div className={'flex flex-wrap'}>
-                {nodeState.children.map((child, index) => (
-                  <Tooltip
-                    key={child.id}
-                    placement={'top'}
-                    overlay={() => <TagChildMenu key={child.id} deleteChild={() => deleteChild(index)} />}
-                  >
-                    <TagLabel node={child} nodeApi={tagApi} onClick={() => selectChild(child)} />
-                  </Tooltip>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-        {parentNodeApi.nodeState && (
-          <div className="flex">
-            Parent:
-            <TagLabel node={parentNodeApi.nodeState} nodeApi={parentNodeApi} onClick={selectParent} />
-          </div>
-        )}
+        <TreeNavigation />
       </div>
     </div>
   );

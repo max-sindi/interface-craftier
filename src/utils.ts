@@ -108,7 +108,7 @@ export const compileStateToProduction = (state: GlobalState) => {
     const classNameConfig = ((): ClassNameForCompile => {
       const classNamesExisting = node.className;
       const classNamesVariabled = node.style;
-      const name =
+      const name = !node.name ? '' :
         node.name
           .trim()
           .split(' ')
@@ -118,11 +118,16 @@ export const compileStateToProduction = (state: GlobalState) => {
       return { name, classNamesExisting, classNamesVariabled };
     })();
 
-    classNamesForCreating.push(classNameConfig);
+    const attrs = { ...node.attrs }
+
+    if(classNameConfig.name) {
+      classNamesForCreating.push(classNameConfig);
+      attrs.className = classNameConfig.name
+    }
 
     return hyperscript(
       node.tag,
-      { ...node.attrs, className: classNameConfig.name },
+      attrs,
       node.isText ? node.text : node.children.map(tagProcessor)
     );
   };

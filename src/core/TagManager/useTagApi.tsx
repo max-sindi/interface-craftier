@@ -19,6 +19,7 @@ export const useTagApi = (nodeId: Uuid) => {
     [nodeState?.parentId]
   );
   const parentNodeState = useSelector(parentNodeSelector);
+  // const parentNodeApi = useTagApi(parentNodeState.id)
   const updateInspectedNode = (node?: Node) => dispatch(updateInspectedNodeAction(node?.id));
   const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
@@ -93,6 +94,8 @@ export const useTagApi = (nodeId: Uuid) => {
     createNode,
     changeName,
     changeTag,
-    rendererTagSelect,
+    rendererTagSelect
   }
 }
+
+export type NodeApi = ReturnType<typeof useTagApi>

@@ -9,6 +9,7 @@ import {
 import { resetStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
 import { compileStateToProduction } from 'src/utils';
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
+import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
@@ -34,7 +35,9 @@ const HtmlManager = () => {
             <div className={`text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
           </div>
         ) : (
-          <EachTagManager nodeId={inspectedNodeId} />
+          <EachTagManagerProvider nodeId={nodeState.id}>
+            <EachTagManager />
+          </EachTagManagerProvider>
         )}
       </div>
 

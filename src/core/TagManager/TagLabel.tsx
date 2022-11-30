@@ -3,15 +3,17 @@ import { BsFillPenFill } from 'react-icons/bs';
 import { IoMdSquareOutline } from 'react-icons/io';
 import { capitalize } from 'lodash';
 import { ExtendedNode } from 'src/core/ExtendedNode';
-import { useTagApi } from 'src/core/TagManager/useTagApi';
+import { NodeApi , useTagApi } from 'src/core/TagManager/useTagApi';
 
 interface ITagLabelProps {
   node: ExtendedNode,
-  nodeApi: ReturnType<typeof useTagApi>,
+  // nodeApi: NodeApi,
   onClick: () => void
 }
 
-const TagLabel = ( { node, nodeApi, onClick } : ITagLabelProps ) => {
+const TagLabel = ( { node, onClick } : ITagLabelProps ) => {
+  const nodeApi = useTagApi(node.id)
+
   return (
     <div
       className={'flex align-center pointer ml-5 mb-5'}
