@@ -187,6 +187,7 @@ function EachTagManager({ }: IEachTagManagerProps) {
             <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5 ml-a pointer`} />
           </Tooltip>
         </div>
+
         <TreeNavigation />
       </div>
     </div>

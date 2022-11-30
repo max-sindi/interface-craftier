@@ -9,6 +9,7 @@ const templateSelector = createSelector(globalStateSelector, state => state.temp
 const variablesSelector = createSelector(globalStateSelector, state => state.variables)
 const inspectedNodeSelector = createSelector(reducerSelector, state => state.inspectedNode)
 const hoveredNodeSelector = createSelector(reducerSelector, state => state.hoveredNode)
+const nodesMapSelector = createSelector(reducerSelector, state => state.nodesMap)
 const createNodeSelector = (id: Uuid) => createSelector(reducerSelector, state => state.nodesMap[id])
 
 export {
@@ -17,5 +18,6 @@ export {
   variablesSelector,
   inspectedNodeSelector,
   hoveredNodeSelector,
-  createNodeSelector
+  createNodeSelector,
+  nodesMapSelector
 }

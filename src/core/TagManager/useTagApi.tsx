@@ -20,9 +20,14 @@ export const useTagApi = (nodeId: Uuid) => {
   );
   const parentNodeState = useSelector(parentNodeSelector);
   // const parentNodeApi = useTagApi(parentNodeState.id)
+  const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId))
   const updateInspectedNode = (node?: Node) => dispatch(updateInspectedNodeAction(node?.id));
   const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
+  const highlightThisNode = (event: any) => {
+    event.stopPropagation();
+    updateHoveredNode(nodeState);
+  }
   const transformField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
@@ -94,7 +99,9 @@ export const useTagApi = (nodeId: Uuid) => {
     createNode,
     changeName,
     changeTag,
-    rendererTagSelect
+    rendererTagSelect,
+    inspectThisNode,
+    highlightThisNode,
   }
 }
 
