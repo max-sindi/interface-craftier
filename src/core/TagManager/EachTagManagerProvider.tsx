@@ -15,8 +15,8 @@ interface IEachTagManagerProviderProps {
 export const EachTagManagerProviderContext = createContext({} as IEachTagManagerContext);
 
 const EachTagManagerProvider = ({ children, nodeId }: IEachTagManagerProviderProps) => {
-  const nodeApi = useTagApi(nodeId);
-  const parentNodeApi = useTagApi(nodeApi.nodeState.parentId || '');
+  const nodeApi: NodeApi = useTagApi(nodeId);
+  const parentNodeApi: NodeApi = useTagApi(nodeApi.nodeState.parentId || '');
 
   return (
     <EachTagManagerProviderContext.Provider

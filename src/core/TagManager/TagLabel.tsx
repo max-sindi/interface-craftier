@@ -1,30 +1,28 @@
-import React , { useContext } from 'react';
+import React, { useContext } from 'react';
 import { BsFillPenFill } from 'react-icons/bs';
 import { IoMdSquareOutline } from 'react-icons/io';
 import { capitalize } from 'lodash';
-import { ExtendedNode } from 'src/core/ExtendedNode';
-import { NodeApi , useTagApi } from 'src/core/TagManager/useTagApi';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 
-interface ITagLabelProps {
-  // node: ExtendedNode,
-  // nodeApi: NodeApi,
-  // onClick: () => void
-  onMouseLeave: (event: any) => void
-}
+interface ITagLabelProps {}
 
-const TagLabel = ( { onMouseLeave } : ITagLabelProps ) => {
-  const { nodeApi: { nodeState, inspectThisNode, highlightThisNode } } = useContext(EachTagManagerProviderContext)
+const TagLabel = (props: ITagLabelProps) => {
+  const {
+    nodeApi: { nodeState, inspectThisNode, highlightThisNode, highlightInspectedNodeAction },
+  } = useContext(EachTagManagerProviderContext);
 
   return (
     <div
-      className={'flex align-center pointer ml-5 mb-5'}
+      className={'w-100-p h-100-p flex align-center pointer ml-5 pl-15'}
       onClick={inspectThisNode}
       onMouseEnter={highlightThisNode}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={highlightInspectedNodeAction}
     >
-      {nodeState.isText ? <BsFillPenFill /> : <IoMdSquareOutline />}
-      {nodeState.isText ? nodeState.text?.slice(0, 6) + '...' : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})`}
+      {nodeState.isText ? <BsFillPenFill /> : <IoMdSquareOutline className={'mr-5'} />}
+      {nodeState.isText
+        ? nodeState.text?.slice(0, 6) + '...' // Tag text
+        : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})` // Text tag
+      }
     </div>
   );
 };

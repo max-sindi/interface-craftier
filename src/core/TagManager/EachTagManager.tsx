@@ -14,49 +14,31 @@ import { BsArrowsCollapse, BsArrowsExpand, /*BsArrowBarDown, BsArrowBarRight, */
 import { BiLayer } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdSquareOutline, IoMdReturnLeft, IoMdAdd } from 'react-icons/io';
-import { TbPlaylistAdd } from 'react-icons/tb';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import EditableField from './EditableField';
-import TagChildMenu from './TagChildMenu';
-import IconButton from './IconButton';
-import { Uuid } from 'src/core/store/modules/template/reducer';
 import Resizers from 'src/core/TagManager/Resize/Resizers';
-import { useTagApi } from 'src/core/TagManager/useTagApi';
-import TagLabel from 'src/core/TagManager/TagLabel';
 import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 
-export type IEachTagManagerProps = {
-  // nodeId: Uuid;
-};
+export type IEachTagManagerProps = {};
 
-function EachTagManager({ }: IEachTagManagerProps) {
-  // const nodeApi = useTagApi(nodeId);
+function EachTagManager(props: IEachTagManagerProps) {
   const {
     parentNodeApi,
     nodeApi: {
       nodeState,
       unselectCurrentNode,
       selectParent,
-      // selectChild,
       onHighlight,
       createChangeHandler,
-      // deleteChild,
-      // changeText,
       changeClassNamesList,
       changeStyles,
-      // addBlockNode,
-      // addTextNode,
-      // changeName,
       onMouseEnter,
       rendererTagSelect,
     },
   } = useContext(EachTagManagerProviderContext);
 
-  const nodeId = nodeState.id
-  const { parentId } = nodeState;
-  // const parentNodeApi = useTagApi(parentId || '0');
+  const nodeId = nodeState.id;
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -77,10 +59,8 @@ function EachTagManager({ }: IEachTagManagerProps) {
   //     transformField((node) => ({ ...node, children: [...nodeState.children, cloneDeepWithUniqueId(parsedData)] }));
   // };
 
-  // console.log(nodeState);
-
   return (
-    <div className={cc('relative min-h-20')} key={nodeId}>
+    <div className={cc('relative min-h-20')}>
       {/* Toggle or Expand menu */}
       <div className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
@@ -136,7 +116,7 @@ function EachTagManager({ }: IEachTagManagerProps) {
                   onChange={createChangeHandler('attrs')}
                   value={nodeState.attrs}
                   fields={attrsExisting}
-                  title={'Attri-butes: '}
+                  title={'Attributes: '}
                 />
               </div>
             </TabPanel>
@@ -149,6 +129,7 @@ function EachTagManager({ }: IEachTagManagerProps) {
             </TabList>
           </Tabs>
         )}
+
         <div className="flex align-center pt-5">
           <Tooltip overlay={'Level Up'} placement={'top'}>
             <div onClick={selectParent} className={cc('flex align-center pr-5 pointer')}>
@@ -186,6 +167,10 @@ function EachTagManager({ }: IEachTagManagerProps) {
           <Tooltip overlay={'Unselect'} placement={'top'}>
             <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5 ml-a pointer`} />
           </Tooltip>
+        </div>
+
+        <div className="relative mt-10">
+          <div className={`tree-navigation-shadow absolute t-0 l-0 w-100-p`} />
         </div>
 
         <TreeNavigation />

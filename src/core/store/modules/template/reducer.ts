@@ -2,13 +2,14 @@ import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { Node } from 'src/core/Node';
 import {
-  resetHoveredNodeAction,
-  resetStateAction,
-  selectRootAction,
-  updateHoveredNodeAction,
-  updateInspectedNodeAction,
-  updateNodeAction,
-  updateVariablesAction,
+  highlightInspectedNodeAction ,
+  resetHoveredNodeAction ,
+  resetStateAction ,
+  selectRootAction ,
+  updateHoveredNodeAction ,
+  updateInspectedNodeAction ,
+  updateNodeAction ,
+  updateVariablesAction ,
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
@@ -116,6 +117,9 @@ export default createReducer(initialState(), (builder) => {
     })
     .addCase(resetHoveredNodeAction, (state) => {
       state.hoveredNode = undefined;
+    })
+    .addCase(highlightInspectedNodeAction, (state) => {
+      state.hoveredNode = state.inspectedNode;
     })
     .addCase(updateInspectedNodeAction, (state, action) => {
       state.inspectedNode = action.payload;

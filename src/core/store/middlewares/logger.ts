@@ -1,5 +1,6 @@
 import { createLogger } from 'redux-logger';
 import { isFailure , isSuccess } from 'src/core/store/utils/buidActions';
+import { resetHoveredNodeAction , updateHoveredNodeAction } from 'src/core/store/modules/template/actions';
 
 export default createLogger({
   collapsed: true,
@@ -9,7 +10,9 @@ export default createLogger({
         return 'green';
       } else if (isFailure(type)) {
         return 'red';
-      } else {
+      } else if ([resetHoveredNodeAction.toString(), updateHoveredNodeAction.toString()].includes(type)){
+        return 'transparent'
+      } {
         return '';
       }
     },

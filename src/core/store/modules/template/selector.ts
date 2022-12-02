@@ -1,6 +1,7 @@
-import { createSelector } from '@reduxjs/toolkit';
+import { createSelector } from 'reselect';
 import { RootReducer } from 'src/core/store/rootReducer';
 import { Uuid } from 'src/core/store/modules/template/reducer';
+import { ExtendedNode } from 'src/core/ExtendedNode';
 
 const reducerSelector = (state: RootReducer) => state.template;
 
@@ -10,6 +11,9 @@ const variablesSelector = createSelector(globalStateSelector, state => state.var
 const inspectedNodeSelector = createSelector(reducerSelector, state => state.inspectedNode)
 const hoveredNodeSelector = createSelector(reducerSelector, state => state.hoveredNode)
 const nodesMapSelector = createSelector(reducerSelector, state => state.nodesMap)
+const inspectedNodeStateSelector = createSelector(nodesMapSelector, inspectedNodeSelector, (map, inspectedNodeId): ExtendedNode | undefined => {
+  return map[inspectedNodeId as Uuid]
+})
 const createNodeSelector = (id: Uuid) => createSelector(reducerSelector, state => state.nodesMap[id])
 
 export {
@@ -19,5 +23,6 @@ export {
   inspectedNodeSelector,
   hoveredNodeSelector,
   createNodeSelector,
-  nodesMapSelector
+  nodesMapSelector,
+  inspectedNodeStateSelector,
 }

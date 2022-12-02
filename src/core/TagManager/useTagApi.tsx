@@ -4,6 +4,7 @@ import React , { useCallback , useMemo } from 'react';
 import { createNodeSelector } from 'src/core/store/modules/template/selector';
 import { Node } from 'src/core/Node';
 import {
+  highlightInspectedNodeAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
   updateNodeAction
@@ -28,6 +29,7 @@ export const useTagApi = (nodeId: Uuid) => {
     event.stopPropagation();
     updateHoveredNode(nodeState);
   }
+  const highlightInspectedNode = () => dispatch(highlightInspectedNodeAction())
   const transformField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
@@ -102,6 +104,7 @@ export const useTagApi = (nodeId: Uuid) => {
     rendererTagSelect,
     inspectThisNode,
     highlightThisNode,
+    highlightInspectedNodeAction,
   }
 }
 

@@ -25,6 +25,11 @@ export interface ClassNameInterface {
   integer: number;
 }
 
+export const levelDeepPx = 15;
+export const labelHeight = 26;
+export const labelFontSize = 20;
+export const greenColor = '#449147'
+
 const isNumber = (value: string | number) => !Number.isNaN(+value);
 
 export const extractNumber = (str: string) =>
@@ -176,6 +181,8 @@ export const compileStateToProduction = (state: GlobalState) => {
 `
       )
       .join('')}
+
     ${parsedTemplate.outerHTML}
   `;
 };
+
