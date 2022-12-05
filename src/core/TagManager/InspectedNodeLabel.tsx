@@ -1,13 +1,11 @@
 import React, { useContext } from 'react';
-import { labelFontSize, levelDeepPx } from 'src/utils';
+import { labelFontSize } from 'src/utils';
 import EditableField from 'src/core/TagManager/EditableField';
 import IconButton from 'src/core/TagManager/IconButton';
 import { IoMdAdd } from 'react-icons/io';
 import { TbPlaylistAdd } from 'react-icons/tb';
-import RecursivelyRenderTagLabels from 'src/core/TagManager/RecursivelyRenderTagLabels';
-import { useSelector } from 'react-redux';
-import { nodesMapSelector } from 'src/core/store/modules/template/selector';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
+import FocuserInput from 'src/core/TagManager/FocuserInput';
 
 interface IInspectedNodeLabelProps {}
 
@@ -17,12 +15,11 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
   } = useContext(EachTagManagerProviderContext);
 
   return (
-    <div style={{ fontSize: labelFontSize + 1 }}>
-      <input type="text" className="label-focus" key={nodeState.id} autoFocus={true} />
+    <div style={{ fontSize: labelFontSize + 1 }} data-name={'InspectedNodeLabel'}>
       {/* Name */}
       {!nodeState.isText && (
         <div className="flex">
-          <div className="flex w-400">
+          <div className="flex" >
             <div>{'Name: '}</div>
             <EditableField
               notEditElement={nodeState.name || '-'}
@@ -70,6 +67,9 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
           </div>
         )}
       </div>
+
+      {/* Hidden */}
+      <FocuserInput key={nodeState.id} />
     </div>
   );
 };

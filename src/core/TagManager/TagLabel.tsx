@@ -3,17 +3,27 @@ import { BsFillPenFill } from 'react-icons/bs';
 import { IoMdSquareOutline } from 'react-icons/io';
 import { capitalize } from 'lodash';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
+import { levelDeepPx } from 'src/utils';
+import { useSelector } from 'react-redux';
+import { inspectedNodeDeepnessSelector } from 'src/core/store/modules/template/selector';
 
 interface ITagLabelProps {}
 
 const TagLabel = (props: ITagLabelProps) => {
   const {
-    nodeApi: { nodeState, inspectThisNode, highlightThisNode, highlightInspectedNodeAction },
+    nodeApi: { nodeState, inspectThisNode, highlightThisNode, highlightInspectedNodeAction, deepness },
   } = useContext(EachTagManagerProviderContext);
+  const inspectedNodeDeepness = useSelector(inspectedNodeDeepnessSelector);
+  const remotenessFromInspectedNode = deepness - inspectedNodeDeepness;
 
   return (
     <div
-      className={'w-100-p h-100-p flex align-center pointer ml-5 pl-15'}
+      data-name={'Tag label '}
+      style={{
+        paddingLeft: nodeState.deepIndex * levelDeepPx + 10,
+        transform: `rotate3d(1, 0, -0, ${0.001 * remotenessFromInspectedNode}turn)`,
+      }}
+      className={'w-100-p h-100-p flex align-center pointer pl-15'}
       onClick={inspectThisNode}
       onMouseEnter={highlightThisNode}
       onMouseLeave={highlightInspectedNodeAction}

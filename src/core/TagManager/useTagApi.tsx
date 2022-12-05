@@ -1,7 +1,11 @@
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import { useDispatch , useSelector } from 'react-redux';
 import React , { useCallback , useMemo } from 'react';
-import { createNodeSelector } from 'src/core/store/modules/template/selector';
+import {
+  createNodeSelector ,
+  inspectedNodeStateSelector , nodeDeepnessSelector ,
+  nodesMapSelector
+} from 'src/core/store/modules/template/selector';
 import { TagNode } from 'src/core/TagNode';
 import {
   highlightInspectedNodeAction ,
@@ -10,6 +14,7 @@ import {
   updateNodeAction
 } from 'src/core/store/modules/template/actions';
 import { tags } from 'src/core/TagManager/config';
+import { createSelector } from 'reselect';
 
 export const useTagApi = (nodeId: Uuid) => {
   const dispatch = useDispatch();
@@ -19,6 +24,13 @@ export const useTagApi = (nodeId: Uuid) => {
     () => (nodeState?.parentId ? createNodeSelector(nodeState.parentId) : () => undefined),
     [nodeState?.parentId]
   );
+  const deepnessSelector = useCallback(createSelector(
+    nodeSelector,
+    nodesMapSelector,
+    nodeDeepnessSelector
+  ), [nodeSelector])
+  const deepness = useSelector(deepnessSelector)
+
   const parentNodeState = useSelector(parentNodeSelector);
   // const parentNodeApi = useTagApi(parentNodeState.id)
   const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId))
@@ -105,6 +117,7 @@ export const useTagApi = (nodeId: Uuid) => {
     inspectThisNode,
     highlightThisNode,
     highlightInspectedNodeAction,
+    deepness,
   }
 }
 

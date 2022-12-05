@@ -79,36 +79,19 @@ export const collectNodeSiblingsChildren = (
 
 export const nodeDeepnessSelector = (inspectedNodeState: ExtendedNode | undefined, nodesMap: NodesMap): number => {
   if (inspectedNodeState) {
-    return collectsNodeParents(inspectedNodeState, nodesMap).reduce((acc, cur) => {
-      return (
-        1 + acc + cur.childIndex + collectNodeSiblingsChildren(cur, nodesMap, collectNodePrependingSiblings).length
-      );
-    }, 0)
-    + 1
-    +
+    return (
+      collectsNodeParents(inspectedNodeState, nodesMap).reduce((acc, cur) => {
+        return (
+          1 + acc + cur.childIndex + collectNodeSiblingsChildren(cur, nodesMap, collectNodePrependingSiblings).length
+        );
+      }, 0) +
+      1 +
       collectNodePrependingSiblings(inspectedNodeState, nodesMap).length +
-    collectNodeSiblingsChildren(inspectedNodeState, nodesMap, collectNodePrependingSiblings).length
+      collectNodeSiblingsChildren(inspectedNodeState, nodesMap, collectNodePrependingSiblings).length
+    );
   } else {
     return 0;
   }
-  //   let inspectedNodeReached = false;
-  //   const recursivelyCountChildrenReducer = (acc: number, node: ExtendedNode, index: number, arr: ExtendedNode[]): number => {
-  //     if(inspectedNodeReached) return acc
-  //     if (node.id === inspectedNodeState.id) {
-  //       inspectedNodeReached = true;
-  //     }
-  //     // return (
-  //     //   acc +
-  //     //   (!inspectedNodeReached ? 0 : index - arr.length )  +
-  //     //   ((node.childrenCollapsed || inspectedNodeReached)
-  //     //     ? 0
-  //     //     : node.children.reduce(recursivelyCountChildrenReducer, acc))
-  //     // );
-  //   };
-  //   return rootTemplate.children.reduce(recursivelyCountChildrenReducer, 1);
-  // } else {
-  //   return 0;
-  // }
 };
 
 const inspectedNodeDeepnessSelector = createSelector(
@@ -116,6 +99,7 @@ const inspectedNodeDeepnessSelector = createSelector(
   nodesMapSelector,
   nodeDeepnessSelector
 );
+
 const createNodeSelector = (id: Uuid) => createSelector(reducerSelector, (state) => state.nodesMap[id]);
 
 export {
