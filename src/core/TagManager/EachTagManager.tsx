@@ -40,7 +40,7 @@ function EachTagManager(props: IEachTagManagerProps) {
 
   const nodeId = nodeState.id;
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(3);
 
   const deleteThisNode = () => {
     parentNodeApi && parentNodeApi.deleteChild(nodeState.childIndex);
@@ -130,7 +130,7 @@ function EachTagManager(props: IEachTagManagerProps) {
           </Tabs>
         )}
 
-        <div className="flex align-center pt-5">
+        <div className="flex align-center pt-10">
           <Tooltip overlay={'Level Up'} placement={'top'}>
             <div onClick={selectParent} className={cc('flex align-center pr-5 pointer')}>
               <IoMdReturnLeft />
@@ -169,11 +169,11 @@ function EachTagManager(props: IEachTagManagerProps) {
           </Tooltip>
         </div>
 
-        <div className="relative mt-10">
+        <div className={'overflow-hidden mt-10 relative'}>
           <div className={`tree-navigation-shadow absolute t-0 l-0 w-100-p`} />
+          <div className={`tree-navigation-shadow absolute b-0 l-0 w-100-p`} />
+          <TreeNavigation />
         </div>
-
-        <TreeNavigation />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ const updateNodeAction = createAction<{ id: Uuid, field: string, value: any, wit
 );
 const resetStateAction = createAction('resetStateAction')
 const selectRootAction = createAction('selectRootAction')
+const toggleChildrenCollapsedAction = createAction<Uuid>('toggleChildrenCollapsedAction')
 
 export {
   updateVariablesAction,
@@ -21,4 +22,5 @@ export {
   resetStateAction,
   selectRootAction,
   highlightInspectedNodeAction,
+  toggleChildrenCollapsedAction,
 };

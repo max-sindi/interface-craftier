@@ -235,6 +235,11 @@ var classNames = [
         values: ['none', 'flex', 'inline-flex', 'block', 'inline', 'inline-block']
     }),
     new CssSimpleClassBranch_1["default"]({
+        property: 'visibility',
+        classNameCreator: function (mdf) { return "visibility-".concat(mdf); },
+        values: ['visible', 'hidden']
+    }),
+    new CssSimpleClassBranch_1["default"]({
         property: 'align-items',
         classNameCreator: function (mdf) { return "align-".concat(mdf); },
         values: ['center', 'flex-start', 'flex-end']

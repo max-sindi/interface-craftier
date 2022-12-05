@@ -2,7 +2,7 @@ import { Uuid } from 'src/core/store/modules/template/reducer';
 import { useDispatch , useSelector } from 'react-redux';
 import React , { useCallback , useMemo } from 'react';
 import { createNodeSelector } from 'src/core/store/modules/template/selector';
-import { Node } from 'src/core/Node';
+import { TagNode } from 'src/core/TagNode';
 import {
   highlightInspectedNodeAction ,
   updateHoveredNodeAction ,
@@ -22,23 +22,23 @@ export const useTagApi = (nodeId: Uuid) => {
   const parentNodeState = useSelector(parentNodeSelector);
   // const parentNodeApi = useTagApi(parentNodeState.id)
   const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId))
-  const updateInspectedNode = (node?: Node) => dispatch(updateInspectedNodeAction(node?.id));
-  const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));
+  const updateInspectedNode = (node?: TagNode) => dispatch(updateInspectedNodeAction(node?.id));
+  const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
   const highlightThisNode = (event: any) => {
     event.stopPropagation();
     updateHoveredNode(nodeState);
   }
   const highlightInspectedNode = () => dispatch(highlightInspectedNodeAction())
-  const transformField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
+  const transformField = ( field: keyof TagNode, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
   //   parentNodeState && dispatch(updateNodeAction({ id: parentNodeState.id, field, value, withTreeDestructing }));
   const selectParent = () => updateInspectedNode(parentNodeState);
-  const selectChild = (child: Node) => updateInspectedNode(child);
+  const selectChild = (child: TagNode) => updateInspectedNode(child);
   const onHighlight = (hoveringNode = nodeState) => updateHoveredNode(hoveringNode);
-  const createHtmlChangeHandler = (path: keyof Node) => (evt: any) => transformField(path, evt.target.value);
-  const createChangeHandler = (path: keyof Node) => (value: any) => {
+  const createHtmlChangeHandler = (path: keyof TagNode) => ( evt: any) => transformField(path, evt.target.value);
+  const createChangeHandler = (path: keyof TagNode) => ( value: any) => {
     value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
   };
   const changeText = createHtmlChangeHandler('text');
@@ -58,10 +58,10 @@ export const useTagApi = (nodeId: Uuid) => {
   };
 
   const addBlockNode = () => addChild();
-  const addTextNode = () => addChild(() => new Node({ isText: true }));
+  const addTextNode = () => addChild(() => new TagNode({ isText: true }));
 
-  const createNode = (children?: Node['children']): Node =>
-    new Node({
+  const createNode = (children?: TagNode['children']): TagNode =>
+    new TagNode({
       children,
     });
 

@@ -1,11 +1,12 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
-import { Node } from 'src/core/Node';
+import { TagNode } from 'src/core/TagNode';
 import {
   highlightInspectedNodeAction ,
   resetHoveredNodeAction ,
   resetStateAction ,
   selectRootAction ,
+  toggleChildrenCollapsedAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
   updateNodeAction ,
@@ -13,13 +14,14 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
+import { destructTree } from 'src/utils';
 
 export type IVariables = {
   [key: string]: string;
 };
 
 export type GlobalState = {
-  template: Node;
+  template: ExtendedNode;
   variables: IVariables;
 };
 
@@ -27,9 +29,10 @@ export enum StorageMap {
   State = 'state',
 }
 export type Uuid = ReturnType<typeof uuid>;
+export type NodesMap = Record<Uuid, ExtendedNode>
 
 interface Reducer {
-  nodesMap: Record<Uuid, ExtendedNode>;
+  nodesMap: NodesMap;
   currentState: GlobalState;
   hoveredNode?: Uuid;
   inspectedNode?: Uuid;
@@ -37,11 +40,11 @@ interface Reducer {
 
 const initialGlobalState: GlobalState = {
   variables: {},
-  template: new Node({
+  template: new TagNode({
     children: [
-      new Node({
+      new TagNode({
         children: [
-          new Node({
+          new TagNode({
             tag: 'span',
             isText: true,
             text: 'tratatat',
@@ -49,45 +52,15 @@ const initialGlobalState: GlobalState = {
         ],
       }),
     ],
-  }),
+  }) as ExtendedNode,
 };
 
 export const cleanupTree = (state: GlobalState): GlobalState => {
-  const observer = (node: ExtendedNode): Node => {
-    return new Node({ ...node, children: node.children.map(observer) });
+  const observer = (node: ExtendedNode): TagNode => {
+    return new TagNode({ ...node, children: node.children.map(observer) });
   };
 
-  return { ...state, template: observer(state.template as ExtendedNode) };
-};
-
-const destructTree = (state: GlobalState) => {
-  const nodesMap: Reducer['nodesMap'] = {};
-
-  const observer = (node: Node, deepIndex: number, levelIndex: number, xPath: string, parentNode?: Node) => {
-    const extendedNode: ExtendedNode = {
-      ...node,
-      xPath,
-      childIndex: levelIndex,
-      deepIndex,
-      parentId: parentNode?.id,
-      children: node.children.map((childNode, index) =>
-        observer(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
-      ),
-    };
-
-    // add node to map
-    nodesMap[extendedNode.id] = extendedNode;
-
-    return extendedNode;
-  };
-
-  const recursivelyObserveChildren = (startingNode: Node) => {
-    return observer(startingNode, 0, 0, 'template');
-  };
-
-  const updatedTemplate = recursivelyObserveChildren(state.template);
-
-  return { nodesMap, currentState: { ...state, template: updatedTemplate } };
+  return { ...state, template: observer(state.template as ExtendedNode) as ExtendedNode }; // @todo fix "as Extended" because it's a liy
 };
 
 const initialState = (initialGlobalState?: GlobalState): Reducer => {
@@ -123,6 +96,10 @@ export default createReducer(initialState(), (builder) => {
     })
     .addCase(updateInspectedNodeAction, (state, action) => {
       state.inspectedNode = action.payload;
+    })
+    .addCase(toggleChildrenCollapsedAction, (state, action) => {
+      state.nodesMap[action.payload].childrenCollapsed = !state.nodesMap[action.payload].childrenCollapsed
+      updateNodeInTree(state, action.payload)
     })
     .addCase(selectRootAction, (state) => {
       state.inspectedNode = state.currentState.template.id;

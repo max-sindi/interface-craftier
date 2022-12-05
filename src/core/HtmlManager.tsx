@@ -3,11 +3,9 @@ import EachTagManager from './TagManager/EachTagManager';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createNodeSelector ,
-  globalStateSelector ,
   inspectedNodeSelector
 } from 'src/core/store/modules/template/selector';
 import { resetStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
-import { compileStateToProduction } from 'src/utils';
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 

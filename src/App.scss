@@ -1,5 +1,9 @@
+//$app-bg: #789;
+$app-bg: #fff;
+
 html {
-  /*background: #7d9707;*/
+  //background: #7d9707;
+  background-color: $app-bg;
 }
 $resizeWidth: 120px;
 $green-padding: #86b049;
@@ -7,13 +11,16 @@ $dimensions-resize-color: #00aead;
 $margin-color: #ffc06e;
 
 .label {
+  margin-left: 20px;
+  min-height: 35px;
   overflow: auto;
   padding-left: 15px;
-  background-color: #449147;
+  //background-color: #449147;
   border-bottom-left-radius: 17px;
   border-bottom-right-radius: 5px;
   color: #fff;
 }
+
 
 ._tag_hover {
   box-shadow: 0 0 5px 5px #00000030;
@@ -38,7 +45,7 @@ $margin-color: #ffc06e;
   background: #{$dimensions-resize-color}80;
   z-index: -1;
 }
-
+//#3363b1
 .html-manager {
   input,
   select,
@@ -56,6 +63,15 @@ $margin-color: #ffc06e;
     background: #44914730;
     color: #111111;
     outline: 2px solid #FF9A00;
+  }
+  .label-focus {
+    outline: 0;
+    width: 0;
+    height: 0;
+    color: transparent;
+    padding: 0;
+    position: absolute;
+    right: 0;
   }
 
   .edit-text-input {
@@ -86,23 +102,26 @@ $margin-color: #ffc06e;
   padding-right: 100px;
   min-height: 100%;
   max-height: 100%;
-  overflow: auto;
+  //overflow: auto;
   transition: transform 0.5s;
+  scroll-behavior: smooth;
 }
 
 .tree-navigation-shadow {
   background-color: rgba(0,255,255,0.5);
-  box-shadow: 0px 1px 2px rgba(0,255,255,0.5),  0px 2px 4px rgba(0,255,255,0.5),  0px 4px 8px rgba(0,255,255,0.5),  0px 8px 16px rgba(0,255,255,0.5);
-  height: 5px;
+  box-shadow: 0px 0px 35px 48px rgba(0,0,0,0.5);
+  //box-shadow: 0px 1px 2px rgba(0,255,255,0.5),  0px 2px 4px rgba(0,255,255,0.5),  0px 4px 8px rgba(0,255,255,0.5),  0px 8px 16px rgba(0,255,255,0.5);
+  //height: 5px;
 }
 
 #toolbar {
-  background: #fff;
+  //background: #fff;
   min-width: 800px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 5px #a3bce350;
   padding: 5px;
   z-index: 100;
+  background: $app-bg;
 }
 
 .rotate-90 {

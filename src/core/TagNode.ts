@@ -6,18 +6,18 @@ export type ClassNameRecord = Partial<Record<'w' | 'h' | 'pt' | 'pb' | 'pl' | 'p
 export type StyleRecord = StandardLonghandProperties
 export type Attrs = Record<string , string>
 
-export class Node {
+export class TagNode {
   name: string;
   id: Uuid;
   className: ClassNameRecord;
   attrs: Attrs;
   style: StyleRecord;
   tag: string;
-  children: Node[] | never[];
+  children: TagNode[];
   isText: boolean
   text: string
 
-  constructor(params: Partial<Node>) {
+  constructor(params: Partial<TagNode> = {}) {
     this.name = params.name || ''
     this.id = params.id || uuid()
     this.children = params.children || []

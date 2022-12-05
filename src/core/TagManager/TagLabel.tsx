@@ -19,9 +19,10 @@ const TagLabel = (props: ITagLabelProps) => {
       onMouseLeave={highlightInspectedNodeAction}
     >
       {nodeState.isText ? <BsFillPenFill /> : <IoMdSquareOutline className={'mr-5'} />}
-      {nodeState.isText
-        ? nodeState.text?.slice(0, 6) + '...' // Tag text
-        : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})` // Text tag
+      {
+        nodeState.isText
+          ? nodeState.text?.slice(0, 16) + '...' // Tag text
+          : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})` // Text tag
       }
     </div>
   );

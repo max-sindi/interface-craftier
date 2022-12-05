@@ -12,7 +12,7 @@ const CopyToClipboardToolbar = (props: ICopyToClipboardToolbarProps) => {
   const toggleToolbarVisibility = () => setToolbarCollapsed((prev) => !prev);
   const globalState = useSelector(globalStateSelector);
   const readyState = useMemo(() => (toolbarCollapsed ? '' : compileStateToProduction(globalState)), [toolbarCollapsed]);
-  console.log(readyState);
+
   const onCopy = (text: string) => {
     console.log('Copied content: ', text);
     setToolbarCollapsed(true);

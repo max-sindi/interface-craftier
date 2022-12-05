@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react';
 import clsx from 'classnames';
-import { Node } from './Node';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createNodeSelector,
@@ -14,6 +13,7 @@ import {
   updateInspectedNodeAction,
 } from 'src/core/store/modules/template/actions';
 import LiveTagManager from 'src/core/LiveTagManager';
+import { TagNode } from 'src/core/TagNode';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -28,14 +28,14 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
   const isHovered = hoveredNodeId === nodeId || inspectedNodeId === nodeId;
   const isThisInspectingNode = inspectedNodeId === nodeId;
-  const canTagHaveChildren = (tag: Node['tag']) => !['input', 'img'].includes(tag);
+  const canTagHaveChildren = (tag: TagNode['tag']) => !['input', 'img'].includes(tag);
   const dispatch = useDispatch();
   const nodeSelector = useCallback(createNodeSelector(nodeId), [nodeId]);
   const nodeState = useSelector(nodeSelector);
   const { className } = nodeState;
 
-  const updateInspectedNode = (node: Node) => dispatch(updateInspectedNodeAction(node.id));
-  const updateHoveredNode = (node: Node) => dispatch(updateHoveredNodeAction(node.id));
+  const updateInspectedNode = (node: TagNode) => dispatch(updateInspectedNodeAction(node.id));
+  const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
 
   const recursiveRenderChildren = () =>

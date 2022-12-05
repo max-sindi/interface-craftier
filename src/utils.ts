@@ -1,10 +1,11 @@
 import { UnitName } from 'src/stylotron/src/Unit';
-import { ClassNameRecord, Node, StyleRecord } from 'src/core/Node';
+import { ClassNameRecord, TagNode, StyleRecord } from 'src/core/TagNode';
 import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
 import styles from 'src/stylotron/src/styles.json';
 import { capitalize, cloneDeepWith, flatten } from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { GlobalState } from 'src/core/store/modules/template/reducer';
+import { GlobalState , NodesMap } from 'src/core/store/modules/template/reducer';
+import { ExtendedNode } from 'src/core/ExtendedNode';
 const hyperscript = require('hyperscript');
 
 export type ClassNameChange = {
@@ -83,7 +84,7 @@ export const deleteField = (obj: Record<any, any>, field: string) => {
 
 export const createDeleter =
   (indexInLevel: number) =>
-  (prev: Node): Node => {
+  (prev: TagNode): TagNode => {
     return {
       ...prev,
       children: prev.children.filter((i, index) => index !== indexInLevel),
@@ -93,8 +94,8 @@ export const createDeleter =
 export const logObjectFields = (object: any) =>
   Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
 
-export const cloneDeepWithUniqueId = (data: Node): Node =>
-  cloneDeepWith(data, (target: Node) =>
+export const cloneDeepWithUniqueId = (data: TagNode): TagNode =>
+  cloneDeepWith(data, (target: TagNode) =>
     Array.isArray(target.children)
       ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
       : target
@@ -109,7 +110,7 @@ interface ClassNameForCompile {
 export const compileStateToProduction = (state: GlobalState) => {
   const classNamesForCreating: ClassNameForCompile[] = [];
 
-  const tagProcessor = (node: Node): ReturnType<typeof hyperscript> => {
+  const tagProcessor = (node: TagNode): ReturnType<typeof hyperscript> => {
     const classNameConfig = ((): ClassNameForCompile => {
       const classNamesExisting = node.className;
       const classNamesVariabled = node.style;
@@ -186,3 +187,34 @@ export const compileStateToProduction = (state: GlobalState) => {
   `;
 };
 
+
+export const destructTree = (state: Omit<GlobalState , 'template'> & { template: TagNode }) => {
+  const nodesMap: NodesMap = {};
+
+  const observer = ( node: TagNode, deepIndex: number, levelIndex: number, xPath: string, parentNode?: TagNode) => {
+    const extendedNode: ExtendedNode = {
+      ...node,
+      childrenCollapsed: false,
+      xPath,
+      childIndex: levelIndex,
+      deepIndex,
+      parentId: parentNode?.id,
+      children: node.children.map((childNode, index) =>
+        observer(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
+      ),
+    };
+
+    // add node to map
+    nodesMap[extendedNode.id] = extendedNode;
+
+    return extendedNode;
+  };
+
+  const recursivelyObserveChildren = (startingNode: TagNode) => {
+    return observer(startingNode, 0, 0, 'template');
+  };
+
+  const updatedTemplate = recursivelyObserveChildren(state.template);
+
+  return { nodesMap, currentState: { ...state, template: updatedTemplate } };
+};

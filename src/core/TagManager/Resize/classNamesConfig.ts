@@ -1,5 +1,5 @@
 import { UnitName } from 'src/stylotron/src/Unit';
-import { ClassNameRecord } from 'src/core/Node';
+import { ClassNameRecord } from 'src/core/TagNode';
 
 export type DefaultClassName = string | Record<UnitName, string>;
 //

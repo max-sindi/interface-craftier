@@ -16,9 +16,7 @@ const EditableField = ({
 
   return (
     <div className={'w-100-p'}>
-      {editMode && (
-        <div className={'absolute-center'} style={{ background: '#33333330', zIndex: 0 }} onClick={onDisableEditNode} />
-      )}
+      {editMode && <div className={'absolute-center'} onClick={onDisableEditNode} />}
       <div className={'relative w-100-p'} onClick={onEnableEditMode}>
         {editMode ? (
           editElement

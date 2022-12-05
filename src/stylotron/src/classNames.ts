@@ -238,6 +238,11 @@ const classNames = [
     values: ['none', 'flex', 'inline-flex', 'block', 'inline', 'inline-block'],
   }),
   new CssSimpleClassBranch({
+    property: 'visibility',
+    classNameCreator: mdf => `visibility-${mdf}`,
+    values: ['visible', 'hidden']
+  }),
+  new CssSimpleClassBranch({
     property: 'align-items',
     classNameCreator: (mdf) => `align-${mdf}`,
     values: ['center', 'flex-start', 'flex-end'],

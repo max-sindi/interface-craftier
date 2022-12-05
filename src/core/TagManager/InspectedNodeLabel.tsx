@@ -17,7 +17,8 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
   } = useContext(EachTagManagerProviderContext);
 
   return (
-    <div className={''} style={{ fontSize: labelFontSize + 1 }}>
+    <div style={{ fontSize: labelFontSize + 1 }}>
+      <input type="text" className="label-focus" key={nodeState.id} autoFocus={true} />
       {/* Name */}
       {!nodeState.isText && (
         <div className="flex">
@@ -50,7 +51,7 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
       <div data-name={'children-navigation'}>
         {nodeState.isText && (
           /* Text child */
-          <div className={'flex label relative'}>
+          <div className={'flex relative'}>
             <div>{'Text: '}</div>
             <EditableField
               initiallyEditable={true}
@@ -67,11 +68,6 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
               }
             />
           </div>
-        // ) : (
-          /* or Children list child */
-          // <div style={{ paddingLeft: levelDeepPx }}>
-          //   <RecursivelyRenderTagLabels children={nodeState.children} />
-          // </div>
         )}
       </div>
     </div>
