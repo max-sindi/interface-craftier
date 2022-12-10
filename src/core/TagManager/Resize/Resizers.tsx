@@ -1,4 +1,4 @@
-import React from 'react';
+import React , { useState } from 'react';
 import DimensionsResize from 'src/core/TagManager/Resize/DimensionsResize';
 import PaddingResize from 'src/core/TagManager/Resize/PaddingResize';
 import MarginResize from 'src/core/TagManager/Resize/MarginResize';
@@ -11,20 +11,37 @@ interface IResizersProps extends ClassNameChange {
 }
 
 const Resizers = ({ nodeId, ...classNameChange }: IResizersProps) => {
+  const [currentModeNumber, setCurrentModeNumber] = useState(0)
   return (
-    <div className={'w-700 h-320 relative mb-10'}>
-      <div className={'absolute t-0 r-0 b-0 l-0 position-resize'} title={'Position'}>
-        <PositionsResize {...classNameChange} key={nodeId + 'position'} />
+    <div className={' absolute t-0 l-0 b-0 r-0'} title={'Resizers'}>
+      <div className='absolute b-100-p l-0' title={'Labels layout'}>
+        <div className={'flex align-center'} title={`Labels inner`}>
+          <div className={'resizers-label'} title={'Label Positioning'} onClick={() => setCurrentModeNumber(0)}>
+            Positioning
+          </div>
+          <div className={'resizers-label'} title={'Label Margin'} onClick={() => setCurrentModeNumber(1)}>
+            Margin
+          </div>
+          <div className={'resizers-label'} title={'Label Padding'} onClick={() => setCurrentModeNumber(2)}>
+            Padding
+          </div>
+          <div className={'resizers-label'} title={'Label Dimensions'} onClick={() => setCurrentModeNumber(3)}>
+            Dimensions
+          </div>
+        </div>
       </div>
-      <div className={`absolute t-${10 * 6} r-${100 * 0.8} b-25 l-${100 * 0.8} margin-resize`} title={'Margin'} >
+      {currentModeNumber === 0 && <div className={ 'absolute t-0 r-0 b-0 l-0 positioning-resize' } title={ 'Position' }>
+        <PositionsResize { ... classNameChange } key={ nodeId + 'position' } />
+      </div> }
+      {currentModeNumber === 1 && <div className={`absolute t-${0 * 6} r-${0 * 0.8} b-0 l-${0 * 0.8} margin-resize`} title={'Margin'} >
         <MarginResize {...classNameChange} key={nodeId + 'margin'}/>
-      </div>
-      <div className={`absolute t-${20 * 6} r-${200 * 0.8} b-50 l-${200 * 0.8} padding-resize`} title={'Padding'}>
+      </div>}
+      {currentModeNumber === 2 && <div className={`absolute t-${0 * 6} r-${0 * 0.8} b-0 l-${0 * 0.8} padding-resize`} title={'Padding'}>
         <PaddingResize {...classNameChange} key={nodeId + 'padding'} />
-      </div>
-      <div className={`absolute t-${30 * 6} r-${300 * 0.8} b-75 l-${300 * 0.8} dimensions-resize`} title={'Dimensions'}>
+      </div>}
+      {currentModeNumber === 3 && <div className={`absolute t-${0 * 6} r-${0 * 0.8} b-0 l-${0 * 0.8} dimensions-resize`} title={'Dimensions'}>
         <DimensionsResize {...classNameChange} key={nodeId + 'dimensions'} />
-      </div>
+      </div>}
     </div>
   );
 };

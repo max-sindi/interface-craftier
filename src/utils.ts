@@ -4,7 +4,7 @@ import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
 import styles from 'src/stylotron/src/styles.json';
 import { capitalize, cloneDeepWith, flatten } from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { GlobalState , NodesMap } from 'src/core/store/modules/template/reducer';
+import { GlobalState, NodesMap } from 'src/core/store/modules/template/reducer';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 const hyperscript = require('hyperscript');
 
@@ -29,7 +29,7 @@ export interface ClassNameInterface {
 export const levelDeepPx = 15;
 export const labelHeight = 26;
 export const labelFontSize = 20;
-export const greenColor = '#449147'
+export const greenColor = '#449147';
 
 const isNumber = (value: string | number) => !Number.isNaN(+value);
 
@@ -94,12 +94,12 @@ export const createDeleter =
 export const logObjectFields = (object: any) =>
   Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
 
-export const cloneDeepWithUniqueId = (data: TagNode): TagNode =>
-  cloneDeepWith(data, (target: TagNode) =>
-    Array.isArray(target.children)
-      ? { ...target, id: uuid(), children: target.children.map((child) => cloneDeepWithUniqueId(child)) }
-      : target
-  );
+export const cloneNode = (data: TagNode): TagNode =>
+  cloneDeepWith(data, (target: TagNode) => ({
+    ...target,
+    id: uuid(),
+    children: target.children.map((child) => cloneNode(child)),
+  }));
 
 interface ClassNameForCompile {
   name: string;
@@ -114,28 +114,25 @@ export const compileStateToProduction = (state: GlobalState) => {
     const classNameConfig = ((): ClassNameForCompile => {
       const classNamesExisting = node.className;
       const classNamesVariabled = node.style;
-      const name = !node.name ? '' :
-        node.name
-          .trim()
-          .split(' ')
-          .map((word, index) => (index === 0 ? word.toLowerCase() : capitalize(word)))
-          .join('') || 'id-' + node.id;
+      const name = !node.name
+        ? ''
+        : node.name
+            .trim()
+            .split(' ')
+            .map((word, index) => (index === 0 ? word.toLowerCase() : capitalize(word)))
+            .join('') || 'id-' + node.id;
 
       return { name, classNamesExisting, classNamesVariabled };
     })();
 
-    const attrs = { ...node.attrs }
+    const attrs = { ...node.attrs };
 
-    if(classNameConfig.name) {
+    if (classNameConfig.name) {
       classNamesForCreating.push(classNameConfig);
-      attrs.className = classNameConfig.name
+      attrs.className = classNameConfig.name;
     }
 
-    return hyperscript(
-      node.tag,
-      attrs,
-      node.isText ? node.text : node.children.map(tagProcessor)
-    );
+    return hyperscript(node.tag, attrs, node.isText ? node.text : node.children.map(tagProcessor));
   };
 
   const parsedTemplate = tagProcessor(state.template);
@@ -172,9 +169,7 @@ export const compileStateToProduction = (state: GlobalState) => {
           `${key
             .split('')
             .map((letter) => (letter.toLowerCase() === letter ? letter : `-${letter.toLowerCase()}`))
-            .join('')}: $${
-            (Object.entries(state.variables).find(([, value2]) => value === value2) || ['unset'])[0]
-          }`
+            .join('')}: $${(Object.entries(state.variables).find(([, value2]) => value === value2) || ['unset'])[0]}`
       ),
   ].join(`;
   `)}
@@ -191,7 +186,7 @@ export const compileStateToProduction = (state: GlobalState) => {
 export const destructTree = (state: Omit<GlobalState , 'template'> & { template: TagNode }) => {
   const nodesMap: NodesMap = {};
 
-  const observer = ( node: TagNode, deepIndex: number, levelIndex: number, xPath: string, parentNode?: TagNode) => {
+  const recursiveIterator = ( node: TagNode, deepIndex: number, levelIndex: number, xPath: string, parentNode?: TagNode) => {
     const extendedNode: ExtendedNode = {
       ...node,
       childrenCollapsed: false,
@@ -200,7 +195,7 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
       deepIndex,
       parentId: parentNode?.id,
       children: node.children.map((childNode, index) =>
-        observer(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
+        recursiveIterator(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
       ),
     };
 
@@ -210,11 +205,11 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
     return extendedNode;
   };
 
-  const recursivelyObserveChildren = (startingNode: TagNode) => {
-    return observer(startingNode, 0, 0, 'template');
-  };
+  // const recursivelyObserveChildren = (startingNode: TagNode) => {
+  //   return observer();
+  // };
 
-  const updatedTemplate = recursivelyObserveChildren(state.template);
+  const updatedTemplate = recursiveIterator(state.template, 0, 0, 'template');
 
   return { nodesMap, currentState: { ...state, template: updatedTemplate } };
 };

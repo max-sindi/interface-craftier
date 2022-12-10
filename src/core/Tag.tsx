@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import clsx from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -14,6 +14,7 @@ import {
 } from 'src/core/store/modules/template/actions';
 import LiveTagManager from 'src/core/LiveTagManager';
 import { TagNode } from 'src/core/TagNode';
+import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -39,16 +40,22 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
 
   const recursiveRenderChildren = () =>
-    !nodeState.isText
-      ? nodeState.children.map((child, index) => (
-          <>
-            {/* @todo: make sure that Tag is not with position: static  */}
-            {isThisInspectingNode && <LiveTagManager nodeState={nodeState} />}
-
+    !nodeState.isText ? (
+      <>
+        {isThisInspectingNode && (
+          <EachTagManagerProvider nodeId={nodeState.id}>
+            <LiveTagManager />
+          </EachTagManagerProvider>
+        )}
+        {nodeState.children.map((child, index) => (
+          <Fragment key={child.id}>
             <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
-          </>
-        ))
-      : nodeState.text;
+          </Fragment>
+        ))}
+      </>
+    ) : (
+      nodeState.text
+    );
 
   const attrs = {
     'data-name': nodeState.name || '',
@@ -59,7 +66,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     className: clsx(
       Object.values(className).join(' '),
       isHovered && '_tag_hover',
-      (className.b || className.t || className.r || className.l) && 'relative'
+      (className.b || className.t || className.r || className.l || isThisInspectingNode) && 'relative'
       // nodeState.className.position
       // @todo fix
       // isHovered && nodeState.className.pb && `decor-before-${nodeState.className.pb.slice(1)}`,
@@ -78,8 +85,10 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       updateHoveredNode(nodeState);
     },
     onClick: (event: any) => {
-      event.stopPropagation();
-      updateInspectedNode(nodeState);
+      if(!nodeState.isText) {
+        event.stopPropagation();
+        updateInspectedNode(nodeState);
+      }
     },
   };
 

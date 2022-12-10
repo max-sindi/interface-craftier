@@ -6,6 +6,7 @@ import { IoMdAdd } from 'react-icons/io';
 import { TbPlaylistAdd } from 'react-icons/tb';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import FocuserInput from 'src/core/TagManager/FocuserInput';
+import TagActionsPanel from 'src/core/TagManager/TagActionsPanel';
 
 interface IInspectedNodeLabelProps {}
 
@@ -36,12 +37,7 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
               }
             />
           </div>
-          <IconButton centering>
-            <IoMdAdd className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
-          </IconButton>
-          <IconButton centering>
-            <TbPlaylistAdd className={'pointer'} onClick={addTextNode} title={'Add text child'} />
-          </IconButton>
+          <TagActionsPanel/>
         </div>
       )}
       {/* Children */}

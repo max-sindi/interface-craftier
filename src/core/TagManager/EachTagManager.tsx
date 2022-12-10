@@ -40,7 +40,7 @@ function EachTagManager(props: IEachTagManagerProps) {
 
   const nodeId = nodeState.id;
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
-  const [tabIndex, setTabIndex] = useState(3);
+  const [tabIndex, setTabIndex] = useState(-1);
 
   const deleteThisNode = () => {
     parentNodeApi && parentNodeApi.deleteChild(nodeState.childIndex);
@@ -67,68 +67,6 @@ function EachTagManager(props: IEachTagManagerProps) {
       </div>
 
       <div className={!toolbarCollapsed ? '' : 'd-none'}>
-        {!nodeState.isText && (
-          <Tabs
-            selectedIndex={tabIndex}
-            onSelect={(index) => setTabIndex(index)}
-            forceRenderTabPanel
-            onMouseEnter={onMouseEnter}
-          >
-            {/* Layout */}
-            <TabPanel>
-              <div className="tabPanel">
-                <Resizers
-                  changeClassName={changeClassNamesList}
-                  classNameRecord={nodeState.className}
-                  nodeId={nodeId}
-                />
-              </div>
-            </TabPanel>
-
-            {/*2 Classes */}
-            <TabPanel>
-              <div className={'tabPanel'}>
-                <ClassNamesSelector
-                  changeClassName={changeClassNamesList}
-                  classNameRecord={nodeState.className}
-                  styleRecord={nodeState.style}
-                  changeStyles={changeStyles}
-                />
-              </div>
-            </TabPanel>
-
-            {/* 3 - Styles */}
-            <TabPanel>
-              <div className={'tabPanel'}>
-                <ObjectEditor
-                  onChange={createChangeHandler('style')}
-                  value={nodeState.style as Record<string, string>}
-                  fields={stylesExisting}
-                  title={'Styles: '}
-                />
-              </div>
-            </TabPanel>
-
-            {/* 4 - Attributes */}
-            <TabPanel>
-              <div className={'tabPanel'}>
-                <ObjectEditor
-                  onChange={createChangeHandler('attrs')}
-                  value={nodeState.attrs}
-                  fields={attrsExisting}
-                  title={'Attributes: '}
-                />
-              </div>
-            </TabPanel>
-            <TabList>
-              {/*<Tab>Tree</Tab>*/}
-              <Tab>Layout</Tab>
-              <Tab>Classes</Tab>
-              <Tab>Styles</Tab>
-              <Tab>Attributes</Tab>
-            </TabList>
-          </Tabs>
-        )}
 
         <div className="flex align-center pt-10">
           <Tooltip overlay={'Level Up'} placement={'top'}>
@@ -161,8 +99,74 @@ function EachTagManager(props: IEachTagManagerProps) {
               {'Highlight'}
             </button>
           </div>
+          {!nodeState.isText && (
+            <Tabs
+              selectedIndex={tabIndex}
+              onSelect={(index) => setTabIndex(index)}
+              forceRenderTabPanel
+              onMouseEnter={onMouseEnter}
+              className={`ml-10`}
+            >
+              {/* Layout */}
+              <TabPanel>
+                <div className="tabPanel">
+                  <div className='h-50 relative toolbar-resizer'>
+
+                    <Resizers
+                      changeClassName={changeClassNamesList}
+                      classNameRecord={nodeState.className}
+                      nodeId={nodeId}
+                    />
+                  </div>
+                </div>
+              </TabPanel>
+
+              {/*2 Classes */}
+              <TabPanel>
+                <div className={'tabPanel'}>
+                  <ClassNamesSelector
+                    changeClassName={changeClassNamesList}
+                    classNameRecord={nodeState.className}
+                    styleRecord={nodeState.style}
+                    changeStyles={changeStyles}
+                  />
+                </div>
+              </TabPanel>
+
+              {/* 3 - Styles */}
+              <TabPanel>
+                <div className={'tabPanel'}>
+                  <ObjectEditor
+                    onChange={createChangeHandler('style')}
+                    value={nodeState.style as Record<string, string>}
+                    fields={stylesExisting}
+                    title={'Styles: '}
+                  />
+                </div>
+              </TabPanel>
+
+              {/* 4 - Attributes */}
+              <TabPanel>
+                <div className={'tabPanel'}>
+                  <ObjectEditor
+                    onChange={createChangeHandler('attrs')}
+                    value={nodeState.attrs}
+                    fields={attrsExisting}
+                    title={'Attributes: '}
+                  />
+                </div>
+              </TabPanel>
+              <TabList>
+                {/*<Tab>Tree</Tab>*/}
+                <Tab>Layout</Tab>
+                <Tab>Classes</Tab>
+                <Tab>Styles</Tab>
+                <Tab>Attributes</Tab>
+              </TabList>
+            </Tabs>
+          )}
           {/* Delete */}
-          <RiDeleteBin6Line onClick={deleteThisNode} size={25} className={'ml-250'} />
+          <RiDeleteBin6Line onClick={deleteThisNode} size={25} className={'ml-50'} />
           {/* Close Popup */}
           <Tooltip overlay={'Unselect'} placement={'top'}>
             <FaRegWindowClose onClick={unselectCurrentNode} size={20} className={`r-3 t-3 z-index-5 ml-a pointer`} />

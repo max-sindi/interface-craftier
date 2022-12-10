@@ -1,5 +1,7 @@
 //$app-bg: #789;
 $app-bg: #fff;
+$blue-dark-main: #005f92;
+$blue-middle-main: #4682b4;
 
 html {
   //background: #7d9707;
@@ -21,6 +23,25 @@ $margin-color: #ffc06e;
   color: #fff;
 }
 
+.resizers-label {
+  border: 1px solid $blue-dark-main;
+  border-bottom: 0;
+  background: #fff;
+  padding: 5px;
+  font-weight: 300;
+  cursor: pointer;
+  &:first-child {
+  border-top-left-radius: 8px;
+  }
+  &:last-child {
+  border-top-right-radius: 8px;
+
+  }
+}
+
+.toolbar-resizer {
+
+}
 
 ._tag_hover {
   box-shadow: 0 0 5px 5px #00000030;
@@ -129,6 +150,10 @@ $margin-color: #ffc06e;
 }
 
 .tabPanel {
+  position: absolute;
+  width: 400px;
+  bottom: 100%;
+  right: 0px;
   padding: 10px 15px 10px;
 }
 
@@ -165,36 +190,52 @@ $margin-color: #ffc06e;
   margin-top: -7.5%;
 }
 
+@mixin resizer {
+  background: transparent;
+  select {
+    padding: 0;
+    border-radius: 4px;
+  }
+}
+
 .dimensions-resize .resizeBox {
-  background: #{$dimensions-resize-color}80;
+  @include resizer;
+  //background: #{$dimensions-resize-color}80;
+  //background: transparent;
 
   &:hover {
-    background: #{$dimensions-resize-color};
+    //background: #{$dimensions-resize-color};
   }
 }
 
 .padding-resize .resizeBox {
-  background: #{$green-padding}80;
+  @include resizer;
+  //background: #{$green-padding}80;
 
   &:hover {
-    background: #{$green-padding};
+    //background: #{$green-padding};
   }
 }
 
 .margin-resize .resizeBox {
-  background: #{$margin-color}80;
+  @include resizer;
+  //background: #{$margin-color}80;
 
   &:hover {
-    background: #{$margin-color};
+    //background: #{$margin-color};
   }
+}
+
+.positioning-resize .resizeBox {
+  @include resizer
 }
 
 .resizeBox {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ccc;
-  border: 1px solid black;
+  //background: #ccc;
+  //border: 0.1px solid black;
   text-align: center;
   box-sizing: border-box;
   overflow: hidden;
@@ -252,7 +293,7 @@ $margin-color: #ffc06e;
     position: absolute;
     width: 8px;
     height: 8px;
-    background-color: #1153aa;
+    border: 2px dashed $blue-middle-main;
     opacity: 0.75;
     border-radius: 4px;
   }
@@ -312,7 +353,7 @@ $margin-color: #ffc06e;
   }
 
   .react-resizable-resize-handle-component {
-    background-color: red;
+    //background-color: red;
   }
 }
 

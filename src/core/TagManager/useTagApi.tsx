@@ -8,10 +8,11 @@ import {
 } from 'src/core/store/modules/template/selector';
 import { TagNode } from 'src/core/TagNode';
 import {
+  duplicateNodeAction ,
   highlightInspectedNodeAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
-  updateNodeAction
+  updateNodeAction , wrapNodeAction
 } from 'src/core/store/modules/template/actions';
 import { tags } from 'src/core/TagManager/config';
 import { createSelector } from 'reselect';
@@ -90,6 +91,9 @@ export const useTagApi = (nodeId: Uuid) => {
     </select>
   );
 
+  const wrapNode = () => dispatch(wrapNodeAction(nodeId))
+  const duplicateNode = () => dispatch(duplicateNodeAction(nodeId))
+
   return {
     onMouseEnter ,
     nodeState,
@@ -118,6 +122,8 @@ export const useTagApi = (nodeId: Uuid) => {
     highlightThisNode,
     highlightInspectedNodeAction,
     deepness,
+    wrapNode,
+    duplicateNode,
   }
 }
 

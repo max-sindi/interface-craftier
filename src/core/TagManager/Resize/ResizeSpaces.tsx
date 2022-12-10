@@ -22,7 +22,7 @@ const ResizeSpaces = ({
   changeClassName,
   classNameRecord,
   reverse,
-                        title,
+  title,
   topClassNameInterface,
   bottomClassNameInterface,
   leftClassNameInterface,
@@ -51,7 +51,7 @@ const ResizeSpaces = ({
 
   return (
     <>
-      <div className={'flex flex-center'}>{title}</div>
+      {/*<div className={'flex flex-center'}>{title}</div>*/}
       <Resizable
         width={nodeWidth}
         height={nodeHeight}
