@@ -42,7 +42,7 @@ function Project() {
       }}
     >
       <>
-        <div className={'pr-350'}>
+        <div className={'scene'}>
           <RenderState />
         </div>
         <Manager />

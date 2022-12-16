@@ -48,7 +48,7 @@ const ClassNamesSelector = ({
 
               return (
                 <div key={name} className={'flex'}>
-                  <div className="w-130 flex align-center">{name}</div>
+                  <div className="min-w-70 max-w-70 pr-5 flex align-center">{name}</div>
                   <ClassNameMultiSwitch
                     texts={values}
                     selectedSwitch={range.findIndex(value => classNameRecord[name] === value)}

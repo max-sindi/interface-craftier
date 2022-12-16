@@ -22,5 +22,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/stylotron/src/styles.json
-/stylotron/src/style.css
+src/stylotron/src/styles.json
+src/stylotron/src/styles.css

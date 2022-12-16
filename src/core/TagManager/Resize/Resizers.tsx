@@ -5,6 +5,7 @@ import MarginResize from 'src/core/TagManager/Resize/MarginResize';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import PositionsResize from 'src/core/TagManager/Resize/PositionsResize';
 import { ClassNameChange } from 'src/utils';
+import clsx from 'classnames';
 
 interface IResizersProps extends ClassNameChange {
   nodeId: Uuid;
@@ -16,17 +17,17 @@ const Resizers = ({ nodeId, ...classNameChange }: IResizersProps) => {
     <div className={' absolute t-0 l-0 b-0 r-0'} title={'Resizers'}>
       <div className='absolute b-100-p l-0' title={'Labels layout'}>
         <div className={'flex align-center'} title={`Labels inner`}>
-          <div className={'resizers-label'} title={'Label Positioning'} onClick={() => setCurrentModeNumber(0)}>
-            Positioning
+          <div className={clsx([ 'resizers-label', currentModeNumber === 0 && 'resizers-label-active'])} title={'Label Positioning'} onClick={() => setCurrentModeNumber(0)}>
+            Pos
           </div>
-          <div className={'resizers-label'} title={'Label Margin'} onClick={() => setCurrentModeNumber(1)}>
-            Margin
+          <div className={clsx([ 'resizers-label', currentModeNumber === 1 && 'resizers-label-active'])} title={'Label Margin'} onClick={() => setCurrentModeNumber(1)}>
+            Mar
           </div>
-          <div className={'resizers-label'} title={'Label Padding'} onClick={() => setCurrentModeNumber(2)}>
-            Padding
+          <div className={clsx([ 'resizers-label', currentModeNumber === 2 && 'resizers-label-active'])} title={'Label Padding'} onClick={() => setCurrentModeNumber(2)}>
+            Pad
           </div>
-          <div className={'resizers-label'} title={'Label Dimensions'} onClick={() => setCurrentModeNumber(3)}>
-            Dimensions
+          <div className={clsx([ 'resizers-label', currentModeNumber === 3 && 'resizers-label-active'])} title={'Label Dimensions'} onClick={() => setCurrentModeNumber(3)}>
+            Size
           </div>
         </div>
       </div>

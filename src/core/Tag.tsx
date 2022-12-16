@@ -44,7 +44,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       <>
         {isThisInspectingNode && (
           <EachTagManagerProvider nodeId={nodeState.id}>
-            <LiveTagManager />
+            {/*<LiveTagManager />*/}
           </EachTagManagerProvider>
         )}
         {nodeState.children.map((child, index) => (

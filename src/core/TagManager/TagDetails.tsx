@@ -29,7 +29,6 @@ const TagDetails = ( props : ITagDetailsProps ) => {
   const [tabIndex, setTabIndex] = useState(4);
 
   return (
-
     <Tabs
       selectedIndex={tabIndex}
       onSelect={(index) => setTabIndex(index)}
@@ -37,10 +36,9 @@ const TagDetails = ( props : ITagDetailsProps ) => {
       onMouseEnter={onMouseEnter}
       className={`ml-10`}
     >
-      {/* Layout */}
       <TabPanel>
-        <div className="tabPanel">
-          <div className='h-50 relative toolbar-resizer'>
+        <div data-name={'Layout'} className="tabPanel">
+          <div className='h-100 mt-30 relative toolbar-resizer'>
 
             <Resizers
               changeClassName={changeClassNamesList}
@@ -51,9 +49,8 @@ const TagDetails = ( props : ITagDetailsProps ) => {
         </div>
       </TabPanel>
 
-      {/*2 Classes */}
       <TabPanel>
-        <div className={'tabPanel'}>
+        <div data-name={'Classes'} className={'tabPanel'}>
           <ClassNamesSelector
             changeClassName={changeClassNamesList}
             classNameRecord={nodeState.className}
@@ -63,9 +60,8 @@ const TagDetails = ( props : ITagDetailsProps ) => {
         </div>
       </TabPanel>
 
-      {/* 3 - Styles */}
       <TabPanel>
-        <div className={'tabPanel'}>
+        <div data-name={"Styles"} className={'tabPanel'}>
           <ObjectEditor
             onChange={createChangeHandler('style')}
             value={nodeState.style as Record<string, string>}
@@ -75,9 +71,8 @@ const TagDetails = ( props : ITagDetailsProps ) => {
         </div>
       </TabPanel>
 
-      {/* 4 - Attributes */}
       <TabPanel>
-        <div className={'tabPanel'}>
+        <div data-name={"Attributes"} className={'tabPanel'}>
           <ObjectEditor
             onChange={createChangeHandler('attrs')}
             value={nodeState.attrs}
@@ -86,9 +81,8 @@ const TagDetails = ( props : ITagDetailsProps ) => {
           />
         </div>
       </TabPanel>
-      {/* App */}
       <TabPanel>
-        <div className='tabPanel'>
+        <div data-name={'App'} className='tabPanel'>
           <AppManager />
         </div>
       </TabPanel>

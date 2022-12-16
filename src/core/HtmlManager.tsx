@@ -25,7 +25,7 @@ const HtmlManager = () => {
 
   return (
     <div className={'html-manager'}>
-      <div id="toolbar" className={'fixed b-20 t-20 r-20 w-300 overflow-hidden'}>
+      <div id="toolbar" className={'fixed b-20 t-20 r-20 overflow-hidden'}>
         {(!inspectedNodeId || !nodeState) ? (
           <div>
             <img

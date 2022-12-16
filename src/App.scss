@@ -11,6 +11,10 @@ $resizeWidth: 120px;
 $green-padding: #86b049;
 $dimensions-resize-color: #00aead;
 $margin-color: #ffc06e;
+$toolbar-width: 400px;
+.scene {
+  padding-right: $toolbar-width;
+}
 
 .label {
   margin-left: 20px;
@@ -24,6 +28,7 @@ $margin-color: #ffc06e;
 }
 
 .resizers-label {
+  position: relative;
   border: 1px solid $blue-dark-main;
   border-bottom: 0;
   background: #fff;
@@ -37,6 +42,11 @@ $margin-color: #ffc06e;
   border-top-right-radius: 8px;
 
   }
+}
+
+.resizers-label-active {
+  z-index: 2;
+  box-shadow: 0 -5px 13px 3px $blue-dark-main;
 }
 
 .toolbar-resizer {
@@ -138,6 +148,7 @@ $margin-color: #ffc06e;
 #toolbar {
   //background: #fff;
   //min-width: 300px;
+  width: $toolbar-width - 45px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 5px #a3bce350;
   padding: 5px;
@@ -150,7 +161,6 @@ $margin-color: #ffc06e;
 }
 
 .tabPanel {
-  width: 400px;
   height: 200px;
   overflow: scroll;
   bottom: 100%;
@@ -292,9 +302,10 @@ $margin-color: #ffc06e;
 
   .react-resizable-handle {
     position: absolute;
-    width: 8px;
-    height: 8px;
+    width: 20px;
+    height: 20px;
     border: 2px dashed $blue-middle-main;
+    background: #235;
     opacity: 0.75;
     border-radius: 4px;
   }
