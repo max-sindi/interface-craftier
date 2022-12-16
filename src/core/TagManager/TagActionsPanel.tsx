@@ -27,7 +27,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
             <WrapIcon />
           </IconButton>
           <IconButton centering>
-            <IoDuplicateOutline title={'Duplicate'} />
+            <IoDuplicateOutline title={'Duplicate'} className={'pointer'} onClick={duplicateNode} />
           </IconButton>
         </>
       )}

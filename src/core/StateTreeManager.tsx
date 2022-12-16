@@ -5,7 +5,6 @@ import AppManager from './AppManager';
 const StateTreeManager = () => {
   return (
     <div>
-      <AppManager />
       <HtmlManager />
     </div>
   );

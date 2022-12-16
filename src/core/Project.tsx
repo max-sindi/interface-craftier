@@ -2,15 +2,23 @@ import React , { useEffect , useState } from 'react';
 import RenderState from './MarkupRenderer';
 import Manager from './StateTreeManager';
 import { useDispatch } from 'react-redux';
+import { Uuid } from 'src/core/store/modules/template/reducer';
+import { current } from '@reduxjs/toolkit';
 
 type IProjectContext = {
   toolbarCollapsed: boolean;
   toggleToolbarVisibility: () => void;
+  nodeDragging?: Uuid
+  setNodeDragging: (nodeId?: Uuid) => void
+  nodeHoveredDragging?: Uuid
+  setNodeHoveredDragging: (nodeId?: Uuid) => void
 };
 
 export const ProjectContext = React.createContext<IProjectContext>({} as IProjectContext);
 
 function Project() {
+  const [nodeDragging, setNodeDragging] = useState<Uuid>()
+  const [nodeHoveredDragging, setNodeHoveredDragging] = useState<Uuid>()
   const [toolbarCollapsed, setToolbarCollapsed] = useState(false);
   const toggleToolbarVisibility = () => setToolbarCollapsed((prev) => !prev);
   const dispatch = useDispatch()
@@ -18,6 +26,8 @@ function Project() {
   useEffect(() => {
     // @ts-ignore
     window.reduxDispatch = dispatch
+    // @ts-ignore
+    window.logProxy = current
   })
 
   return (
@@ -25,10 +35,16 @@ function Project() {
       value={{
         toolbarCollapsed,
         toggleToolbarVisibility,
+        nodeDragging,
+        setNodeDragging,
+        nodeHoveredDragging,
+        setNodeHoveredDragging,
       }}
     >
       <>
-        <RenderState />
+        <div className={'pr-350'}>
+          <RenderState />
+        </div>
         <Manager />
       </>
     </ProjectContext.Provider>

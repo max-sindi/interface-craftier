@@ -1,22 +1,20 @@
-import React , { useContext } from 'react';
+import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { inspectedNodeDeepnessSelector , templateSelector } from 'src/core/store/modules/template/selector';
+import { inspectedNodeDeepnessSelector, templateSelector } from 'src/core/store/modules/template/selector';
 import RecursivelyRenderTagLabels from 'src/core/TagManager/RecursivelyRenderTagLabels';
-import { ExtendedNode } from 'src/core/ExtendedNode';
-import EachTagManagerProvider , { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
+import EachTagManagerProvider  from 'src/core/TagManager/EachTagManagerProvider';
 import { labelHeight } from 'src/utils';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 interface ITreeNavigationProps {}
 
 const TreeNavigation = (props: ITreeNavigationProps) => {
   const template = useSelector(templateSelector);
-  const inspectedNodeDeepness = useSelector(inspectedNodeDeepnessSelector)
-  const {
-    nodeApi: { nodeState },
-  } = useContext(EachTagManagerProviderContext);
+  const inspectedNodeDeepness = useSelector(inspectedNodeDeepnessSelector);
 
   return (
-    <div data-name={'tree-navigation'} className={'h-300 overflow-auto flex flex-column'}>
+    <div data-name={'tree-navigation'} className={'h-600 overflow-auto flex flex-column'}>
       <div
         className={'tags-container'}
         style={{
@@ -24,9 +22,11 @@ const TreeNavigation = (props: ITreeNavigationProps) => {
             inspectedNodeDeepness < 7 ? 'none' : `translateY(calc(170px - ${labelHeight * inspectedNodeDeepness}px))`,
         }}
       >
-        <EachTagManagerProvider nodeId={template.id}>
-          <RecursivelyRenderTagLabels children={[template]} />
-        </EachTagManagerProvider>
+        <DndProvider backend={HTML5Backend}>
+          <EachTagManagerProvider nodeId={template.id}>
+            <RecursivelyRenderTagLabels children={[template]} />
+          </EachTagManagerProvider>
+        </DndProvider>
       </div>
     </div>
   );

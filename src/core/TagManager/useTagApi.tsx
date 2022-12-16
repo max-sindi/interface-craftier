@@ -8,8 +8,9 @@ import {
 } from 'src/core/store/modules/template/selector';
 import { TagNode } from 'src/core/TagNode';
 import {
+  deleteNodeAction ,
   duplicateNodeAction ,
-  highlightInspectedNodeAction ,
+  highlightInspectedNodeAction , pasteChildrenAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
   updateNodeAction , wrapNodeAction
@@ -93,8 +94,14 @@ export const useTagApi = (nodeId: Uuid) => {
 
   const wrapNode = () => dispatch(wrapNodeAction(nodeId))
   const duplicateNode = () => dispatch(duplicateNodeAction(nodeId))
+  const pasteChildren = (params: Omit<Parameters<typeof pasteChildrenAction>[0], 'receivingNodeId'>) => {
+    dispatch(pasteChildrenAction( { ...params, receivingNodeId: nodeId }))
+    dispatch(deleteNodeAction(params.givenNodeId))
+  }
+  const deleteThisNode = () => dispatch(deleteNodeAction(nodeId))
 
   return {
+    deleteThisNode,
     onMouseEnter ,
     nodeState,
     parentNodeState,
@@ -124,6 +131,7 @@ export const useTagApi = (nodeId: Uuid) => {
     deepness,
     wrapNode,
     duplicateNode,
+    pasteChildren,
   }
 }
 

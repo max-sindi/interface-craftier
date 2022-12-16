@@ -13,7 +13,12 @@ const resetStateAction = createAction('resetStateAction')
 const selectRootAction = createAction('selectRootAction')
 const wrapNodeAction = createAction<Uuid>('wrapNodeAction')
 const duplicateNodeAction = createAction<Uuid>('duplicateNodeAction')
+const deleteNodeAction = createAction<Uuid>('deleteNodeAction')
 const toggleChildrenCollapsedAction = createAction<Uuid>('toggleChildrenCollapsedAction')
+const pasteChildrenAction = createAction<{ receivingNodeId: Uuid, givenNodeId: Uuid, indexToPaste: number }>('pasteChildrenAction')
+
+// add new actions here
+export const actionsToSave = [pasteChildrenAction, deleteNodeAction]
 
 export {
   updateVariablesAction,
@@ -27,4 +32,6 @@ export {
   toggleChildrenCollapsedAction,
   wrapNodeAction,
   duplicateNodeAction,
+  pasteChildrenAction,
+  deleteNodeAction,
 };

@@ -27,8 +27,8 @@ const ObjectEditor: React.FunctionComponent<{
     onChange((old) => ({ ...old, [fieldValue]: value[fieldValue] || '' }));
 
   return (
-    <div className={`flex align-center flex-wrap`}>
-      <div className={`w-100 bold mb-5 mr-15 fz-20`}>{title}</div>
+    <div className={`align-center`}>
+      <div className={`w-100 bold mb-5 `}>{title}</div>
       <div className={`flex flex-column align-flex-start`}>
         {Object.entries(value)
           .map(([name]) => {
@@ -91,7 +91,7 @@ const ObjectEditor: React.FunctionComponent<{
                 <div key={name} className={`flex align-center pt-5 pb-5`}>
                   <div className={`flex align-center w-100-p`}>
                     {custom ? (
-                      <textarea rows={1} value={name} onChange={onFieldNameChange} />
+                      <textarea rows={1} value={name} onChange={onFieldNameChange} className={'w-80'} />
                     ) : (
                       <select value={name} className={`ml-10`} onChange={onFieldSelect}>
                         {fields.map(({ name: fieldName }) => (
@@ -102,7 +102,7 @@ const ObjectEditor: React.FunctionComponent<{
 
                     <FaRegWindowClose onClick={() => _delete()} size={20} className={`mr-10 ml-10 min-w-20`} />
 
-                    <textarea rows={1} value={fieldValue} onChange={onFieldChange} />
+                    <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-80'} />
                     {/*{withFile && (*/}
                     {/*  <Tooltip*/}
                     {/*    trigger={['hover']}*/}
@@ -138,15 +138,14 @@ const ObjectEditor: React.FunctionComponent<{
         ) : null}
 
         {enableCreating && (
-          <div className={`flex align-center pt-15`}>
-            New field:
+          <div className={`flex align-center`}>
             <textarea
               rows={1}
               value={newField}
               onChange={({ target: { value } }) => setNewField(value)}
-              className={`ml-15`}
+              className={'w-80'}
             />
-            <button className={`ml-20`} onClick={onAddFieldClick}>
+            <button className={`ml-50`} onClick={onAddFieldClick}>
               + (Add)
             </button>
           </div>

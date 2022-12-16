@@ -12,15 +12,14 @@ interface IInspectedNodeLabelProps {}
 
 const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
   const {
-    nodeApi: { nodeState, changeName, changeText, addBlockNode, addTextNode },
+    nodeApi: { nodeState, changeName, changeText },
   } = useContext(EachTagManagerProviderContext);
 
   return (
     <div style={{ fontSize: labelFontSize + 1 }} data-name={'InspectedNodeLabel'}>
-      {/* Name */}
       {!nodeState.isText && (
         <div className="flex">
-          <div className="flex" >
+          <div data-name={'Name '} className="flex fz-18"  >
             <div>{'Name: '}</div>
             <EditableField
               notEditElement={nodeState.name || '-'}

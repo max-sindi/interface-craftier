@@ -1,5 +1,4 @@
-import React , { useCallback } from 'react';
-import EachTagManager from './TagManager/EachTagManager';
+import React , { useCallback , useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createNodeSelector ,
@@ -8,6 +7,7 @@ import {
 import { resetStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
+import Toolbar from './TagManager/Toolbar';
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
@@ -17,10 +17,15 @@ const HtmlManager = () => {
   const resetState = () => dispatch(resetStateAction());
   const selectRoot = () => dispatch(selectRootAction())
 
+  useEffect(() => {
+  // resetState()
+    selectRoot()
+  }, [])
+
 
   return (
     <div className={'html-manager'}>
-      <div id="toolbar" className={'fixed b-20 l-50-p transform-left-center'}>
+      <div id="toolbar" className={'fixed b-20 t-20 r-20 w-300 overflow-hidden'}>
         {(!inspectedNodeId || !nodeState) ? (
           <div>
             <img
@@ -30,19 +35,20 @@ const HtmlManager = () => {
               height={50}
               className={'mr-a ml-a d-block'}
             />
-            <div className={`text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
+            <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
+            <div className='mt-40 text-center'>
+              <button className=" pointer" onClick={resetState}>
+                Reset state
+              </button>
+            </div>
           </div>
         ) : (
           <EachTagManagerProvider nodeId={nodeState.id}>
-            <EachTagManager />
+            <Toolbar />
           </EachTagManagerProvider>
         )}
       </div>
 
-      {/* Reset State button */}
-      {/*<button className="fixed t-30 r-30 pointer" onClick={resetState}>*/}
-      {/*  Reset state*/}
-      {/*</button>*/}
       <CopyToClipboardToolbar />
 
     </div>

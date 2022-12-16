@@ -94,7 +94,7 @@ export const createDeleter =
 export const logObjectFields = (object: any) =>
   Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
 
-export const cloneNode = (data: TagNode): TagNode =>
+export const cloneNode = (data: TagNode | ExtendedNode): TagNode | ExtendedNode =>
   cloneDeepWith(data, (target: TagNode) => ({
     ...target,
     id: uuid(),
@@ -194,7 +194,7 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
       childIndex: levelIndex,
       deepIndex,
       parentId: parentNode?.id,
-      children: node.children.map((childNode, index) =>
+      children: node.children.filter(Boolean).map((childNode, index) =>
         recursiveIterator(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
       ),
     };
@@ -204,10 +204,6 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
 
     return extendedNode;
   };
-
-  // const recursivelyObserveChildren = (startingNode: TagNode) => {
-  //   return observer();
-  // };
 
   const updatedTemplate = recursiveIterator(state.template, 0, 0, 'template');
 
