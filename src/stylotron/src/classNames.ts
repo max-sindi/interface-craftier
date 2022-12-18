@@ -1,5 +1,6 @@
 import CssUnitClassBranch from './CssUnitClassBranch';
 import CssSimpleClassBranch from './CssSimpleClassBranch';
+import { CSSProperties } from 'react';
 
  export const widthClassNameInstance = new CssUnitClassBranch({
    className: 'w',
@@ -218,7 +219,7 @@ const classNames = [
     property: `font-weight`,
     values: ['300', '400', '500', '600', '700', '800', '900'],
   }),
-  new CssUnitClassBranch({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, px: true }),
+  new CssUnitClassBranch({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, each5ValuesLimit: 100, px: true }),
   new CssUnitClassBranch({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
   new CssUnitClassBranch({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),
   new CssSimpleClassBranch({ classNameCreator: (mdf) => `z-index-${mdf}`, property: 'z-index', media: true, values: ['-1', '0', '1', '2', '3'] }),
@@ -339,6 +340,14 @@ const classNames = [
   new CssSimpleClassBranch({
     property: `text-transform`,
     values: ['capitalize', 'uppercase'],
+  }),
+  new CssSimpleClassBranch({
+    property: 'text-decoration',
+    values: ['none', 'underline', 'linethrough']
+  }),
+  new CssSimpleClassBranch({
+    property: 'box-sizing',
+    values: ['border-box', 'content-box']
   }),
 ];
 

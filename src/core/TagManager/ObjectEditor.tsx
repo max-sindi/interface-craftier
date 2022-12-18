@@ -112,7 +112,7 @@ const ObjectEditor: React.FunctionComponent<{
                     {/*      <button className={`black ml-20`}> File?</button>*/}
                     {/*  </Tooltip>*/}
                     {/*)}*/}
-                    {withVariable && (
+                    {/*{withVariable && (*/}
                       <Tooltip
                         trigger={['hover']}
                         overlay={<VariableSelector onChange={onVariableChange} />}
@@ -120,7 +120,7 @@ const ObjectEditor: React.FunctionComponent<{
                       >
                         <button className={`black ml-20`}> Variable?</button>
                       </Tooltip>
-                    )}
+                    {/*)}*/}
                   </div>
                 </div>
               );

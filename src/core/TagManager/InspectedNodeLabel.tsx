@@ -19,24 +19,27 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
     <div style={{ fontSize: labelFontSize + 1 }} data-name={'InspectedNodeLabel'}>
       {!nodeState.isText && (
         <div className="flex">
-          <div data-name={'Name '} className="flex fz-18"  >
-            <div>{'Name: '}</div>
-            <EditableField
-              notEditElement={nodeState.name || '-'}
-              editElement={
-                <input
-                  type="text"
-                  data-name={'text-field'}
-                  value={nodeState.name}
-                  onChange={changeName}
-                  autoFocus={true}
-                  style={{ fontSize: labelFontSize + 1 }}
-                  className={'edit-text-input w-90-p ml-5'}
-                />
-              }
-            />
+          <div>
+            <div className="fz-18">Tag: {`< ${nodeState.tag} />`}</div>
+            <div data-name={'Name '} className="flex fz-18">
+              <div>{'Name: '}</div>
+              <EditableField
+                notEditElement={nodeState.name || '-'}
+                editElement={
+                  <input
+                    type="text"
+                    data-name={'text-field'}
+                    value={nodeState.name}
+                    onChange={changeName}
+                    autoFocus={true}
+                    style={{ fontSize: labelFontSize + 1 }}
+                    className={'edit-text-input w-90-p ml-5'}
+                  />
+                }
+              />
+            </div>
           </div>
-          <TagActionsPanel/>
+          <TagActionsPanel />
         </div>
       )}
       {/* Children */}

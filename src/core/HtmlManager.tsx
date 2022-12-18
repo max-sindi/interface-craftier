@@ -25,7 +25,7 @@ const HtmlManager = () => {
 
   return (
     <div className={'html-manager'}>
-      <div id="toolbar" className={'fixed b-20 t-20 r-20 overflow-hidden'}>
+      <div id="toolbar" className={'fixed b-20 t-200 r-20 overflow-hidden'}>
         {(!inspectedNodeId || !nodeState) ? (
           <div>
             <img
@@ -36,11 +36,11 @@ const HtmlManager = () => {
               className={'mr-a ml-a d-block'}
             />
             <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
-            <div className='mt-40 text-center'>
-              <button className=" pointer" onClick={resetState}>
-                Reset state
-              </button>
-            </div>
+            {/*<div className='mt-40 text-center'>*/}
+            {/*  <button className=" pointer" onClick={resetState}>*/}
+            {/*    Reset state*/}
+            {/*  </button>*/}
+            {/*</div>*/}
           </div>
         ) : (
           <EachTagManagerProvider nodeId={nodeState.id}>

@@ -216,7 +216,7 @@ var classNames = [
         property: "font-weight",
         values: ['300', '400', '500', '600', '700', '800', '900']
     }),
-    new CssUnitClassBranch_1["default"]({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, px: true }),
+    new CssUnitClassBranch_1["default"]({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, each5ValuesLimit: 100, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),
     new CssSimpleClassBranch_1["default"]({ classNameCreator: function (mdf) { return "z-index-".concat(mdf); }, property: 'z-index', media: true, values: ['-1', '0', '1', '2', '3'] }),
@@ -334,6 +334,14 @@ var classNames = [
     new CssSimpleClassBranch_1["default"]({
         property: "text-transform",
         values: ['capitalize', 'uppercase']
+    }),
+    new CssSimpleClassBranch_1["default"]({
+        property: 'text-decoration',
+        values: ['none', 'underline', 'linethrough']
+    }),
+    new CssSimpleClassBranch_1["default"]({
+        property: 'box-sizing',
+        values: ['border-box', 'content-box']
     }),
 ];
 exports["default"] = classNames;

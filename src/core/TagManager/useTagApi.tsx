@@ -1,19 +1,23 @@
 import { Uuid } from 'src/core/store/modules/template/reducer';
-import { useDispatch , useSelector } from 'react-redux';
-import React , { useCallback , useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback, useMemo } from 'react';
 import {
-  createNodeSelector ,
-  inspectedNodeStateSelector , nodeDeepnessSelector ,
-  nodesMapSelector
+  createNodeSelector,
+  inspectedNodeStateSelector,
+  nodeDeepnessSelector,
+  nodesMapSelector,
 } from 'src/core/store/modules/template/selector';
 import { TagNode } from 'src/core/TagNode';
 import {
-  deleteNodeAction ,
-  duplicateNodeAction ,
-  highlightInspectedNodeAction , pasteChildrenAction ,
-  updateHoveredNodeAction ,
-  updateInspectedNodeAction ,
-  updateNodeAction , wrapNodeAction
+  addChildAction,
+  deleteNodeAction,
+  duplicateNodeAction,
+  highlightInspectedNodeAction,
+  pasteChildrenAction,
+  updateHoveredNodeAction,
+  updateInspectedNodeAction,
+  updateNodeAction,
+  wrapNodeAction,
 } from 'src/core/store/modules/template/actions';
 import { tags } from 'src/core/TagManager/config';
 import { createSelector } from 'reselect';
@@ -26,33 +30,31 @@ export const useTagApi = (nodeId: Uuid) => {
     () => (nodeState?.parentId ? createNodeSelector(nodeState.parentId) : () => undefined),
     [nodeState?.parentId]
   );
-  const deepnessSelector = useCallback(createSelector(
+  const deepnessSelector = useCallback(createSelector(nodeSelector, nodesMapSelector, nodeDeepnessSelector), [
     nodeSelector,
-    nodesMapSelector,
-    nodeDeepnessSelector
-  ), [nodeSelector])
-  const deepness = useSelector(deepnessSelector)
+  ]);
+  const deepness = useSelector(deepnessSelector);
 
   const parentNodeState = useSelector(parentNodeSelector);
   // const parentNodeApi = useTagApi(parentNodeState.id)
-  const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId))
+  const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId));
   const updateInspectedNode = (node?: TagNode) => dispatch(updateInspectedNodeAction(node?.id));
   const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
   const highlightThisNode = (event: any) => {
     event.stopPropagation();
     updateHoveredNode(nodeState);
-  }
-  const highlightInspectedNode = () => dispatch(highlightInspectedNodeAction())
-  const transformField = ( field: keyof TagNode, value: any, withTreeDestructing?: boolean) =>
+  };
+  const highlightInspectedNode = () => dispatch(highlightInspectedNodeAction());
+  const transformField = (field: keyof TagNode, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
   //   parentNodeState && dispatch(updateNodeAction({ id: parentNodeState.id, field, value, withTreeDestructing }));
   const selectParent = () => updateInspectedNode(parentNodeState);
   const selectChild = (child: TagNode) => updateInspectedNode(child);
   const onHighlight = (hoveringNode = nodeState) => updateHoveredNode(hoveringNode);
-  const createHtmlChangeHandler = (path: keyof TagNode) => ( evt: any) => transformField(path, evt.target.value);
-  const createChangeHandler = (path: keyof TagNode) => ( value: any) => {
+  const createHtmlChangeHandler = (path: keyof TagNode) => (evt: any) => transformField(path, evt.target.value);
+  const createChangeHandler = (path: keyof TagNode) => (value: any) => {
     value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
   };
   const changeText = createHtmlChangeHandler('text');
@@ -67,12 +69,6 @@ export const useTagApi = (nodeId: Uuid) => {
       true
     );
 
-  const addChild = (creator = createNode) => {
-    transformField('children', [...nodeState.children, creator()], true);
-  };
-
-  const addBlockNode = () => addChild();
-  const addTextNode = () => addChild(() => new TagNode({ isText: true }));
 
   const createNode = (children?: TagNode['children']): TagNode =>
     new TagNode({
@@ -92,17 +88,20 @@ export const useTagApi = (nodeId: Uuid) => {
     </select>
   );
 
-  const wrapNode = () => dispatch(wrapNodeAction(nodeId))
-  const duplicateNode = () => dispatch(duplicateNodeAction(nodeId))
+  const addChild = (creator = createNode) => dispatch(addChildAction({ id: nodeId, child: creator() }));
+  const addBlockNode = () => addChild();
+  const addTextNode = () => addChild(() => new TagNode({ isText: true }));
+  const wrapNode = () => dispatch(wrapNodeAction(nodeId));
+  const duplicateNode = () => dispatch(duplicateNodeAction(nodeId));
   const pasteChildren = (params: Omit<Parameters<typeof pasteChildrenAction>[0], 'receivingNodeId'>) => {
-    dispatch(pasteChildrenAction( { ...params, receivingNodeId: nodeId }))
-    dispatch(deleteNodeAction(params.givenNodeId))
-  }
-  const deleteThisNode = () => dispatch(deleteNodeAction(nodeId))
+    dispatch(pasteChildrenAction({ ...params, receivingNodeId: nodeId }));
+    dispatch(deleteNodeAction(params.givenNodeId));
+  };
+  const deleteThisNode = () => dispatch(deleteNodeAction(nodeId));
 
   return {
     deleteThisNode,
-    onMouseEnter ,
+    onMouseEnter,
     nodeState,
     parentNodeState,
     updateInspectedNode,
@@ -132,7 +131,7 @@ export const useTagApi = (nodeId: Uuid) => {
     wrapNode,
     duplicateNode,
     pasteChildren,
-  }
-}
+  };
+};
 
-export type NodeApi = ReturnType<typeof useTagApi>
+export type NodeApi = ReturnType<typeof useTagApi>;

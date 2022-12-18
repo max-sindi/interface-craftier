@@ -26,7 +26,7 @@ const TagDetails = ( props : ITagDetailsProps ) => {
     },
   } = useContext(EachTagManagerProviderContext);
   const nodeId = nodeState.id;
-  const [tabIndex, setTabIndex] = useState(4);
+  const [tabIndex, setTabIndex] = useState(1);
 
   return (
     <Tabs

@@ -1,3 +1,4 @@
+import { StandardLonghandProperties } from 'csstype';
 
 
 export const stylesExisting = [
@@ -21,6 +22,9 @@ export const stylesExisting = [
   {
     name: 'lineHeight',
     withVariable: true
+  },
+  {
+    name: 'fontFamily'
   }
 ]
 
@@ -35,6 +39,12 @@ export const attrsExisting = [
   },
   {
     name: 'href',
+  },
+  {
+    name: 'placeholder',
+  },
+  {
+    name: 'value',
   },
 ]
 

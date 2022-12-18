@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 // import { AiOutlineFileAdd } from 'react-icons/ai';
 import { FaRegWindowClose } from 'react-icons/fa';
 // import { MdArrowDownward, MdArrowUpward } from 'react-icons/md';
@@ -52,13 +52,12 @@ function Toolbar(props: IEachTagManagerProps) {
 
   return (
     <div className={cc('relative min-h-20')}>
-      {/* Toggle or Expand menu */}
-      <div className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
+      <div data-name={'Toggle or Expand menu'} className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
       </div>
 
       <div className={!toolbarCollapsed ? '' : 'd-none'}>
-        <div className={'min-h-285'}>{!nodeState.isText && <TagDetails />}</div>
+        <div className={'min-h-250'}>{!nodeState.isText && <TagDetails />}</div>
 
         <div className="flex flex-wrap align-center pt-10 h-70">
           <Tooltip overlay={'Level Up'} placement={'top'}>
@@ -82,9 +81,9 @@ function Toolbar(props: IEachTagManagerProps) {
               {rendererTagSelect()}
             </div>
           )}
-          <button onClick={() => onHighlight()} className={`ml-20 pointer fz-13`}>
-            {'Highlight'}
-          </button>
+          {/*<button onClick={() => onHighlight()} className={`ml-20 pointer fz-13`}>*/}
+          {/*  {'Highlight'}*/}
+          {/*</button>*/}
           <div className={'flex align-center justify-space-between w-100-p'}>
             {nodeState.deepIndex > 0 && (
               <RiDeleteBin6Line

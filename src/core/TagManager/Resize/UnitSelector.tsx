@@ -19,9 +19,14 @@ const UnitSelector = ({
         typeof defaultClassName === 'string' ? defaultClassName : defaultClassName[evt.target.value as UnitName],
     });
   };
+  const onResetClassName = () => {
+    const clone = { ...classNameRecord }
+    delete clone[classNameRoot]
+    changeClassName(clone)
+  }
 
   return (
-    <div>
+    <div className={'flex align-center'}>
       <select value={unit} onChange={onChangeUnit} className={'p-0'}>
         {(['px', '%', 'vh'] as UnitName[]).map((unit) => (
           <option value={unit} key={unit}>
@@ -29,6 +34,7 @@ const UnitSelector = ({
           </option>
         ))}
       </select>
+      <span className={'ml-5 w-15 h-15 pointer'} style={{ background: 'red'}} onClick={onResetClassName}/>
     </div>
   );
 };

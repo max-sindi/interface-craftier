@@ -13,7 +13,7 @@ $dimensions-resize-color: #00aead;
 $margin-color: #ffc06e;
 $toolbar-width: 400px;
 .scene {
-  padding-right: $toolbar-width;
+  //padding-right: $toolbar-width;
 }
 
 .label {
@@ -165,7 +165,7 @@ $toolbar-width: 400px;
   overflow: scroll;
   bottom: 100%;
   right: 0px;
-  padding: 10px 15px 10px;
+  padding: 10px 0;
 }
 
 .edit-mode-enabled {
@@ -395,3 +395,42 @@ $toolbar-width: 400px;
 //.resizeBoxReverse .react-resizable-handle-s {
 //  transform: rotate(-135deg);
 //}
+
+
+$inter: 'Inter';
+
+@font-face {
+  font-family: $inter;
+  src: url('./core/fonts/Inter/static/Inter-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $inter;
+  src: url('./core/fonts/Inter/static/Inter-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $inter;
+  src: url('./core/fonts/Inter/static/Inter-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: $inter;
+  src: url('./core/fonts/Inter/static/Inter-ExtraBold.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}

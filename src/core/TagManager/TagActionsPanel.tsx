@@ -23,8 +23,8 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       </IconButton>
       {nodeState.deepIndex > 0 && (
         <>
-          <IconButton centering className={'w-25 h-25 pt-5'} title={'Wrap'} onClick={wrapNode}>
-            <WrapIcon />
+          <IconButton centering className={'flex flex-center'} title={'Wrap'} onClick={wrapNode}>
+            <WrapIcon className={'w-25 h-25'} />
           </IconButton>
           <IconButton centering>
             <IoDuplicateOutline title={'Duplicate'} className={'pointer'} onClick={duplicateNode} />

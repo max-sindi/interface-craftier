@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React , { useContext , useState } from 'react';
 import { ClassNameChange, deleteField, extractNumber, lastArrayItem, StyleChange } from 'src/utils';
 import styles from 'src/stylotron/src/styles.json';
 import ClassNameMultiSwitch from 'src/core/TagManager/ClassNameMultiSwitch';
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { variablesSelector } from 'src/core/store/modules/template/selector';
 import InputRange from 'src/core/UI/InputRange';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 
 const withRanges = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
 const withSingleValue = styles.classBranches.filter((branch) => (branch.range?.length || 0) === 1);
@@ -29,6 +30,7 @@ const ClassNamesSelector = ({
   styleRecord,
   changeStyles,
 }: IClassNamesSelectorProps) => {
+  const { nodeApi: { nodeState: { id } }} = useContext(EachTagManagerProviderContext)
   const [tabIndex, setTabIndex] = useState(0);
   const variables = useSelector(variablesSelector);
 
@@ -39,6 +41,11 @@ const ClassNamesSelector = ({
         onSelect={(index) => setTabIndex(index)}
         forceRenderTabPanel
       >
+        <TabList>
+          <Tab>Ranged</Tab>
+          <Tab>Flags</Tab>
+          <Tab>Variabled</Tab>
+        </TabList>
         {/* 1 - Ranged */}
         <TabPanel>
           <div className={`max-h-200 overflow-auto`}>
@@ -47,7 +54,7 @@ const ClassNamesSelector = ({
               const range = ['', ...(branch.range || [])]
 
               return (
-                <div key={name} className={'flex'}>
+                <div key={id + name} className={'flex'}>
                   <div className="min-w-70 max-w-70 pr-5 flex align-center">{name}</div>
                   <ClassNameMultiSwitch
                     texts={values}
@@ -126,11 +133,6 @@ const ClassNamesSelector = ({
             ))}
           </div>
         </TabPanel>
-        <TabList>
-          <Tab>Ranged</Tab>
-          <Tab>Flags</Tab>
-          <Tab>Variabled</Tab>
-        </TabList>
       </Tabs>
     </div>
   );

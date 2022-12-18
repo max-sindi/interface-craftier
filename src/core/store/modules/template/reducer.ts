@@ -2,6 +2,7 @@ import { createReducer , current } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { TagNode } from 'src/core/TagNode';
 import {
+  addChildAction ,
   deleteNodeAction ,
   duplicateNodeAction ,
   highlightInspectedNodeAction ,
@@ -161,7 +162,14 @@ export default createReducer(initialState(), (builder) => {
           [] as ExtendedNode[]
         );
         updateNodeInTree(state, node.parentId, true);
+        state.inspectedNode = clone.id
       }
+    })
+    .addCase(addChildAction, (state, { payload: { id, child } }) => {
+      const node = state.nodesMap[id];
+      node.children.push(child as ExtendedNode)
+      updateNodeInTree(state, node.id, true)
+      state.inspectedNode = child.id
     })
     .addCase(updateNodeAction, (state, { payload: { id, field, value, withTreeDestructing } }) => {
       (state.nodesMap[id] as any)[field] = value;

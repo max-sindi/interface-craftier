@@ -76,7 +76,7 @@ const ResizeSpaces = ({
           </div>
           <div className="absolute t-50-p l-0 transform-top-center flex p-15">
             {leftClassNameInterface.integer}{' '}
-            <UnitSelector classNameInterface={bottomClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
+            <UnitSelector classNameInterface={leftClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
           </div>
         </div>
       </Resizable>

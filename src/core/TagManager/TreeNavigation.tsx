@@ -14,12 +14,12 @@ const TreeNavigation = (props: ITreeNavigationProps) => {
   const inspectedNodeDeepness = useSelector(inspectedNodeDeepnessSelector);
 
   return (
-    <div data-name={'tree-navigation'} className={'h-600 overflow-auto flex flex-column'}>
+    <div data-name={'tree-navigation'} className={'h-340 overflow-auto flex flex-column'}>
       <div
         className={'tags-container'}
         style={{
           transform:
-            inspectedNodeDeepness < 7 ? 'none' : `translateY(calc(170px - ${labelHeight * inspectedNodeDeepness}px))`,
+            inspectedNodeDeepness < 17 ? 'none' : `translateY(calc(170px - ${labelHeight * inspectedNodeDeepness}px))`,
         }}
       >
         <DndProvider backend={HTML5Backend}>

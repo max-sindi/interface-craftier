@@ -85,6 +85,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       updateHoveredNode(nodeState);
     },
     onClick: (event: any) => {
+      event.preventDefault()
       if(!nodeState.isText) {
         event.stopPropagation();
         updateInspectedNode(nodeState);
