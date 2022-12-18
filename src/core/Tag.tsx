@@ -15,6 +15,9 @@ import {
 import LiveTagManager from 'src/core/LiveTagManager';
 import { TagNode } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
+import Tooltip from 'rc-tooltip';
+import Toolbar from 'src/core/TagManager/Toolbar';
+import FocuserInput from 'src/core/TagManager/FocuserInput';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -39,24 +42,24 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
 
-  const recursiveRenderChildren = () =>
-    !nodeState.isText ? (
-      <>
-        {isThisInspectingNode && (
-          <EachTagManagerProvider nodeId={nodeState.id}>
-            {/*<LiveTagManager />*/}
-          </EachTagManagerProvider>
-        )}
-        {nodeState.children.map((child, index) => (
-          <Fragment key={child.id}>
-            <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
-          </Fragment>
-        ))}
-      </>
-    ) : (
-      nodeState.text
-    );
-
+  const recursiveRenderChildren = () => (
+    <>
+      {!nodeState.isText ? (
+        <>
+          {isThisInspectingNode && (
+            <EachTagManagerProvider nodeId={nodeState.id}>{/*<LiveTagManager />*/}</EachTagManagerProvider>
+          )}
+          {nodeState.children.map((child, index) => (
+            <Fragment key={child.id}>
+              <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
+            </Fragment>
+          ))}
+        </>
+      ) : (
+        nodeState.text
+      )}
+    </>
+  );
   const attrs = {
     'data-name': nodeState.name || '',
     'data-deep-level': deepLevel + 1,
@@ -85,15 +88,41 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       updateHoveredNode(nodeState);
     },
     onClick: (event: any) => {
-      event.preventDefault()
-      if(!nodeState.isText) {
+      event.preventDefault();
+      if (!nodeState.isText) {
         event.stopPropagation();
         updateInspectedNode(nodeState);
       }
     },
+    onChange: (undefined as never as (() => void))
   };
 
-  return hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined);
+  // disable warning
+  if(nodeState.tag === 'input') {
+    attrs.onChange = () => {}
+  }
+
+  const wrapper = (children?: JSX.Element) =>
+    !isThisInspectingNode ? (
+      <>{children}</>
+    ) : (
+      <Tooltip
+        visible={true}
+        overlay={() => (
+          <>
+            <EachTagManagerProvider nodeId={nodeState.id}>
+              <Toolbar />
+            </EachTagManagerProvider>
+          </>
+        )}
+      >
+        {children}
+      </Tooltip>
+    );
+
+  return wrapper(
+    hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined)
+  );
 }
 
 export default Tag;

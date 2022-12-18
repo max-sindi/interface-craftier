@@ -14,16 +14,20 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
   const {
     nodeApi: { nodeState, changeName, changeText },
   } = useContext(EachTagManagerProviderContext);
+  const nameInitiallyEditable = !nodeState.name
 
   return (
     <div style={{ fontSize: labelFontSize + 1 }} data-name={'InspectedNodeLabel'}>
+      {/* Hidden */}
+      <FocuserInput key={nodeState.id} />
+
       {!nodeState.isText && (
         <div className="flex">
           <div>
             <div className="fz-18">Tag: {`< ${nodeState.tag} />`}</div>
             <div data-name={'Name '} className="flex fz-18">
               <div>{'Name: '}</div>
-              <EditableField
+              <EditableField initiallyEditable={nameInitiallyEditable}
                 notEditElement={nodeState.name || '-'}
                 editElement={
                   <input
@@ -66,8 +70,6 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
         )}
       </div>
 
-      {/* Hidden */}
-      <FocuserInput key={nodeState.id} />
     </div>
   );
 };

@@ -14,7 +14,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
   } = useContext(EachTagManagerProviderContext);
 
   return (
-    <div className={'ml-a pr-10 flex'} data-name={'TagActionsPanel'}>
+    <div className={'ml-a pr-10 flex relative '} data-name={'TagActionsPanel'}>
       <IconButton centering>
         <IoMdAdd className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
       </IconButton>

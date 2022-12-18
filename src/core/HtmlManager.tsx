@@ -19,35 +19,35 @@ const HtmlManager = () => {
 
   useEffect(() => {
   // resetState()
-    selectRoot()
+  //   selectRoot()
   }, [])
 
 
   return (
     <div className={'html-manager'}>
-      <div id="toolbar" className={'fixed b-20 t-200 r-20 overflow-hidden'}>
-        {(!inspectedNodeId || !nodeState) ? (
-          <div>
-            <img
-              src="https://cdn2.iconfinder.com/data/icons/visual-empty-state/32/No_Data_Found_Not_Found_Lost_Searching_Search-1024.png"
-              alt="No data"
-              width={50}
-              height={50}
-              className={'mr-a ml-a d-block'}
-            />
-            <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
-            {/*<div className='mt-40 text-center'>*/}
-            {/*  <button className=" pointer" onClick={resetState}>*/}
-            {/*    Reset state*/}
-            {/*  </button>*/}
-            {/*</div>*/}
-          </div>
-        ) : (
-          <EachTagManagerProvider nodeId={nodeState.id}>
-            <Toolbar />
-          </EachTagManagerProvider>
-        )}
-      </div>
+      {/*<div id="toolbar" className={'fixed b-20 t-200 r-20 overflow-hidden'}>*/}
+      {/*  {(!inspectedNodeId || !nodeState) ? (*/}
+      {/*    <div>*/}
+      {/*      <img*/}
+      {/*        src="https://cdn2.iconfinder.com/data/icons/visual-empty-state/32/No_Data_Found_Not_Found_Lost_Searching_Search-1024.png"*/}
+      {/*        alt="No data"*/}
+      {/*        width={50}*/}
+      {/*        height={50}*/}
+      {/*        className={'mr-a ml-a d-block'}*/}
+      {/*      />*/}
+      {/*      <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>*/}
+      {/*      /!*<div className='mt-40 text-center'>*!/*/}
+      {/*      /!*  <button className=" pointer" onClick={resetState}>*!/*/}
+      {/*      /!*    Reset state*!/*/}
+      {/*      /!*  </button>*!/*/}
+      {/*      /!*</div>*!/*/}
+      {/*    </div>*/}
+      {/*  ) : (*/}
+      {/*    <EachTagManagerProvider nodeId={nodeState.id}>*/}
+      {/*      <Toolbar />*/}
+      {/*    </EachTagManagerProvider>*/}
+      {/*  )}*/}
+      {/*</div>*/}
 
       <CopyToClipboardToolbar />
 

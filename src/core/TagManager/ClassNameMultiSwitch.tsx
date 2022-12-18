@@ -13,7 +13,7 @@ const ClassNameMultiSwitch = ({ texts, onToggle, selectedSwitch }: IClassNameMul
   return (
     <MultiSwitch
       texts={texts}
-      selectedSwitch={Number(selectedSwitch) >= 0 ? Number(selectedSwitch) : 0}
+      selectedSwitch={Number(selectedSwitch) >= 0 ? Number(selectedSwitch) : undefined}
       bgColor={'#e57168'}
       onToggleCallback={onToggleCallback}
       fontColor={'white'}

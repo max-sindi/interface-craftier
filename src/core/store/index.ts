@@ -3,12 +3,12 @@ import middlewares from './middlewares';
 import { configureStore, MiddlewareAPI } from '@reduxjs/toolkit';
 import { cleanupTree, StorageMap } from 'src/core/store/modules/template/reducer';
 import {
-  actionsToSave,
-  duplicateNodeAction,
-  resetStateAction,
-  updateNodeAction,
-  updateVariablesAction,
-  wrapNodeAction,
+  actionsToSave ,
+  duplicateNodeAction ,
+  resetStateAction , updateInspectedNodeAction ,
+  updateNodeAction ,
+  updateVariablesAction ,
+  wrapNodeAction ,
 } from 'src/core/store/modules/template/actions';
 
 function makeStore(preloadedState?: RootReducer) {
@@ -16,8 +16,9 @@ function makeStore(preloadedState?: RootReducer) {
     reducer: rootReducer,
     middleware: [
       ...middlewares,
-      (api: MiddlewareAPI) => (next: any) => (action: { type: string }) => {
+      (api: MiddlewareAPI) => (next: any) => (action: { type: string, payload: any }) => {
         next(action);
+        // save global state
         if (
           [
             updateNodeAction.toString(),
@@ -29,6 +30,11 @@ function makeStore(preloadedState?: RootReducer) {
           ].includes(action.type)
         ) {
           localStorage.setItem(StorageMap.State, JSON.stringify(cleanupTree(api.getState().template.currentState)));
+        }
+
+        // save inspected node
+        if([updateInspectedNodeAction.toString()].includes(action.type) && action.payload) {
+          localStorage.setItem(StorageMap.InspectedNode, action.payload)
         }
       },
     ],

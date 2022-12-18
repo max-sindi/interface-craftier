@@ -34,6 +34,7 @@ export type GlobalState = {
 
 export enum StorageMap {
   State = 'state',
+  InspectedNode = 'inspectedNode',
 }
 
 export type Uuid = ReturnType<typeof uuid>;
@@ -80,7 +81,7 @@ const initialState = (initialGlobalState?: GlobalState): Reducer => {
   return {
     ...destructTree(currentState),
     hoveredNode: undefined,
-    inspectedNode: undefined,
+    inspectedNode: localStorage.getItem(StorageMap.InspectedNode) || undefined,
   };
 };
 

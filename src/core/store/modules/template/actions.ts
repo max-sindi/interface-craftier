@@ -7,7 +7,7 @@ const updateVariablesAction = createAction<IVariables>('updateVariable');
 const updateHoveredNodeAction = createAction<Uuid>('updateHoveredNode');
 const resetHoveredNodeAction = createAction('resetHoveredNode');
 const highlightInspectedNodeAction = createAction('highlightInspectedNodeAction');
-const updateInspectedNodeAction = createAction<Uuid | undefined>('updateInspectedNode');
+const updateInspectedNodeAction = createAction<Uuid | undefined>('updateInspectedNodeAction');
 const updateNodeAction = createAction<{ id: Uuid, field: string, value: any, withTreeDestructing?: boolean }>(
   'updateNodeAction'
 );
@@ -21,7 +21,7 @@ const toggleChildrenCollapsedAction = createAction<Uuid>('toggleChildrenCollapse
 const pasteChildrenAction = createAction<{ receivingNodeId: Uuid, givenNodeId: Uuid, indexToPaste: number }>('pasteChildrenAction')
 
 // add new actions here
-export const actionsToSave = [pasteChildrenAction, deleteNodeAction]
+export const actionsToSave = [pasteChildrenAction, deleteNodeAction, addChildAction]
 
 export {
   updateVariablesAction,

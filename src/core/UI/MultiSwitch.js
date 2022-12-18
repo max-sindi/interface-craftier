@@ -109,7 +109,7 @@ export default class MultiSwitch extends Component {
 
 MultiSwitch.defaultProps = {
   texts: ['Text 1', 'Text 2'],
-  selectedSwitch: 0,
+  // selectedSwitch: 0,
   bgColor: 'white',
   borderColor: 'black',
   borderWidth: '0.1rem',

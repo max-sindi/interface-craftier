@@ -24,7 +24,10 @@ const TagLabel = (props: ITagLabelProps) => {
         transform: `rotate3d(1, 0, -0, ${0.001 * remotenessFromInspectedNode}turn)`,
       }}
       className={'w-100-p h-100-p flex align-center pointer pl-15'}
-      onClick={inspectThisNode}
+      onClick={(evt) => {
+        evt.stopPropagation()
+        inspectThisNode()
+      }}
       onMouseEnter={highlightThisNode}
       onMouseLeave={highlightInspectedNodeAction}
     >

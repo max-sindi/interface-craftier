@@ -34,7 +34,7 @@ const ChildTagNode = (props: IChildNodeProps) => {
   const fontSize = labelFontSize - levelDifferenceToInspectedNode * 0.12;
   const toggleChildrenCollapsed = () => {
     dispatch(toggleChildrenCollapsedAction(id));
-    dispatch(updateInspectedNodeAction(id));
+    // dispatch(updateInspectedNodeAction(id));
   };
 
   const [, dragRef] = useDrag(

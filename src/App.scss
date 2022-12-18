@@ -76,6 +76,15 @@ $toolbar-width: 400px;
   background: #{$dimensions-resize-color}80;
   z-index: -1;
 }
+.label-focus {
+  outline: 0;
+  width: 0;
+  height: 0;
+  color: transparent;
+  padding: 0;
+  position: absolute;
+  right: 0;
+}
 //#3363b1
 .html-manager {
   input,
@@ -94,15 +103,6 @@ $toolbar-width: 400px;
     background: #44914730;
     color: #111111;
     outline: 2px solid #FF9A00;
-  }
-  .label-focus {
-    outline: 0;
-    width: 0;
-    height: 0;
-    color: transparent;
-    padding: 0;
-    position: absolute;
-    right: 0;
   }
 
   .edit-text-input {

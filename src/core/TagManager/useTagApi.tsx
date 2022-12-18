@@ -69,7 +69,6 @@ export const useTagApi = (nodeId: Uuid) => {
       true
     );
 
-
   const createNode = (children?: TagNode['children']): TagNode =>
     new TagNode({
       children,

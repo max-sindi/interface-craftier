@@ -9,11 +9,12 @@ import { variablesSelector } from 'src/core/store/modules/template/selector';
 import InputRange from 'src/core/UI/InputRange';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
+import { StyleRecord } from 'src/core/TagNode';
 
 const withRanges = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
 const withSingleValue = styles.classBranches.filter((branch) => (branch.range?.length || 0) === 1);
 const withNumericRanges = styles.classBranches.filter((branch) =>
-  ['border-width', 'border-radius', 'fz'].includes(branch.name)
+  ['border-width', 'border-radius', 'fz', 'min-w', 'max-w', 'min-h', 'max-h'].includes(branch.name)
 );
 
 const defaultValues: Record<any, any> = {
@@ -54,8 +55,8 @@ const ClassNamesSelector = ({
               const range = ['', ...(branch.range || [])]
 
               return (
-                <div key={id + name} className={'flex'}>
-                  <div className="min-w-70 max-w-70 pr-5 flex align-center">{name}</div>
+                <div key={id + name} className={'mb-10'}>
+                  <div className="text-center mb-5">{name}</div>
                   <ClassNameMultiSwitch
                     texts={values}
                     selectedSwitch={range.findIndex(value => classNameRecord[name] === value)}
@@ -71,7 +72,7 @@ const ClassNamesSelector = ({
               const value = classNameRecord[name] ? extractNumber(classNameRecord[name] as string) : undefined;
 
               return !list || !list[0] ? null : (
-                <div className="flex align-center pt-5" key={name}>
+                <div className="flex align-center pt-5" key={id + name}>
                   <div className="w-130 flex align-center">{name}</div>
                   <InputRange
                     min={list[0].integer}
@@ -101,7 +102,7 @@ const ClassNamesSelector = ({
         <TabPanel>
           <div className={'max-h-400 overflow-auto flex flex-wrap'}>
             {withSingleValue.map(({ name }, index) => (
-              <div key={index + name} className={'w-50-p'}>
+              <div key={id + index + name} className={'w-50-p'}>
                 <label htmlFor={`flag-${name}`}>{name}</label>
                 <input
                   type="checkbox"
@@ -122,15 +123,20 @@ const ClassNamesSelector = ({
               backgroundColor: undefined,
               color: undefined,
               borderColor: undefined,
-            } as StandardLonghandProperties).map((item) => (
-              <div className={'flex'} key={item}>
-                <div className={'w-200'}>{item}</div>
-                <ClassNameMultiSwitch
-                  texts={['', ...Object.values(variables).filter((value) => value[0] === '#')]}
-                  onToggle={(value) => changeStyles({ ...styleRecord, [item]: value })}
-                />
-              </div>
-            ))}
+            } as Partial<StyleRecord>).map((item) => {
+              const range = ['', ...Object.values( variables ).filter( ( value ) => value[ 0 ] === '#' )]
+              return (
+                <div className={ 'flex' } key={ id + item }>
+                  <div className={ 'w-200' }>{ item }</div>
+                  <ClassNameMultiSwitch
+                    // selectedSwitch={2}
+                    selectedSwitch={ range.findIndex( value => styleRecord[ item as keyof StyleRecord] === value ) }
+                    texts={range}
+                    onToggle={ ( value ) => changeStyles( { ... styleRecord , [ item ] : value } ) }
+                  />
+                </div>
+              );
+            })}
           </div>
         </TabPanel>
       </Tabs>

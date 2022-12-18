@@ -21,6 +21,8 @@ import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import TagDetails from 'src/core/TagManager/TagDetails';
 import AppManager from 'src/core/AppManager';
+import { capitalize } from 'lodash';
+import FocuserInput from 'src/core/TagManager/FocuserInput';
 
 export type IEachTagManagerProps = {};
 
@@ -51,7 +53,7 @@ function Toolbar(props: IEachTagManagerProps) {
   };
 
   return (
-    <div className={cc('relative min-h-20')}>
+    <div className={cc('relative min-h-20')} onClick={evt => evt.stopPropagation()}>
       <div data-name={'Toggle or Expand menu'} className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
       </div>
@@ -60,7 +62,7 @@ function Toolbar(props: IEachTagManagerProps) {
         <div className={'min-h-250'}>{!nodeState.isText && <TagDetails />}</div>
 
         <div className="flex flex-wrap align-center pt-10 h-70">
-          <Tooltip overlay={'Level Up'} placement={'top'}>
+          <Tooltip overlay={<div>{parentNodeApi?.nodeState ? ` Parent: ${capitalize(parentNodeApi.nodeState.name)}` : 'No parent'}</div>} placement={'top'}>
             <div onClick={selectParent} className={cc('flex align-center pr-5 pointer')}>
               <IoMdReturnLeft />
             </div>
@@ -95,7 +97,10 @@ function Toolbar(props: IEachTagManagerProps) {
             )}
             <FaRegWindowClose
               data-name={'Close Popup '}
-              onClick={unselectCurrentNode}
+              onClick={(evt) => {
+                evt.stopPropagation()
+                unselectCurrentNode()
+              }}
               size={20}
               className={` z-index-5 mr-20 pointer`}
             />
