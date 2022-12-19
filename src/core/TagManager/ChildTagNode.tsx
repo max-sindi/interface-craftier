@@ -1,7 +1,7 @@
-import React, { Fragment, useContext, useState } from 'react';
-import EachTagManagerProvider, { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
+import React, { useContext } from 'react';
+import  { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { greenColor, labelFontSize, labelHeight, levelDeepPx } from 'src/utils';
-import { toggleChildrenCollapsedAction, updateInspectedNodeAction } from 'src/core/store/modules/template/actions';
+import { toggleChildrenCollapsedAction } from 'src/core/store/modules/template/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { inspectedNodeStateSelector } from 'src/core/store/modules/template/selector';
 import { AiFillCaretRight } from 'react-icons/ai';
@@ -9,13 +9,11 @@ import clsx from 'classnames';
 import InspectedNodeLabel from 'src/core/TagManager/InspectedNodeLabel';
 import TagLabel from 'src/core/TagManager/TagLabel';
 import RecursivelyRenderTagLabels from 'src/core/TagManager/RecursivelyRenderTagLabels';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 import { ProjectContext } from 'src/core/Project';
 import ChildDropZone from 'src/core/TagManager/ChildDropZone';
 
-interface IChildNodeProps {}
-
-const ChildTagNode = (props: IChildNodeProps) => {
+const ChildTagNode = () => {
   const {
     nodeApi: {
       nodeState,
@@ -41,11 +39,11 @@ const ChildTagNode = (props: IChildNodeProps) => {
     () => ({
       item: nodeState,
       type: 'TagNode',
-      canDrag: (monitor) => {
+      canDrag: () => {
         setNodeDragging(id);
         return true;
       },
-      end: (monitor, source) => {
+      end: () => {
         setNodeDragging(undefined);
         setNodeHoveredDragging(undefined);
       },
@@ -64,11 +62,11 @@ const ChildTagNode = (props: IChildNodeProps) => {
         {!nodeState.isText && !!nodeState.children.length ? (
           <div
             data-name={'Tag collapser button'}
-            className={`w-0`}
+            className={`w-0 z-index-1`}
             style={{ position: 'relative', left: nodeState.deepIndex * levelDeepPx - 10 }}
           >
             <AiFillCaretRight
-              className={'pointer'}
+              className={'pointer p-3'}
               style={{ transform: `rotate(${nodeState.childrenCollapsed ? 0 : 45}deg)`, transition: 'all 0.4s' }}
               onClick={toggleChildrenCollapsed}
             />

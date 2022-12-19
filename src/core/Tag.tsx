@@ -12,12 +12,10 @@ import {
   updateHoveredNodeAction,
   updateInspectedNodeAction,
 } from 'src/core/store/modules/template/actions';
-import LiveTagManager from 'src/core/LiveTagManager';
 import { TagNode } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
-import Tooltip from 'rc-tooltip';
-import Toolbar from 'src/core/TagManager/Toolbar';
-import FocuserInput from 'src/core/TagManager/FocuserInput';
+// import Tooltip from 'rc-tooltip';
+// import Toolbar from 'src/core/TagManager/Toolbar';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -102,27 +100,25 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     attrs.onChange = () => {}
   }
 
-  const wrapper = (children?: JSX.Element) =>
-    !isThisInspectingNode ? (
-      <>{children}</>
-    ) : (
-      <Tooltip
-        visible={true}
-        overlay={() => (
-          <>
-            <EachTagManagerProvider nodeId={nodeState.id}>
-              <Toolbar />
-            </EachTagManagerProvider>
-          </>
-        )}
-      >
-        {children}
-      </Tooltip>
-    );
+  // const wrapper = (children?: JSX.Element) =>
+  //   !isThisInspectingNode ? (
+  //     <>{children}</>
+  //   ) : (
+  //     <Tooltip
+  //       visible={true}
+  //       overlay={() => (
+  //         <>
+  //           <EachTagManagerProvider nodeId={nodeState.id}>
+  //             <Toolbar />
+  //           </EachTagManagerProvider>
+  //         </>
+  //       )}
+  //     >
+  //       {children}
+  //     </Tooltip>
+  //   );
 
-  return wrapper(
-    hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined)
-  );
+  return hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined)
 }
 
 export default Tag;

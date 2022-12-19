@@ -76,14 +76,17 @@ $toolbar-width: 400px;
   background: #{$dimensions-resize-color}80;
   z-index: -1;
 }
-.label-focus {
-  outline: 0;
-  width: 0;
-  height: 0;
-  color: transparent;
-  padding: 0;
-  position: absolute;
-  right: 0;
+#toolbar {
+
+  .label-focus {
+    outline: 0;
+    width: 0;
+    height: 0;
+    color: transparent;
+    padding: 0;
+    position: absolute;
+    right: 0;
+  }
 }
 //#3363b1
 .html-manager {
@@ -108,12 +111,12 @@ $toolbar-width: 400px;
   .edit-text-input {
     background: #fff;
     outline: 0;
-    padding: 0px;
+    padding: 0;
     padding-left: 5px;
   }
 
   .node-text {
-    font-family: 'Courier';
+    font-family: 'Courier', serif;
     width: 90%;
   }
 }
@@ -140,15 +143,15 @@ $toolbar-width: 400px;
 
 .tree-navigation-shadow {
   background-color: rgba(0,255,255,0.5);
-  box-shadow: 0px 0px 25px 38px rgba(0, 130, 20, 1);
+  box-shadow: 0 0 25px 38px rgba(0, 130, 20, 1);
   //box-shadow: 0px 1px 2px rgba(0,255,255,0.5),  0px 2px 4px rgba(0,255,255,0.5),  0px 4px 8px rgba(0,255,255,0.5),  0px 8px 16px rgba(0,255,255,0.5);
   //height: 5px;
 }
 
 #toolbar {
   //background: #fff;
-  //min-width: 300px;
-  width: $toolbar-width - 45px;
+  max-width: 700px;
+  //width: $toolbar-width - 45px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 5px #a3bce350;
   padding: 5px;
@@ -164,7 +167,7 @@ $toolbar-width: 400px;
   height: 200px;
   overflow: scroll;
   bottom: 100%;
-  right: 0px;
+  right: 0;
   padding: 10px 0;
 }
 
@@ -404,7 +407,6 @@ $inter: 'Inter';
   src: url('./core/fonts/Inter/static/Inter-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  text-rendering: optimizeLegibility;
   font-display: swap;
 }
 
@@ -413,8 +415,7 @@ $inter: 'Inter';
   src: url('./core/fonts/Inter/static/Inter-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
-  text-rendering: optimizeLegibility;
-  font-display: swap;
+  font-display: swap
 }
 
 @font-face {
@@ -422,7 +423,6 @@ $inter: 'Inter';
   src: url('./core/fonts/Inter/static/Inter-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
-  text-rendering: optimizeLegibility;
   font-display: swap;
 }
 
@@ -431,6 +431,5 @@ $inter: 'Inter';
   src: url('./core/fonts/Inter/static/Inter-ExtraBold.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
-  text-rendering: optimizeLegibility;
   font-display: swap;
 }

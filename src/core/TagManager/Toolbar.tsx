@@ -1,35 +1,22 @@
-import React, { useCallback, useContext } from 'react';
-// import { AiOutlineFileAdd } from 'react-icons/ai';
+import React, { useContext } from 'react';
 import { FaRegWindowClose } from 'react-icons/fa';
-// import { MdArrowDownward, MdArrowUpward } from 'react-icons/md';
-import ClassNamesSelector from './ClassNamesSelector';
-import ObjectEditor from './ObjectEditor';
-// import SVGBlockToText from '../UI/svg/BlockToText';
 import Tooltip from 'rc-tooltip';
-// import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ProjectContext } from '../Project';
 import cc from 'classnames';
-import { attrsExisting, stylesExisting, tags } from './config';
-import { BsArrowsCollapse, BsArrowsExpand, /*BsArrowBarDown, BsArrowBarRight, */ BsFillPenFill } from 'react-icons/bs';
+import { BsArrowsCollapse, BsArrowsExpand} from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { IoMdSquareOutline, IoMdReturnLeft, IoMdAdd } from 'react-icons/io';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { IoMdReturnLeft } from 'react-icons/io';
 import 'react-tabs/style/react-tabs.css';
-import Resizers from 'src/core/TagManager/Resize/Resizers';
 import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import TagDetails from 'src/core/TagManager/TagDetails';
-import AppManager from 'src/core/AppManager';
 import { capitalize } from 'lodash';
-import FocuserInput from 'src/core/TagManager/FocuserInput';
 
-export type IEachTagManagerProps = {};
-
-function Toolbar(props: IEachTagManagerProps) {
+function Toolbar() {
   const {
     parentNodeApi,
-    nodeApi: { nodeState, unselectCurrentNode, selectParent, onHighlight, deleteThisNode, rendererTagSelect },
+    nodeApi: { nodeState, unselectCurrentNode, selectParent, deleteThisNode, rendererTagSelect },
   } = useContext(EachTagManagerProviderContext);
 
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
@@ -53,7 +40,7 @@ function Toolbar(props: IEachTagManagerProps) {
   };
 
   return (
-    <div className={cc('relative min-h-20')} onClick={evt => evt.stopPropagation()}>
+    <div id={'toolbar'} className={cc('relative min-h-20')}>
       <div data-name={'Toggle or Expand menu'} className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
       </div>
@@ -62,7 +49,14 @@ function Toolbar(props: IEachTagManagerProps) {
         <div className={'min-h-250'}>{!nodeState.isText && <TagDetails />}</div>
 
         <div className="flex flex-wrap align-center pt-10 h-70">
-          <Tooltip overlay={<div>{parentNodeApi?.nodeState ? ` Parent: ${capitalize(parentNodeApi.nodeState.name)}` : 'No parent'}</div>} placement={'top'}>
+          <Tooltip
+            overlay={
+              <div>
+                {parentNodeApi?.nodeState ? ` Parent: ${capitalize(parentNodeApi.nodeState.name)}` : 'No parent'}
+              </div>
+            }
+            placement={'top'}
+          >
             <div onClick={selectParent} className={cc('flex align-center pr-5 pointer')}>
               <IoMdReturnLeft />
             </div>
@@ -98,8 +92,8 @@ function Toolbar(props: IEachTagManagerProps) {
             <FaRegWindowClose
               data-name={'Close Popup '}
               onClick={(evt) => {
-                evt.stopPropagation()
-                unselectCurrentNode()
+                evt.stopPropagation();
+                unselectCurrentNode();
               }}
               size={20}
               className={` z-index-5 mr-20 pointer`}

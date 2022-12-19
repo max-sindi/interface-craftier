@@ -1,4 +1,4 @@
-import { createReducer , current } from '@reduxjs/toolkit';
+import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { TagNode } from 'src/core/TagNode';
 import {
@@ -20,8 +20,6 @@ import {
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
 import { cloneNode, destructTree } from 'src/utils';
-import { Simulate } from 'react-dom/test-utils';
-import loadedData = Simulate.loadedData;
 
 export type IVariables = {
   [key: string]: string;
@@ -92,10 +90,6 @@ export default createReducer(initialState(), (builder) => {
     })
     .addCase(updateHoveredNodeAction, (state, action) => {
       state.hoveredNode = action.payload;
-      // update state to be sure in up to date
-      const destructed = destructTree(state.currentState);
-      state.nodesMap = destructed.nodesMap;
-      state.currentState = destructed.currentState;
     })
     .addCase(resetStateAction, () => {
       return initialState(initialGlobalState);

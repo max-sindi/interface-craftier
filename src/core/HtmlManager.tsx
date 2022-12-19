@@ -1,10 +1,9 @@
 import React , { useCallback , useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   createNodeSelector ,
   inspectedNodeSelector
 } from 'src/core/store/modules/template/selector';
-import { resetStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import Toolbar from './TagManager/Toolbar';
@@ -13,9 +12,9 @@ const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
   const nodeSelector = useCallback(createNodeSelector(inspectedNodeId || '0'), [inspectedNodeId]);
   const nodeState = useSelector(nodeSelector);
-  const dispatch = useDispatch();
-  const resetState = () => dispatch(resetStateAction());
-  const selectRoot = () => dispatch(selectRootAction())
+  // const dispatch = useDispatch();
+  // const resetState = () => dispatch(resetStateAction());
+  // const selectRoot = () => dispatch(selectRootAction())
 
   useEffect(() => {
   // resetState()
@@ -43,14 +42,15 @@ const HtmlManager = () => {
       {/*      /!*</div>*!/*/}
       {/*    </div>*/}
       {/*  ) : (*/}
-      {/*    <EachTagManagerProvider nodeId={nodeState.id}>*/}
-      {/*      <Toolbar />*/}
-      {/*    </EachTagManagerProvider>*/}
+      {inspectedNodeId && nodeState && (
+        <EachTagManagerProvider nodeId={nodeState.id}>
+          <Toolbar />
+        </EachTagManagerProvider>
+      )}
       {/*  )}*/}
       {/*</div>*/}
 
       <CopyToClipboardToolbar />
-
     </div>
   );
 };

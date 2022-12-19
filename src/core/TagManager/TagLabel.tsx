@@ -7,9 +7,7 @@ import { levelDeepPx } from 'src/utils';
 import { useSelector } from 'react-redux';
 import { inspectedNodeDeepnessSelector } from 'src/core/store/modules/template/selector';
 
-interface ITagLabelProps {}
-
-const TagLabel = (props: ITagLabelProps) => {
+const TagLabel = () => {
   const {
     nodeApi: { nodeState, inspectThisNode, highlightThisNode, highlightInspectedNodeAction, deepness },
   } = useContext(EachTagManagerProviderContext);
@@ -34,7 +32,7 @@ const TagLabel = (props: ITagLabelProps) => {
       {nodeState.isText ? <BsFillPenFill /> : <IoMdSquareOutline className={'mr-5'} />}
       {
         nodeState.isText
-          ? nodeState.text?.slice(0, 16) + '...' // Tag text
+          ? nodeState.text?.slice(0, 216) + (nodeState.text.length < 216 ? '' : '...') // Tag text
           : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})` // Text tag
       }
     </div>

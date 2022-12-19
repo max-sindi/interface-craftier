@@ -1,6 +1,5 @@
 import CssUnitClassBranch from './CssUnitClassBranch';
 import CssSimpleClassBranch from './CssSimpleClassBranch';
-import { CSSProperties } from 'react';
 
  export const widthClassNameInstance = new CssUnitClassBranch({
    className: 'w',
@@ -29,7 +28,7 @@ import { CSSProperties } from 'react';
 const classNames = [
   new CssSimpleClassBranch({
     className: 'container',
-    fast: 'max-width: 1200px; box-sizing: content-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 90px; padding-right: 90px',
+    fast: 'max-width: 1500px; box-sizing: border-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px',
   }),
   widthClassNameInstance,
   new CssUnitClassBranch({

@@ -26,7 +26,7 @@ var heightClassNameInstance = new CssUnitClassBranch_1["default"]({
 var classNames = [
     new CssSimpleClassBranch_1["default"]({
         className: 'container',
-        fast: 'max-width: 1200px; box-sizing: content-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 90px; padding-right: 90px'
+        fast: 'max-width: 1500px; box-sizing: border-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px'
     }),
     exports.widthClassNameInstance,
     new CssUnitClassBranch_1["default"]({
