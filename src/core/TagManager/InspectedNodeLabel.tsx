@@ -1,16 +1,11 @@
 import React, { useContext } from 'react';
 import { labelFontSize } from 'src/utils';
 import EditableField from 'src/core/TagManager/EditableField';
-import IconButton from 'src/core/TagManager/IconButton';
-import { IoMdAdd } from 'react-icons/io';
-import { TbPlaylistAdd } from 'react-icons/tb';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import FocuserInput from 'src/core/TagManager/FocuserInput';
 import TagActionsPanel from 'src/core/TagManager/TagActionsPanel';
 
-interface IInspectedNodeLabelProps {}
-
-const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
+const InspectedNodeLabel = () => {
   const {
     nodeApi: { nodeState, changeName, changeText },
   } = useContext(EachTagManagerProviderContext);
@@ -24,7 +19,6 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
       {!nodeState.isText && (
         <div className="flex">
           <div>
-            <div className="fz-18">Tag: {`< ${nodeState.tag} />`}</div>
             <div data-name={'Name '} className="flex fz-18">
               <div>{'Name: '}</div>
               <EditableField initiallyEditable={nameInitiallyEditable}
@@ -42,6 +36,7 @@ const InspectedNodeLabel = (props: IInspectedNodeLabelProps) => {
                 }
               />
             </div>
+            <div className="fz-18">Tag: {`< ${nodeState.tag} />`}</div>
           </div>
           <TagActionsPanel />
         </div>

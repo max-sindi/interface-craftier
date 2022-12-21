@@ -3,7 +3,7 @@ import { FaRegWindowClose } from 'react-icons/fa';
 import Tooltip from 'rc-tooltip';
 import { ProjectContext } from '../Project';
 import cc from 'classnames';
-import { BsArrowsCollapse, BsArrowsExpand} from 'react-icons/bs';
+import { BsArrowsCollapse, BsArrowsExpand } from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdReturnLeft } from 'react-icons/io';
@@ -40,14 +40,11 @@ function Toolbar() {
   };
 
   return (
-    <div id={'toolbar'} className={cc('relative min-h-20')}>
+    <div id={'toolbar'}>
       <div data-name={'Toggle or Expand menu'} className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
       </div>
-
-      <div className={!toolbarCollapsed ? '' : 'd-none'}>
-        <div className={'min-h-250'}>{!nodeState.isText && <TagDetails />}</div>
-
+      <div className={`w-50-p pr-10 flex flex-column`}>
         <div className="flex flex-wrap align-center pt-10 h-70">
           <Tooltip
             overlay={
@@ -101,12 +98,13 @@ function Toolbar() {
           </div>
         </div>
 
-        <div data-name={'Tree Navigation'} className={'overflow-hidden mt-10 relative'}>
+        <div data-name={'Tree Navigation'} className={'overflow-auto mt-10 relative pt-30 pb-30'}>
           <div className={`tree-navigation-shadow absolute t-0 l-0 w-100-p`} />
           <div className={`tree-navigation-shadow absolute b-0 l-0 w-100-p`} />
           <TreeNavigation />
         </div>
       </div>
+      <div className={'w-50-p pl-10 overflow-auto'}>{!nodeState.isText && <TagDetails />}</div>
     </div>
   );
 }

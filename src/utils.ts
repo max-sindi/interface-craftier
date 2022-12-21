@@ -209,3 +209,6 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
 
   return { nodesMap, currentState: { ...state, template: updatedTemplate } };
 };
+
+export const isColor = (value: string) => value[0] === '#'
+export const isGradient = (value: string) => !value.split('linear-gradient(')[0]

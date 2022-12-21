@@ -1,9 +1,16 @@
-import React , { useContext , useState } from 'react';
-import { ClassNameChange, deleteField, extractNumber, lastArrayItem, StyleChange } from 'src/utils';
+import React, { useContext, useState } from 'react';
+import {
+  ClassNameChange ,
+  deleteField ,
+  extractNumber ,
+  isColor ,
+  isGradient ,
+  lastArrayItem ,
+  StyleChange
+} from 'src/utils';
 import styles from 'src/stylotron/src/styles.json';
 import ClassNameMultiSwitch from 'src/core/TagManager/ClassNameMultiSwitch';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import { StandardLonghandProperties } from 'csstype';
 import { useSelector } from 'react-redux';
 import { variablesSelector } from 'src/core/store/modules/template/selector';
 import InputRange from 'src/core/UI/InputRange';
@@ -31,17 +38,17 @@ const ClassNamesSelector = ({
   styleRecord,
   changeStyles,
 }: IClassNamesSelectorProps) => {
-  const { nodeApi: { nodeState: { id } }} = useContext(EachTagManagerProviderContext)
+  const {
+    nodeApi: {
+      nodeState: { id },
+    },
+  } = useContext(EachTagManagerProviderContext);
   const [tabIndex, setTabIndex] = useState(0);
   const variables = useSelector(variablesSelector);
 
   return (
     <div className={``}>
-      <Tabs
-        selectedIndex={tabIndex}
-        onSelect={(index) => setTabIndex(index)}
-        forceRenderTabPanel
-      >
+      <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)} forceRenderTabPanel>
         <TabList>
           <Tab>Ranged</Tab>
           <Tab>Flags</Tab>
@@ -49,17 +56,17 @@ const ClassNamesSelector = ({
         </TabList>
         {/* 1 - Ranged */}
         <TabPanel>
-          <div className={`max-h-200 overflow-auto`}>
+          <div className={`overflow-auto`}>
             {withRanges.map(({ name, ...branch }) => {
-              const values = ['', ...(branch.values || [])]
-              const range = ['', ...(branch.range || [])]
+              const values = ['', ...(branch.values || [])];
+              const range = ['', ...(branch.range || [])];
 
               return (
                 <div key={id + name} className={'mb-10'}>
                   <div className="text-center mb-5">{name}</div>
                   <ClassNameMultiSwitch
                     texts={values}
-                    selectedSwitch={range.findIndex(value => classNameRecord[name] === value)}
+                    selectedSwitch={range.findIndex((value) => classNameRecord[name] === value)}
                     onToggle={(value: string, index: number) =>
                       changeClassName({ ...classNameRecord, [name]: range[index] })
                     }
@@ -118,21 +125,39 @@ const ClassNamesSelector = ({
         </TabPanel>
         {/*  Variabled */}
         <TabPanel>
-          <div className={'max-h-400 overflow-auto'} style={{}}>
+          <div className={'max-h-400 overflow-auto'}>
             {Object.keys({
               backgroundColor: undefined,
               color: undefined,
               borderColor: undefined,
             } as Partial<StyleRecord>).map((item) => {
-              const range = ['', ...Object.values( variables ).filter( ( value ) => value[ 0 ] === '#' )]
+              const range = ['', ...Object.values(variables).filter((value) => isColor(value))];
+              const labels = range.map(value => (Object.entries(variables).find(([, variable]) => variable === value) || [''])[0])
+
               return (
-                <div className={ 'flex' } key={ id + item }>
-                  <div className={ 'w-200' }>{ item }</div>
+                <div className={'flex'} key={id + item}>
+                  <div className={'w-200'}>{item}</div>
                   <ClassNameMultiSwitch
-                    // selectedSwitch={2}
-                    selectedSwitch={ range.findIndex( value => styleRecord[ item as keyof StyleRecord] === value ) }
+                    selectedSwitch={range.findIndex((value) => styleRecord[item as keyof StyleRecord] === value)}
                     texts={range}
-                    onToggle={ ( value ) => changeStyles( { ... styleRecord , [ item ] : value } ) }
+                    labels={labels}
+                    onToggle={(value) => changeStyles({ ...styleRecord, [item]: value })}
+                  />
+                </div>
+              );
+            })}
+
+            {Object.keys({
+              fontFamily: undefined,
+            } as Partial<StyleRecord>).map((item) => {
+              const range = ['', ...Object.values(variables).filter((value) => !isColor(value) && !isGradient(value)) ];
+              return (
+                <div className={'flex'} key={id + item}>
+                  <div className={'w-200'}>{item}</div>
+                  <ClassNameMultiSwitch
+                    selectedSwitch={range.findIndex((value) => styleRecord[item as keyof StyleRecord] === value)}
+                    texts={range}
+                    onToggle={(value) => changeStyles({ ...styleRecord, [item]: value })}
                   />
                 </div>
               );

@@ -66,7 +66,7 @@ const ChildTagNode = () => {
             style={{ position: 'relative', left: nodeState.deepIndex * levelDeepPx - 10 }}
           >
             <AiFillCaretRight
-              className={'pointer p-3'}
+              className={'pointer p-3 ml-5'}
               style={{ transform: `rotate(${nodeState.childrenCollapsed ? 0 : 45}deg)`, transition: 'all 0.4s' }}
               onClick={toggleChildrenCollapsed}
             />

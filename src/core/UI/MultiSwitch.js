@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './MultiSwitch.css';
+import { isColor } from '../../utils';
 
 export default class MultiSwitch extends Component {
   constructor(props) {
@@ -27,10 +28,10 @@ export default class MultiSwitch extends Component {
       fontColor,
       fontSize,
       fontWeight,
-      height,
       borderColor,
       borderWidth,
       selectedSwitchColor,
+      labels,
     } = this.props;
     const { selectedSwitch } = this.state;
     const noOfSwitches = texts.length || 2;
@@ -42,14 +43,15 @@ export default class MultiSwitch extends Component {
       backgroundColor: bgColor,
       borderWidth,
       borderColor,
-      height,
+      // height,
     };
     const labelWidth = `${eachSwitchWidth || switchWidth / noOfSwitches}px`;
 
     const switches = texts.map((text, index) => {
+      const description = labels[index]
       const labelStyles = {
         width: labelWidth,
-        color: text[0] === '#' ? text : fontColor,
+        color: isColor(text) ? text : fontColor,
         fontSize,
         fontWeight,
       };
@@ -67,6 +69,7 @@ export default class MultiSwitch extends Component {
           style={labelStyles}
           onClick={this.onToggle.bind(this)}
         >
+          {description && description + ':\n'}
           {text}
         </label>
       );
@@ -75,7 +78,7 @@ export default class MultiSwitch extends Component {
     const switchHandleStyles = {
       width: labelWidth,
       left: `${selectedSwitch * eachSwitchWidth + 2}px`,
-      height,
+      // height,
       // lineHeight: height,
       backgroundColor: selectedSwitchColor,
     };
@@ -120,4 +123,5 @@ MultiSwitch.defaultProps = {
   height: '30px',
   fontSize: '12px',
   fontWeight: 'bold',
+  labels: []
 };
