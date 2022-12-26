@@ -28,6 +28,7 @@ $toolbar-width: 400px;
 }
 
 .resizers-label {
+  width: 40px;
   position: relative;
   border: 1px solid $blue-dark-main;
   border-bottom: 0;
@@ -46,7 +47,7 @@ $toolbar-width: 400px;
 
 .resizers-label-active {
   z-index: 2;
-  box-shadow: 0 -5px 13px 3px $blue-dark-main;
+  box-shadow: 5px 0 13px 5px $blue-dark-main;
 }
 
 .toolbar-resizer {

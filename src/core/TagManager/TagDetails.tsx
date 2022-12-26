@@ -12,7 +12,7 @@ const TagDetails = () => {
     nodeApi: { nodeState, createChangeHandler, changeClassNamesList, changeStyles, onMouseEnter },
   } = useContext(EachTagManagerProviderContext);
   const nodeId = nodeState.id;
-  const [tabIndex, setTabIndex] = useState(1);
+  const [tabIndex, setTabIndex] = useState(0);
 
   return (
     <Tabs
@@ -20,54 +20,50 @@ const TagDetails = () => {
       onSelect={(index) => setTabIndex(index)}
       forceRenderTabPanel
       onMouseEnter={onMouseEnter}
-      className={`ml-10 flex`}
+      className={`ml-10 flex max-h-100-p w-100-p`}
     >
       <TabList className={`tab-list-container-rotate`}>
         <Tab className={``}>Class</Tab>
-        <Tab className={``}>Styles</Tab>
         <Tab className={``}>Attrs</Tab>
         <Tab className={``}>App</Tab>
       </TabList>
-      <TabPanel>
-        <div data-name={'Classes'} className={'tabPanel'}>
-          <div className="w-400 mb-20 relative toolbar-resizer">
-            <Resizers changeClassName={changeClassNamesList} classNameRecord={nodeState.className} nodeId={nodeId} />
+      <div className={'overflow-auto'}>
+        <TabPanel>
+          <div data-name={'Classes'} className={'tabPanel'}>
+            <div className="w-400 mb-20 relative toolbar-resizer">
+              <Resizers changeClassName={changeClassNamesList} classNameRecord={nodeState.className} nodeId={nodeId} />
+            </div>
+            <ClassNamesSelector
+              changeClassName={changeClassNamesList}
+              classNameRecord={nodeState.className}
+              styleRecord={nodeState.style}
+              changeStyles={changeStyles}
+            />
           </div>
-          <ClassNamesSelector
-            changeClassName={changeClassNamesList}
-            classNameRecord={nodeState.className}
-            styleRecord={nodeState.style}
-            changeStyles={changeStyles}
-          />
-        </div>
-      </TabPanel>
+        </TabPanel>
 
-      <TabPanel>
-        <div data-name={'Styles'} className={'tabPanel'}>
-          <ObjectEditor
-            onChange={createChangeHandler('style')}
-            value={nodeState.style as Record<string, string>}
-            fields={stylesExisting}
-            title={'Styles: '}
-          />
-        </div>
-      </TabPanel>
-
-      <TabPanel>
-        <div data-name={'Attributes'} className={'tabPanel'}>
-          <ObjectEditor
-            onChange={createChangeHandler('attrs')}
-            value={nodeState.attrs}
-            fields={attrsExisting}
-            title={'Attributes: '}
-          />
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <div data-name={'App'} className="tabPanel">
-          <AppManager />
-        </div>
-      </TabPanel>
+        <TabPanel>
+          <div data-name={'Attributes'} className={'tabPanel pr-20'}>
+            <ObjectEditor
+              onChange={createChangeHandler('style')}
+              value={nodeState.style as Record<string, string>}
+              fields={stylesExisting}
+              title={'Styles: '}
+            />
+            <ObjectEditor
+              onChange={createChangeHandler('attrs')}
+              value={nodeState.attrs}
+              fields={attrsExisting}
+              title={'Attributes: '}
+            />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div data-name={'App'} className="tabPanel">
+            <AppManager />
+          </div>
+        </TabPanel>
+      </div>
     </Tabs>
   );
 };

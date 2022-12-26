@@ -94,11 +94,11 @@ export const createDeleter =
 export const logObjectFields = (object: any) =>
   Object.keys(object).forEach((name) => console.log(name, ': ', object[name]));
 
-export const cloneNode = (data: TagNode | ExtendedNode): TagNode | ExtendedNode =>
+export const cloneNode = (data: TagNode | ExtendedNode, nodesMap: NodesMap): TagNode | ExtendedNode =>
   cloneDeepWith(data, (target: TagNode) => ({
     ...target,
     id: uuid(),
-    children: target.children.map((child) => cloneNode(child)),
+    children: target.children.map((child) => cloneNode(nodesMap[child.id], nodesMap)),
   }));
 
 interface ClassNameForCompile {
@@ -183,13 +183,13 @@ export const compileStateToProduction = (state: GlobalState) => {
 };
 
 
-export const destructTree = (state: Omit<GlobalState , 'template'> & { template: TagNode }) => {
+export const destructTree = (state: Omit<GlobalState , 'template'> & { template: TagNode }, prevNodesMap: NodesMap) => {
   const nodesMap: NodesMap = {};
 
   const recursiveIterator = ( node: TagNode, deepIndex: number, levelIndex: number, xPath: string, parentNode?: TagNode) => {
     const extendedNode: ExtendedNode = {
       ...node,
-      childrenCollapsed: false,
+      childrenCollapsed: !!prevNodesMap[node.id]?.childrenCollapsed,
       xPath,
       childIndex: levelIndex,
       deepIndex,

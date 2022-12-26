@@ -1,4 +1,4 @@
-import { StandardLonghandProperties } from 'csstype';
+import images from 'src/project-loaded-images.json'
 
 
 export const stylesExisting = [
@@ -32,7 +32,8 @@ export const attrsExisting = [
   {
     name: 'src',
     withFile: true,
-    // fileValueCreator: fileName => `http://localhost:8000${fileName}`
+    suggestions: images,
+    fileValueCreator: (fileName: string) => `icons/${fileName}`
   },
   {
     name: 'title',

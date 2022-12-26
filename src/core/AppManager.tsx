@@ -16,7 +16,7 @@ class AppManager extends React.Component {
 
   render() {
     return (
-      <div data-name={'app-manager'} className={''}>
+      <div data-name={'app-manager'} className={'pl-10'}>
         <Variables />
 
         {/*<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" className="style-scope yt-icon"*/}

@@ -12,6 +12,7 @@ import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import TagDetails from 'src/core/TagManager/TagDetails';
 import { capitalize } from 'lodash';
+import TagActionsPanel from "src/core/TagManager/TagActionsPanel";
 
 function Toolbar() {
   const {
@@ -34,10 +35,10 @@ function Toolbar() {
   //     transformField((node) => ({ ...node, children: [...nodeState.children, cloneDeepWithUniqueId(parsedData)] }));
   // };
 
-  const onDeleteThisNode = () => {
-    selectParent();
-    deleteThisNode();
-  };
+  // const onDeleteThisNode = () => {
+  //   selectParent();
+  //   deleteThisNode();
+  // };
 
   return (
     <div id={'toolbar'}>
@@ -74,6 +75,7 @@ function Toolbar() {
               {rendererTagSelect()}
             </div>
           )}
+          <TagActionsPanel />
           {/*<button onClick={() => onHighlight()} className={`ml-20 pointer fz-13`}>*/}
           {/*  {'Highlight'}*/}
           {/*</button>*/}
@@ -81,7 +83,7 @@ function Toolbar() {
             {nodeState.deepIndex > 0 && (
               <RiDeleteBin6Line
                 data-name={'Delete this node'}
-                onClick={onDeleteThisNode}
+                onClick={deleteThisNode}
                 size={25}
                 className={'ml-50 pointer'}
               />
@@ -104,7 +106,7 @@ function Toolbar() {
           <TreeNavigation />
         </div>
       </div>
-      <div className={'w-50-p pl-10 overflow-auto'}>{!nodeState.isText && <TagDetails />}</div>
+      <div className={'w-50-p pl-10'}>{!nodeState.isText && <TagDetails />}</div>
     </div>
   );
 }

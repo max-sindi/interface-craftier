@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FaRegWindowClose } from 'react-icons/fa';
 import VariableSelector from './VariableSelector';
+// import { attrsExisting, stylesExisting } from 'src/core/TagManager/config';
+import { lastArrayItem } from 'src/utils';
 
-const ObjectEditor: React.FunctionComponent<{
+interface IObjectEditorProps {
   fields: {
     name: string;
     withFile?: boolean;
@@ -12,12 +14,21 @@ const ObjectEditor: React.FunctionComponent<{
     withVariable?: boolean;
     variableValueCreator?: (value: string) => string;
     textable?: boolean;
+    suggestions?: string[];
   }[];
   value: Record<string, string>;
   onChange: (arg1: (old: Record<string, string>) => Record<string, string>) => void;
   title: string;
   enableCreating?: boolean;
-}> = ({ fields = [], value = {}, onChange, title = '', enableCreating = false }) => {
+}
+
+const ObjectEditor = ({
+  fields = [],
+  value = {},
+  onChange,
+  title = '',
+  enableCreating = false,
+}: IObjectEditorProps) => {
   const [newField, setNewField] = React.useState('');
   const onAddFieldClick = () => {
     onChange((old) => ({ ...old, [newField]: '' })); // add field
@@ -26,12 +37,14 @@ const ObjectEditor: React.FunctionComponent<{
   const onNewFieldSelect = ({ target: { value: fieldValue } }: any) =>
     onChange((old) => ({ ...old, [fieldValue]: value[fieldValue] || '' }));
 
+  const initialSorted = useMemo(() => Object.keys(value).sort((name1, name2) => (name1 > name2 ? 1 : -1)), []);
+
   return (
     <div className={`align-center`}>
       <div className={`w-100 bold mb-5 `}>{title}</div>
       <div className={`flex flex-column align-flex-start`}>
-        {Object.entries(value)
-          .map(([name]) => {
+        {[...initialSorted, ...Object.keys(value).filter((name) => !initialSorted.includes(name))]
+          .map((name) => {
             const custom = !fields.map((i) => i.name).includes(name);
 
             return {
@@ -43,9 +56,10 @@ const ObjectEditor: React.FunctionComponent<{
           .map(
             ({
               name = '',
+              suggestions,
               // withFile = false,
-              // fileValueCreator = (value) => value,
-              withVariable = false,
+              fileValueCreator = (value) => value,
+              // withVariable = false,
               variableValueCreator = (value) => value,
               // textable = false,
               custom = false,
@@ -55,6 +69,7 @@ const ObjectEditor: React.FunctionComponent<{
               //     ...value,
               //     [name]: fileValueCreator(fileName)
               // })
+              // const variableValueCreator = (value: string) => value
               const onVariableChange = (variableName: string) =>
                 onChange((prev) => ({
                   ...prev,
@@ -65,14 +80,14 @@ const ObjectEditor: React.FunctionComponent<{
                 onChange((prev) => ({ ...prev, [name]: fieldValue }));
 
               const onFieldNameChange = (evt: any) => {
-                const value = evt.target.value
-                onChange(prev => {
-                  const freshState = { ...prev }
-                  const oldValue = prev[name]
-                  delete freshState[name]
-                  return { ...freshState, [value]: oldValue }
-                })
-              }
+                const value = evt.target.value;
+                onChange((prev) => {
+                  const freshState = { ...prev };
+                  const oldValue = prev[name];
+                  delete freshState[name];
+                  return { ...freshState, [value]: oldValue };
+                });
+              };
 
               const _delete = () => {
                 const clone = { ...value };
@@ -88,6 +103,7 @@ const ObjectEditor: React.FunctionComponent<{
               };
 
               return (
+                // todo made key as ID so prevent loosing the focus of name input while typing
                 <div key={name} className={`flex align-center pt-5 pb-5`}>
                   <div className={`flex align-center w-100-p`}>
                     {custom ? (
@@ -102,7 +118,7 @@ const ObjectEditor: React.FunctionComponent<{
 
                     <FaRegWindowClose onClick={() => _delete()} size={20} className={`mr-10 ml-10 min-w-20`} />
 
-                    <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-80'} />
+                    <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-150'} />
                     {/*{withFile && (*/}
                     {/*  <Tooltip*/}
                     {/*    trigger={['hover']}*/}
@@ -113,13 +129,39 @@ const ObjectEditor: React.FunctionComponent<{
                     {/*  </Tooltip>*/}
                     {/*)}*/}
                     {/*{withVariable && (*/}
+                    {suggestions && (
                       <Tooltip
                         trigger={['hover']}
-                        overlay={<VariableSelector onChange={onVariableChange} />}
-                        placement={`top`}
+                        placement={'top'}
+                        overlay={
+                          <div>
+                            {suggestions.map((path) => (
+                              <div
+                                key={path}
+                                className="flex justify-space-between pointer"
+                                onClick={() => onFieldChange({ target: { value: fileValueCreator(path) } })}
+                              >
+                                <div className={'mr-10'}>{path}</div>
+                                <div className={`max-w-40`}>
+                                  {['svg', 'png', 'jpeg'].includes(lastArrayItem(path.split('.'))) && (
+                                    <img src={fileValueCreator(path)} alt={path} />
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        }
                       >
-                        <button className={`black ml-20`}> Variable?</button>
+                        <button className={`black ml-20`}>File?</button>
                       </Tooltip>
+                    )}
+                    <Tooltip
+                      trigger={['hover']}
+                      overlay={<VariableSelector onChange={onVariableChange} />}
+                      placement={`top`}
+                    >
+                      <button className={`black ml-20 mr-10`}> Variable?</button>
+                    </Tooltip>
                     {/*)}*/}
                   </div>
                 </div>

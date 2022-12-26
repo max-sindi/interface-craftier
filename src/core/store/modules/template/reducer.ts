@@ -19,7 +19,7 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
-import { cloneNode, destructTree } from 'src/utils';
+import { cloneNode , destructTree } from "src/utils";
 
 export type IVariables = {
   [key: string]: string;
@@ -77,7 +77,7 @@ const initialState = (initialGlobalState?: GlobalState): Reducer => {
   const currentState = initialGlobalState || readStorageState();
 
   return {
-    ...destructTree(currentState),
+    ...destructTree(currentState,{}),
     hoveredNode: undefined,
     inspectedNode: localStorage.getItem(StorageMap.InspectedNode) || undefined,
   };
@@ -107,8 +107,12 @@ export default createReducer(initialState(), (builder) => {
       const node = state.nodesMap[action.payload]
       if(node.parentId) {
         const parentNode = state.nodesMap[node.parentId]
-        parentNode.children = parentNode.children.filter(item => item.id !== node.id)
-        updateNodeInTree(state, parentNode.id, true)
+        const indexToDelete = parentNode.children.findIndex(item => item.id === node.id)
+        console.log(indexToDelete);
+        parentNode.children = parentNode.children.filter((item, index) => index !== indexToDelete)
+        updateNodeInTree(state, parentNode.id, true);
+        state.inspectedNode = (parentNode.children[indexToDelete] || parentNode.children[indexToDelete - 1] || parentNode).id
+          // parentNode.children[indexToDelete] ? indexToDelete : (lastArrayItem())]
       }
     })
     .addCase(toggleChildrenCollapsedAction, (state, action) => {
@@ -132,10 +136,10 @@ export default createReducer(initialState(), (builder) => {
       const nodeGiven = state.nodesMap[givenNodeId];
 
       if(nodeGiven.parentId) {
-        const clone = cloneNode(nodeGiven) as ExtendedNode;
+        const clone = cloneNode(nodeGiven, state.nodesMap) as ExtendedNode;
         const slotToPaste = nodeReceiving.children[indexToPaste]
 
-        // shift items ahead on 1 index and give a slot for pasted node
+        // shift items ahead for 1 index and so give a slot for pasting node
         if(slotToPaste) {
           for(let i = nodeReceiving.children.length - 1; i >= indexToPaste; i--) {
             nodeReceiving.children[i + 1] = nodeReceiving.children[i]
@@ -150,7 +154,7 @@ export default createReducer(initialState(), (builder) => {
     .addCase(duplicateNodeAction, (state, action) => {
       const node = state.nodesMap[action.payload];
       if (node.parentId) {
-        const clone = cloneNode(node);
+        const clone = cloneNode(node, state.nodesMap);
         const parentNode = state.nodesMap[node.parentId];
         parentNode.children = parentNode.children.reduce(
           (acc, cur) => (cur.childIndex === node.childIndex ? [...acc, cur, clone as ExtendedNode] : [...acc, cur]),
@@ -176,11 +180,12 @@ function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolea
   const updatedNode = nodeState || state.nodesMap[id];
   setWith(state.currentState, updatedNode.xPath, updatedNode);
 
-  if (withTreeDestructing) {
-    const destructed = destructTree(state.currentState);
+  //  @todo performance
+  // if (withTreeDestructing) {
+    const destructed = destructTree(state.currentState, state.nodesMap);
     state.nodesMap = destructed.nodesMap;
     state.currentState = destructed.currentState;
-  }
+  // }
 }
 
 function readStorageState() {
