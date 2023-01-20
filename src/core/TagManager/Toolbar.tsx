@@ -7,17 +7,19 @@ import { BsArrowsCollapse, BsArrowsExpand } from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdReturnLeft } from 'react-icons/io';
+import { CgErase } from 'react-icons/cg';
 import 'react-tabs/style/react-tabs.css';
 import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import TagDetails from 'src/core/TagManager/TagDetails';
 import { capitalize } from 'lodash';
-import TagActionsPanel from "src/core/TagManager/TagActionsPanel";
+import TagActionsPanel from 'src/core/TagManager/TagActionsPanel';
+import IconButton from 'src/core/TagManager/IconButton';
 
 function Toolbar() {
   const {
     parentNodeApi,
-    nodeApi: { nodeState, unselectCurrentNode, selectParent, deleteThisNode, rendererTagSelect },
+    nodeApi: { nodeState, unselectCurrentNode, selectParent, deleteThisNode, rendererTagSelect, eraseStyling },
   } = useContext(EachTagManagerProviderContext);
 
   const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
@@ -80,6 +82,9 @@ function Toolbar() {
           {/*  {'Highlight'}*/}
           {/*</button>*/}
           <div className={'flex align-center justify-space-between w-100-p'}>
+            <IconButton centering className={'pointer'} onClick={eraseStyling}>
+              <CgErase />
+            </IconButton>
             {nodeState.deepIndex > 0 && (
               <RiDeleteBin6Line
                 data-name={'Delete this node'}

@@ -103,7 +103,6 @@ const ObjectEditor = ({
               };
 
               return (
-                // todo made key as ID so prevent loosing the focus of name input while typing
                 <div key={name} className={`flex align-center pt-5 pb-5`}>
                   <div className={`flex align-center w-100-p`}>
                     {custom ? (
@@ -162,7 +161,6 @@ const ObjectEditor = ({
                     >
                       <button className={`black ml-20 mr-10`}> Variable?</button>
                     </Tooltip>
-                    {/*)}*/}
                   </div>
                 </div>
               );

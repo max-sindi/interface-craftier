@@ -6,6 +6,7 @@ $blue-middle-main: #4682b4;
 html {
   //background: #7d9707;
   background-color: $app-bg;
+  padding-bottom: 100vh;
 }
 $resizeWidth: 120px;
 $green-padding: #86b049;
@@ -78,6 +79,8 @@ $toolbar-width: 400px;
   z-index: -1;
 }
 #toolbar {
+  position: fixed;
+  bottom: 0;
 
   .label-focus {
     outline: 0;

@@ -31,7 +31,8 @@ export type GlobalState = {
 };
 
 export enum StorageMap {
-  State = 'state',
+  // State = 'state.Shopka',
+  State = 'state.hrsLanguages',
   InspectedNode = 'inspectedNode',
 }
 
@@ -139,7 +140,7 @@ export default createReducer(initialState(), (builder) => {
         const clone = cloneNode(nodeGiven, state.nodesMap) as ExtendedNode;
         const slotToPaste = nodeReceiving.children[indexToPaste]
 
-        // shift items ahead for 1 index and so give a slot for pasting node
+        // shift all the items ahead on 1 index and so give a slot for pasting node
         if(slotToPaste) {
           for(let i = nodeReceiving.children.length - 1; i >= indexToPaste; i--) {
             nodeReceiving.children[i + 1] = nodeReceiving.children[i]

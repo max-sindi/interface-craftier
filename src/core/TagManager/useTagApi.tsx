@@ -21,6 +21,7 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { tags } from 'src/core/TagManager/config';
 import { createSelector } from 'reselect';
+import { ExtendedNode } from "src/core/ExtendedNode";
 
 export const useTagApi = (nodeId: Uuid) => {
   const dispatch = useDispatch();
@@ -54,13 +55,15 @@ export const useTagApi = (nodeId: Uuid) => {
   const selectChild = (child: TagNode) => updateInspectedNode(child);
   const onHighlight = (hoveringNode = nodeState) => updateHoveredNode(hoveringNode);
   const createHtmlChangeHandler = (path: keyof TagNode) => (evt: any) => transformField(path, evt.target.value);
-  const createChangeHandler = (path: keyof TagNode) => (value: any) => {
-    value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
-  };
-  const changeText = createHtmlChangeHandler('text');
-  const changeClassNamesList = createChangeHandler('className');
-  const changeStyles = createChangeHandler('style');
+  function createChangeHandler<Value>(path: keyof TagNode) {
+    return (value: Value) => {
+      value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
+    };
+  }
+  const changeClassNamesList = createChangeHandler<ExtendedNode['className']>('className');
+  const changeStyles = createChangeHandler<ExtendedNode['style']>('style');
   const changeName = createHtmlChangeHandler('name');
+  const changeText = createHtmlChangeHandler('text');
   const changeTag = createHtmlChangeHandler('tag');
   const deleteChild = (indexToDelete: number) =>
     transformField(
@@ -97,8 +100,13 @@ export const useTagApi = (nodeId: Uuid) => {
     dispatch(deleteNodeAction(params.givenNodeId));
   };
   const deleteThisNode = () => dispatch(deleteNodeAction(nodeId));
+  const eraseStyling = () => {
+    changeStyles({})
+    changeClassNamesList({})
+  }
 
   return {
+    eraseStyling,
     deleteThisNode,
     onMouseEnter,
     nodeState,

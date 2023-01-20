@@ -1,5 +1,5 @@
 import React , { useCallback , useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch , useSelector } from "react-redux";
 import {
   createNodeSelector ,
   inspectedNodeSelector
@@ -7,14 +7,15 @@ import {
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import Toolbar from './TagManager/Toolbar';
+import { selectRootAction } from "src/core/store/modules/template/actions";
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
   const nodeSelector = useCallback(createNodeSelector(inspectedNodeId || '0'), [inspectedNodeId]);
   const nodeState = useSelector(nodeSelector);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const resetState = () => dispatch(resetStateAction());
-  // const selectRoot = () => dispatch(selectRootAction())
+  const selectRoot = () => dispatch(selectRootAction())
 
   useEffect(() => {
   // resetState()
@@ -42,10 +43,12 @@ const HtmlManager = () => {
       {/*      /!*</div>*!/*/}
       {/*    </div>*/}
       {/*  ) : (*/}
-      {inspectedNodeId && nodeState && (
+      {inspectedNodeId && nodeState ? (
         <EachTagManagerProvider nodeId={nodeState.id}>
           <Toolbar />
         </EachTagManagerProvider>
+      ) : (
+        <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
       )}
       {/*  )}*/}
       {/*</div>*/}
