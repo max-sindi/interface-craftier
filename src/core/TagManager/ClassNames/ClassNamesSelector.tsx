@@ -9,7 +9,7 @@ import {
   StyleChange
 } from 'src/utils';
 import styles from 'src/stylotron/src/styles.json';
-import ClassNameMultiSwitch from 'src/core/TagManager/ClassNameMultiSwitch';
+import ClassNameMultiSwitch from 'src/core/TagManager/ClassNames/ClassNameMultiSwitch';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import { useSelector } from 'react-redux';
 import { variablesSelector } from 'src/core/store/modules/template/selector';
@@ -17,6 +17,7 @@ import InputRange from 'src/core/UI/InputRange';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { StyleRecord } from 'src/core/TagNode';
+import SizesClassNames from "src/core/TagManager/ClassNames/SizesClassNames";
 
 const withRanges = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
 const withSingleValue = styles.classBranches.filter((branch) => (branch.range?.length || 0) === 1);
@@ -43,7 +44,7 @@ const ClassNamesSelector = ({
       nodeState: { id },
     },
   } = useContext(EachTagManagerProviderContext);
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(1);
   const variables = useSelector(variablesSelector);
 
   return (
@@ -51,10 +52,12 @@ const ClassNamesSelector = ({
       <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)} forceRenderTabPanel>
         <TabList>
           <Tab>Ranged</Tab>
+          <Tab>Sizes</Tab>
           <Tab>Flags</Tab>
           <Tab>Variabled</Tab>
         </TabList>
-        {/* 1 - Ranged */}
+
+        {/* Ranged */}
         <TabPanel>
           <div className={`overflow-auto`}>
             {withRanges.map(({ name, ...branch }) => {
@@ -79,8 +82,8 @@ const ClassNamesSelector = ({
               const value = classNameRecord[name] ? extractNumber(classNameRecord[name] as string) : undefined;
 
               return !list || !list[0] ? null : (
-                <div className="flex align-center pt-5" key={id + name}>
-                  <div className="w-130 flex align-center">{name}</div>
+                <div className="d-flex align-center pt-5" key={id + name}>
+                  <div className="w-130 d-flex align-center">{name}</div>
                   <InputRange
                     min={list[0].integer}
                     max={lastArrayItem(list).integer}
@@ -105,9 +108,15 @@ const ClassNamesSelector = ({
           </div>
         </TabPanel>
 
-        {/* 2 - Flags */}
         <TabPanel>
-          <div className={'max-h-400 overflow-auto flex flex-wrap'}>
+          <div>
+            <SizesClassNames changeClassName={changeClassName} classNameRecord={classNameRecord} />
+          </div>
+        </TabPanel>
+
+        {/* Flags */}
+        <TabPanel>
+          <div className={'max-h-400 overflow-auto d-flex flex-wrap'}>
             {withSingleValue.map(({ name }, index) => (
               <div key={id + index + name} className={'w-50-p'}>
                 <label htmlFor={`flag-${name}`}>{name}</label>
@@ -135,7 +144,7 @@ const ClassNamesSelector = ({
               const labels = range.map(value => (Object.entries(variables).find(([, variable]) => variable === value) || [''])[0])
 
               return (
-                <div className={'flex'} key={id + item}>
+                <div className={'d-flex'} key={id + item}>
                   <div className={'w-200'}>{item}</div>
                   <ClassNameMultiSwitch
                     selectedSwitch={range.findIndex((value) => styleRecord[item as keyof StyleRecord] === value)}
@@ -152,7 +161,7 @@ const ClassNamesSelector = ({
             } as Partial<StyleRecord>).map((item) => {
               const range = ['', ...Object.values(variables).filter((value) => !isColor(value) && !isGradient(value)) ];
               return (
-                <div className={'flex'} key={id + item}>
+                <div className={'d-flex'} key={id + item}>
                   <div className={'w-200'}>{item}</div>
                   <ClassNameMultiSwitch
                     selectedSwitch={range.findIndex((value) => styleRecord[item as keyof StyleRecord] === value)}

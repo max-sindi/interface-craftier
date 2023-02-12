@@ -42,7 +42,7 @@ const ObjectEditor = ({
   return (
     <div className={`align-center`}>
       <div className={`w-100 bold mb-5 `}>{title}</div>
-      <div className={`flex flex-column align-flex-start`}>
+      <div className={`d-flex flex-column align-flex-start`}>
         {[...initialSorted, ...Object.keys(value).filter((name) => !initialSorted.includes(name))]
           .map((name) => {
             const custom = !fields.map((i) => i.name).includes(name);
@@ -103,8 +103,8 @@ const ObjectEditor = ({
               };
 
               return (
-                <div key={name} className={`flex align-center pt-5 pb-5`}>
-                  <div className={`flex align-center w-100-p`}>
+                <div key={name} className={`d-flex align-center pt-5 pb-5`}>
+                  <div className={`d-flex align-center w-100-p`}>
                     {custom ? (
                       <textarea rows={1} value={name} onChange={onFieldNameChange} className={'w-80'} />
                     ) : (
@@ -137,7 +137,7 @@ const ObjectEditor = ({
                             {suggestions.map((path) => (
                               <div
                                 key={path}
-                                className="flex justify-space-between pointer"
+                                className="d-flex justify-space-between pointer"
                                 onClick={() => onFieldChange({ target: { value: fileValueCreator(path) } })}
                               >
                                 <div className={'mr-10'}>{path}</div>
@@ -178,7 +178,7 @@ const ObjectEditor = ({
         ) : null}
 
         {enableCreating && (
-          <div className={`flex align-center`}>
+          <div className={`d-flex align-center`}>
             <textarea
               rows={1}
               value={newField}

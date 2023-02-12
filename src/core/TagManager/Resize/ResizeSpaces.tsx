@@ -51,7 +51,7 @@ const ResizeSpaces = ({
 
   return (
     <>
-      {/*<div className={'flex flex-center'}>{title}</div>*/}
+      {/*<div className={'d-flex flex-center'}>{title}</div>*/}
       <Resizable
         width={nodeWidth}
         height={nodeHeight}
@@ -62,19 +62,19 @@ const ResizeSpaces = ({
         maxConstraints={[Infinity, Infinity]}
       >
         <div>
-          <div className="absolute l-50-p t-0 transform-left-center flex p-15">
+          <div className="absolute l-50-p t-0 transform-left-center d-flex p-15">
             {topClassNameInterface.integer}{' '}
             <UnitSelector classNameInterface={topClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
           </div>
-          <div className="absolute t-50-p r-0 transform-top-center flex p-15">
+          <div className="absolute t-50-p r-0 transform-top-center d-flex p-15">
             {rightClassNameInterface.integer}{' '}
             <UnitSelector classNameInterface={rightClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
           </div>
-          <div className="absolute l-50-p b-0 transform-left-center flex p-15">
+          <div className="absolute l-50-p b-0 transform-left-center d-flex p-15">
             {bottomClassNameInterface.integer}{' '}
             <UnitSelector classNameInterface={bottomClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
           </div>
-          <div className="absolute t-50-p l-0 transform-top-center flex p-15">
+          <div className="absolute t-50-p l-0 transform-top-center d-flex p-15">
             {leftClassNameInterface.integer}{' '}
             <UnitSelector classNameInterface={leftClassNameInterface} classNameRecord={classNameRecord} changeClassName={changeClassName} />
           </div>

@@ -1,7 +1,7 @@
 import CssUnitClassBranch from './CssUnitClassBranch';
 import CssSimpleClassBranch from './CssSimpleClassBranch';
 
- export const widthClassNameInstance = new CssUnitClassBranch({
+ const widthClassNameInstance = new CssUnitClassBranch({
    className: 'w',
    property: 'width',
    media: true,
@@ -12,7 +12,7 @@ import CssSimpleClassBranch from './CssSimpleClassBranch';
    vh: 100,
    // decoratorAfter: false,
    // decoratorBefore: false,
- });
+});
 
  const heightClassNameInstance = new CssUnitClassBranch({
     className: 'h',
@@ -23,7 +23,17 @@ import CssSimpleClassBranch from './CssSimpleClassBranch';
     eachValueLimit: 50,
     px: true,
     vh: 100,
-  })
+});
+
+ const maxWidthClassNameInstance = new CssUnitClassBranch({
+  className: 'max-w',
+  property: 'max-width',
+  media: true,
+  percent: 200,
+  each5ValuesLimit: 800,
+  px: true,
+  vh: 100,
+})
 
 const classNames = [
   new CssSimpleClassBranch({
@@ -41,15 +51,7 @@ const classNames = [
     px: true,
   }),
   heightClassNameInstance,
-  new CssUnitClassBranch({
-    className: 'max-w',
-    property: 'max-width',
-    media: true,
-    percent: 200,
-    each5ValuesLimit: 800,
-    px: true,
-    vh: 100,
-  }),
+  maxWidthClassNameInstance,
   new CssUnitClassBranch({
     className: 'max-h',
     property: 'max-height',
@@ -64,7 +66,7 @@ const classNames = [
     property: 'min-width',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 1000,
     px: true,
     vh: 100,
   }),
@@ -82,7 +84,7 @@ const classNames = [
     property: 'padding',
     media: true,
     percent: 200,
-    each5ValuesLimit: 200,
+    each5ValuesLimit: 500,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -90,8 +92,8 @@ const classNames = [
     property: 'padding-left',
     media: true,
     percent: 200,
-    each5ValuesLimit: 400,
-    eachValueLimit: 50,
+    each5ValuesLimit: 500,
+    eachValueLimit: 20,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -100,7 +102,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
-    eachValueLimit: 50,
+    eachValueLimit: 20,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -109,7 +111,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
-    eachValueLimit: 50,
+    eachValueLimit: 20,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -118,7 +120,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
-    eachValueLimit: 50,
+    eachValueLimit: 20,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -127,6 +129,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
+    eachValueLimit: 20,
     px: true,
   }),
   new CssUnitClassBranch({
@@ -135,6 +138,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
+    eachValueLimit: 20,
     px: true,
     minus: true,
   }),
@@ -144,6 +148,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
+    eachValueLimit: 20,
     px: true,
     minus: true,
   }),
@@ -153,6 +158,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
+    eachValueLimit: 20,
     px: true,
     minus: true,
   }),
@@ -162,6 +168,7 @@ const classNames = [
     media: true,
     percent: 200,
     each5ValuesLimit: 400,
+    eachValueLimit: 20,
     px: true,
     minus: true,
   }),
@@ -229,9 +236,9 @@ const classNames = [
     eachValueLimit: 10,
   }),
 
-  new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto', media: true }),
-  new CssSimpleClassBranch({ className: 'ml-a', fast: 'margin-left: auto', media: true }),
-  new CssSimpleClassBranch({ className: 'mr-a', fast: 'margin-right: auto', media: true }),
+  // new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto', media: true }),
+  // new CssSimpleClassBranch({ className: 'ml-a', fast: 'margin-left: auto', media: true }),
+  // new CssSimpleClassBranch({ className: 'mr-a', fast: 'margin-right: auto', media: true }),
   new CssSimpleClassBranch({
     property: 'display',
     classNameCreator: (mdf) => `d-${mdf}`,
@@ -288,12 +295,17 @@ const classNames = [
     classNameCreator: (mdf) => `grow-${mdf}`,
     values: ['1', '2', '3'],
   }),
+  new CssSimpleClassBranch({
+    property: 'white-space',
+    classNameCreator: (mdf) => `white-space-${mdf}`,
+    values: ['pre-wrap', 'text-wrap', 'text-no-wrap'],
+  }),
   new CssSimpleClassBranch({ className: 'flex-wrap', fast: 'flex-wrap: wrap', media: true }),
-  new CssSimpleClassBranch({ className: 'flex', fast: 'display: flex', media: true }),
-  new CssSimpleClassBranch({ className: 'flex-center', fast: 'justify-content: center; align-items: center' }),
-  new CssSimpleClassBranch({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
-  new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
-  new CssSimpleClassBranch({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
+  // new CssSimpleClassBranch({ className: 'flex', fast: 'display: flex', media: true }),
+  new CssSimpleClassBranch({ className: 'flex-center', fast: 'display: flex; justify-content: center; align-items: center' }),
+  // new CssSimpleClassBranch({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
+  // new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
+  // new CssSimpleClassBranch({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
   // new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
   new CssSimpleClassBranch({ className: 'pointer', fast: 'cursor: pointer' }),
   // new CssSimpleClassBranch({ className: 'fw-bold', fast: 'font-weight: 700' }),
@@ -308,30 +320,30 @@ const classNames = [
   new CssSimpleClassBranch({ className: 'transform-top-center', fast: 'transform: translateY(-50%)' }),
   new CssSimpleClassBranch({ className: 'transform-bottom-center', fast: 'transform: translateY(50%)' }),
   new CssSimpleClassBranch({ className: 'scale-75-p', fast: 'transform: scale(0.75)', media: true }),
-  new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto' }),
-  new CssSimpleClassBranch({ className: 'l-a', fast: 'left: auto', media: true }),
+  // new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto' }),
+  // new CssSimpleClassBranch({ className: 'l-a', fast: 'left: auto', media: true }),
 
   /* special */
-  new CssSimpleClassBranch({
-    className: 'color-white',
-    fast: `color: white`,
-  }),
-  new CssSimpleClassBranch({
-    className: 'ff-primary',
-    fast: `font-family: "Maitree, serif"`,
-  }),
-  new CssSimpleClassBranch({
-    className: 'ff-secondary',
-    fast: `font-family: "Raleway, serif"`,
-  }),
-  new CssSimpleClassBranch({
-    className: 'ff-thirdly',
-    fast: `font-family: "Circe, serif"`,
-  }),
-  new CssSimpleClassBranch({
-    className: 'black',
-    fast: `color: #111`,
-  }),
+  // new CssSimpleClassBranch({
+  //   className: 'color-white',
+  //   fast: `color: white`,
+  // }),
+  // new CssSimpleClassBranch({
+  //   className: 'ff-primary',
+  //   fast: `font-family: "Maitree, serif"`,
+  // }),
+  // new CssSimpleClassBranch({
+  //   className: 'ff-secondary',
+  //   fast: `font-family: "Raleway, serif"`,
+  // }),
+  // new CssSimpleClassBranch({
+  //   className: 'ff-thirdly',
+  //   fast: `font-family: "Circe, serif"`,
+  // }),
+  // new CssSimpleClassBranch({
+  //   className: 'black',
+  //   fast: `color: #111`,
+  // }),
   new CssSimpleClassBranch({
     className: 'flex-column',
     fast: 'flex-direction: column',
@@ -351,3 +363,9 @@ const classNames = [
 ];
 
 export default classNames;
+
+// export {
+//   maxWidthClassNameInstance,
+//   // widthClassNameInstance,
+//   heightClassNameInstance
+// }

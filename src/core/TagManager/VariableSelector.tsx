@@ -8,7 +8,7 @@ const VariableSelector = ( { onChange }: { onChange: (value: string) => void}) =
   return (
     <div>
       {Object.entries(variables).map(([name, value]) =>
-        <div className="flex align-center pointer text-no-wrap justify-space-between" onClick={() => onChange(value)} key={name}>
+        <div className="d-flex align-center pointer text-no-wrap justify-space-between" onClick={() => onChange(value)} key={name}>
           <div className={`mr-10`}>{name}:</div> <div>{value}</div>
         </div>
       )}

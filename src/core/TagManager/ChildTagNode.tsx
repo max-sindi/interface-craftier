@@ -55,7 +55,7 @@ const ChildTagNode = () => {
     <>
       <div
         ref={dragRef}
-        className={'flex align-center w-100-p'}
+        className={'d-flex align-center w-100-p'}
         data-name={'Drag ref, RecursivelyRenderTagLabels + ' + id}
         style={{ opacity: !isDragging ? 1 : 0.5}}
       >

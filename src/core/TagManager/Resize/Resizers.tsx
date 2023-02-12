@@ -14,9 +14,9 @@ interface IResizersProps extends ClassNameChange {
 const Resizers = ({ nodeId, ...classNameChange }: IResizersProps) => {
   const [currentModeNumber, setCurrentModeNumber] = useState(1);
   return (
-    <div className={'flex'} title={'Resizers'}>
+    <div className={'d-flex'} title={'Resizers'}>
       <div className="mr-20"  title={'Labels layout'}>
-        <div className={'flex flex-column align-center overflow-auto'} title={`Labels inner`}>
+        <div className={'d-flex flex-column align-center overflow-auto'} title={`Labels inner`}>
           <div
             className={clsx(['resizers-label', currentModeNumber === 1 && 'resizers-label-active'])}
             title={'Label Margin'}

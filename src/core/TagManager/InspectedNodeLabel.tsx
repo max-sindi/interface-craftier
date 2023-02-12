@@ -17,9 +17,9 @@ const InspectedNodeLabel = () => {
       <FocuserInput key={nodeState.id} />
 
       {!nodeState.isText && (
-        <div className="flex">
+        <div className="d-flex">
           <div>
-            <div data-name={'Name '} className="flex fz-18">
+            <div data-name={'Name '} className="d-flex fz-18">
               <div>{'Name: '}</div>
               <EditableField initiallyEditable={nameInitiallyEditable}
                 notEditElement={nodeState.name || '-'}
@@ -45,7 +45,7 @@ const InspectedNodeLabel = () => {
       <div data-name={'children-navigation'}>
         {nodeState.isText && (
           /* Text child */
-          <div className={'flex relative'}>
+          <div className={'d-flex relative'}>
             <div>{'Text: '}</div>
             <EditableField
               initiallyEditable={true}

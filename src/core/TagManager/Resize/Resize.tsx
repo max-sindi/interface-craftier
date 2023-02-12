@@ -44,8 +44,8 @@ const Resize = ({
         minConstraints={[-Infinity, -Infinity]}
         maxConstraints={[Infinity, Infinity]}
       >
-        <div className={'flex'}>
-          <div className="flex">
+        <div className={'d-flex'}>
+          <div className="d-flex">
             {widthClassNameInterface.integer}{' '}
             <UnitSelector
               classNameInterface={widthClassNameInterface}
@@ -54,7 +54,7 @@ const Resize = ({
             />
           </div>
           X
-          <div className="flex">
+          <div className="d-flex">
             {heightClassNameInterface.integer}{' '}
             <UnitSelector
               classNameInterface={heightClassNameInterface}

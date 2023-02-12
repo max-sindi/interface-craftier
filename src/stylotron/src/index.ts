@@ -41,6 +41,7 @@ class ClassesStorage {
       classBranches: this.classBranches.map((branch) => {
         if (branch instanceof CssUnitClassBranch) {
           return {
+            property: branch.property,
             name: branch.className,
             units: branch.units.reduce(
               (acc, unit) => ({

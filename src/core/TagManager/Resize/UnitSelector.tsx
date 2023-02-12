@@ -26,7 +26,7 @@ const UnitSelector = ({
   }
 
   return (
-    <div className={'flex align-center'}>
+    <div className={'d-flex align-center'}>
       <select value={unit} onChange={onChangeUnit} className={'p-0'}>
         {(['px', '%', 'vh'] as UnitName[]).map((unit) => (
           <option value={unit} key={unit}>

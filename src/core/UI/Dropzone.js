@@ -188,12 +188,12 @@ const Dropzone = (props) => {
                             )}
                         >
                             {loading && (
-                                <div className="fluid-absolute flex flex-center bg-white">
+                                <div className="fluid-absolute d-flex flex-center bg-white">
                                     {/*<Loader></Loader>*/}
                                 </div>
                             )}
                             <div className={cls(
-                                'flex flex-column',
+                                'd-flex flex-column',
                                 circle && 'fluid-absolute flex-center'
                             )}>
                                 {hasValue && notDisplayable

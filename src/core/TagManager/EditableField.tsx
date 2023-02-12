@@ -21,7 +21,7 @@ const EditableField = ({
         {editMode ? (
           editElement
         ) : (
-          <div className={'flex align-flex-end pointer'}>
+          <div className={'d-flex align-flex-end pointer'}>
             <AiFillEdit size={13} />
             {notEditElement}
           </div>

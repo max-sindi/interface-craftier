@@ -19,7 +19,7 @@ const CopyToClipboardToolbar = (props: ICopyToClipboardToolbarProps) => {
   };
 
   return (
-    <div className={'fixed t-30 r-30 h-30 pointer flex align-center'}>
+    <div className={'fixed t-30 r-30 h-30 pointer d-flex align-center'}>
       {!toolbarCollapsed && (
         <CopyToClipboard text={readyState} onCopy={onCopy}>
           <button className="pointer">Get Ready Markup</button>

@@ -3,7 +3,7 @@ import Unit, { Range } from './Unit';
 import Media from './Media';
 
 export default class CssUnitClassBranch extends Media {
-  private readonly property: string;
+  public readonly property: string;
   // private readonly media: boolean
   public readonly units: Unit[];
   public readonly className: string;

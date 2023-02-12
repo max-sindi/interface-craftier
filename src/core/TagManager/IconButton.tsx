@@ -7,7 +7,7 @@ interface IIconButtonProps extends HTMLAttributes<HTMLDivElement> {
 
 const IconButton = ({ children, centering, ...props }: IIconButtonProps) => {
   return (
-    <div className={cc([centering && 'flex flex-center', 'pointer pl-5 pr-5'])} {...props}>
+    <div className={cc([centering && 'd-flex flex-center', 'pointer pl-5 pr-5'])} {...props}>
       {children}
     </div>
   );

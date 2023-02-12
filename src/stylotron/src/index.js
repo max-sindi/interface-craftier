@@ -44,6 +44,7 @@ var ClassesStorage = /** @class */ (function () {
             classBranches: this.classBranches.map(function (branch) {
                 if (branch instanceof CssUnitClassBranch_1["default"]) {
                     return {
+                        property: branch.property,
                         name: branch.className,
                         units: branch.units.reduce(function (acc, unit) {
                             var _a;

@@ -40,7 +40,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
   };
 
   return (
-    <div className={'ml-a pr-10 flex relative '} data-name={'TagActionsPanel'}>
+    <div className={'ml-a pr-10 d-flex relative '} data-name={'TagActionsPanel'}>
       <IconButton centering>
         <CopyToClipboard
           text={styleToCopy}
@@ -61,7 +61,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       </IconButton>
       {deepIndex > 0 && (
         <>
-          <IconButton centering className={'flex flex-center'} title={'Wrap'} onClick={wrapNode}>
+          <IconButton centering className={'d-flex flex-center'} title={'Wrap'} onClick={wrapNode}>
             <WrapIcon className={'w-25 h-25'} />
           </IconButton>
           <IconButton centering>
