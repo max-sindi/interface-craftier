@@ -4,8 +4,6 @@ import { IoMdAdd } from 'react-icons/io';
 import { IoDuplicateOutline } from 'react-icons/io5';
 import { MdCopyright } from 'react-icons/md';
 import { HiClipboardCopy } from 'react-icons/hi';
-
-import { TbPlaylistAdd } from 'react-icons/tb';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import WrapIcon from 'src/core/UI/svg/WrapIcon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -22,7 +20,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       addBlockNode,
       addTextNode,
       duplicateNode,
-      nodeState: { style, className, deepIndex }, changeStyles, changeClassNamesList
+      nodeState: { style, className, deepIndex }, changeStyles, changeClassNames
     },
   } = useContext(EachTagManagerProviderContext);
 
@@ -32,7 +30,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
 
     try {
       const parsedData = JSON.parse(data) as StyleToCopy ;
-      changeClassNamesList({...className, ...parsedData.className})
+      changeClassNames({...className, ...parsedData.className})
       changeStyles({...style, ...parsedData.style})
     } catch (e) {
       console.error('Error while parse');

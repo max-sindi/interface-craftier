@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback, useMemo } from 'react';
 import {
   createNodeSelector,
-  inspectedNodeStateSelector,
   nodeDeepnessSelector,
   nodesMapSelector,
 } from 'src/core/store/modules/template/selector';
@@ -46,7 +45,6 @@ export const useTagApi = (nodeId: Uuid) => {
     event.stopPropagation();
     updateHoveredNode(nodeState);
   };
-  const highlightInspectedNode = () => dispatch(highlightInspectedNodeAction());
   const transformField = (field: keyof TagNode, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
@@ -60,7 +58,7 @@ export const useTagApi = (nodeId: Uuid) => {
       value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
     };
   }
-  const changeClassNamesList = createChangeHandler<ExtendedNode['className']>('className');
+  const changeClassNames = createChangeHandler<ExtendedNode['className']>('className');
   const changeStyles = createChangeHandler<ExtendedNode['style']>('style');
   const changeName = createHtmlChangeHandler('name');
   const changeText = createHtmlChangeHandler('text');
@@ -102,7 +100,7 @@ export const useTagApi = (nodeId: Uuid) => {
   const deleteThisNode = () => dispatch(deleteNodeAction(nodeId));
   const eraseStyling = () => {
     changeStyles({})
-    changeClassNamesList({})
+    changeClassNames({})
   }
 
   return {
@@ -122,7 +120,7 @@ export const useTagApi = (nodeId: Uuid) => {
     createChangeHandler,
     deleteChild,
     changeText,
-    changeClassNamesList,
+    changeClassNames,
     changeStyles,
     addChild,
     addBlockNode,

@@ -5,7 +5,8 @@ export const stylesExisting = [
   {
     name: 'backgroundImage',
     withFile: true,
-    // fileValueCreator: fileName => `url('http://localhost:8000${fileName}')`
+    suggestions: images,
+    fileValueCreator: (fileName: string) => `url(icons/${fileName})`
   },
   {
     name: 'backgroundColor',
@@ -25,7 +26,13 @@ export const stylesExisting = [
   },
   {
     name: 'fontFamily'
-  }
+  },
+  {
+    name: 'boxShadow'
+  },
+  {
+    name: 'fontSize'
+  },
 ]
 
 export const attrsExisting = [
@@ -49,4 +56,5 @@ export const attrsExisting = [
   },
 ]
 
-export const tags = ['div', 'span', 'input', 'img', 'a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5']
+export const tags = ['div', 'span', 'input', 'img', 'a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'br']
+export const tagsWithNoChildren = ['input', 'img', 'br']

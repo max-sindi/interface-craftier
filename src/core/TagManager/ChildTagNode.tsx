@@ -82,7 +82,7 @@ const ChildTagNode = () => {
             minHeight: (isInspected ? labelHeight + 10 : labelHeight) + (isHovered ? 70 : 0),
             transition: `all 0.${3 + levelDifferenceToInspectedNode}s`,
             background: isInspected ? greenColor : 'transparent',
-            marginLeft: !isInspected ? 0 : nodeState.deepIndex * levelDeepPx + 10,
+            marginLeft: !isInspected ? 0 : nodeState.deepIndex * levelDeepPx + 10 + 7,
           }}
         >
           {isInspected ? <InspectedNodeLabel /> : <TagLabel />}

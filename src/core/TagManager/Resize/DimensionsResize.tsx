@@ -27,14 +27,14 @@ const DimensionsResize = (props: ClassNameChange) => {
           changeUnit: onWidthUnitChange,
           classNameRoot: 'w',
           defaultClassName: widthDefaultClassName,
-          integer: widthInteger,
+          integer: widthInteger || 0,
           unit: widthUnit,
         }}
         heightClassNameInterface={{
           changeUnit: onHeightUnitChange,
           classNameRoot: 'h',
           defaultClassName: heightDefaultClassName,
-          integer: heightInteger,
+          integer: heightInteger || 0,
           unit: heightUnit,
         }}
         {...props}

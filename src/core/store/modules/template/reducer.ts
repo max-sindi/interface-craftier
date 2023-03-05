@@ -32,7 +32,8 @@ export type GlobalState = {
 
 export enum StorageMap {
   // State = 'state.Shopka',
-  State = 'state.hrsLanguages',
+  State = 'state.thebox',
+  // State = 'state.hrsLanguages',
   InspectedNode = 'inspectedNode',
 }
 

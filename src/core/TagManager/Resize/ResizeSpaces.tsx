@@ -15,14 +15,13 @@ type Props = ClassNameChange & {
 };
 
 export const extractClassNameValue = (rawValue: string) => {
-  return extractNumber(rawValue) * (lastArrayItem(rawValue.split('-')) === 'minus' ? -1 : 1);
+  return (extractNumber(rawValue) || 0) * (lastArrayItem(rawValue.split('-')) === 'minus' ? -1 : 1);
 };
 
 const ResizeSpaces = ({
   changeClassName,
   classNameRecord,
   reverse,
-  title,
   topClassNameInterface,
   bottomClassNameInterface,
   leftClassNameInterface,

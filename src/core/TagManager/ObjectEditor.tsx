@@ -143,7 +143,7 @@ const ObjectEditor = ({
                                 <div className={'mr-10'}>{path}</div>
                                 <div className={`max-w-40`}>
                                   {['svg', 'png', 'jpeg'].includes(lastArrayItem(path.split('.'))) && (
-                                    <img src={fileValueCreator(path)} alt={path} />
+                                    <img src={fileValueCreator(path)} alt={path} className={'max-h-40 max-w-100-p'} />
                                   )}
                                 </div>
                               </div>

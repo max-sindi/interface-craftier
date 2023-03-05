@@ -18,13 +18,14 @@ var Unit = /** @class */ (function () {
         var prefixes = [this.prefix, minus && 'minus'].filter(Boolean);
         var prefix = !prefixes.length ? '' : '-' + prefixes.join('-');
         var name = "".concat(this.classBranch.className, "-").concat(integer).concat(prefix);
-        var value = this.classBranch.createValue(String("".concat(integer * (minus ? -1 : 1)) + // - or +
+        var integerValue = integer * (minus ? -1 : 1);
+        var value = this.classBranch.createValue(String("".concat(integerValue) + // - or +
             "".concat(integer === 0 ? '' : this.unit) // omit redundant unit for 0 value
         ));
         return new CssClass_1["default"]({
             name: name,
             value: value,
-            integer: integer,
+            integer: integerValue,
             decoratorAfter: this.decoratorAfter,
             decoratorBefore: this.decoratorBefore
         });
@@ -37,7 +38,7 @@ var Unit = /** @class */ (function () {
                 .sort(function (range1, range2) { return range2.limit - range1.limit; })
                 .forEach(function (range, index, arr) {
                 var nextRange = arr[index + 1];
-                for (var value = range.limit; value >= (nextRange ? nextRange.limit : 0); value -= range.step) {
+                for (var value = range.limit; value > (nextRange ? nextRange.limit : 0); value -= range.step) {
                     var negativeClassName = _this.createClassName(value, true);
                     _this.classBranch.classes.push(negativeClassName);
                     _this.classNames.push(negativeClassName);
@@ -49,7 +50,7 @@ var Unit = /** @class */ (function () {
             .sort(function (range1, range2) { return range1.limit - range2.limit; })
             .forEach(function (range, index, arr) {
             var prevRange = arr[index - 1];
-            for (var value = prevRange ? prevRange.limit : 0; value <= range.limit; value += range.step) {
+            for (var value = prevRange ? prevRange.limit : 0; value < range.limit; value += range.step) {
                 var positiveClassName = _this.createClassName(value);
                 _this.classBranch.classes.push(positiveClassName);
                 _this.classNames.push(positiveClassName);

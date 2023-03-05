@@ -14,6 +14,7 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { TagNode } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
+import { tagsWithNoChildren } from "src/core/TagManager/config";
 // import Tooltip from 'rc-tooltip';
 // import Toolbar from 'src/core/TagManager/Toolbar';
 const hyperscript = require('react-hyperscript');
@@ -30,7 +31,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
   const isHovered = hoveredNodeId === nodeId || inspectedNodeId === nodeId;
   const isThisInspectingNode = inspectedNodeId === nodeId;
-  const canTagHaveChildren = (tag: TagNode['tag']) => !['input', 'img'].includes(tag);
+  const canTagHaveChildren = (tag: TagNode['tag']) => !tagsWithNoChildren.includes(tag);
   const dispatch = useDispatch();
   const nodeSelector = useCallback(createNodeSelector(nodeId), [nodeId]);
   const nodeState = useSelector(nodeSelector);

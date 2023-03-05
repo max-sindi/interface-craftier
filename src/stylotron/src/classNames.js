@@ -27,7 +27,7 @@ var maxWidthClassNameInstance = new CssUnitClassBranch_1["default"]({
     property: 'max-width',
     media: true,
     percent: 200,
-    each5ValuesLimit: 800,
+    each5ValuesLimit: 1200,
     px: true,
     vh: 100
 });
@@ -37,15 +37,15 @@ var classNames = [
         fast: 'max-width: 1500px; box-sizing: border-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px'
     }),
     widthClassNameInstance,
-    new CssUnitClassBranch_1["default"]({
-        className: 'w-calc',
-        property: 'width',
-        classNameCreator: function (mdf) { return "calc(100% + ".concat(mdf, ")"); },
-        media: true,
-        each5ValuesLimit: 400,
-        eachValueLimit: 50,
-        px: true
-    }),
+    // new CssUnitClassBranch({
+    //   className: 'w-calc',
+    //   property: 'width',
+    //   classNameCreator: (mdf: string) => `calc(100% + ${mdf})`,
+    //   media: true,
+    //   each5ValuesLimit: 400,
+    //   eachValueLimit: 50,
+    //   px: true,
+    // }),
     heightClassNameInstance,
     maxWidthClassNameInstance,
     new CssUnitClassBranch_1["default"]({
@@ -169,26 +169,6 @@ var classNames = [
         minus: true
     }),
     new CssUnitClassBranch_1["default"]({
-        className: 'l',
-        property: 'left',
-        media: true,
-        percent: 200,
-        each5ValuesLimit: 1000,
-        eachValueLimit: 15,
-        px: true,
-        minus: true
-    }),
-    new CssUnitClassBranch_1["default"]({
-        className: 'r',
-        property: 'right',
-        media: true,
-        percent: 200,
-        each5ValuesLimit: 1000,
-        eachValueLimit: 15,
-        px: true,
-        minus: true
-    }),
-    new CssUnitClassBranch_1["default"]({
         className: 't',
         property: 'top',
         media: true,
@@ -209,6 +189,61 @@ var classNames = [
         minus: true
     }),
     new CssUnitClassBranch_1["default"]({
+        className: 'r',
+        property: 'right',
+        media: true,
+        percent: 200,
+        each5ValuesLimit: 1000,
+        eachValueLimit: 15,
+        px: true,
+        minus: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'l',
+        property: 'left',
+        media: true,
+        percent: 200,
+        each5ValuesLimit: 1000,
+        eachValueLimit: 15,
+        px: true,
+        minus: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'bw',
+        property: 'border-width',
+        media: true,
+        eachValueLimit: 15,
+        px: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'bl',
+        property: 'border-left-width',
+        media: true,
+        eachValueLimit: 15,
+        px: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'br',
+        property: 'border-right-width',
+        media: true,
+        eachValueLimit: 15,
+        px: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'bt',
+        property: 'border-top-width',
+        media: true,
+        eachValueLimit: 15,
+        px: true
+    }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'bb',
+        property: 'border-bottom-width',
+        media: true,
+        eachValueLimit: 15,
+        px: true
+    }),
+    new CssUnitClassBranch_1["default"]({
         className: 'fz',
         property: 'font-size',
         media: true,
@@ -221,28 +256,36 @@ var classNames = [
         property: "font-weight",
         values: ['300', '400', '500', '600', '700', '800', '900']
     }),
-    new CssUnitClassBranch_1["default"]({ className: 'border-radius', property: 'border-radius', eachValueLimit: 10, each5ValuesLimit: 100, px: true }),
+    new CssUnitClassBranch_1["default"]({
+        className: 'border-radius',
+        property: 'border-radius',
+        eachValueLimit: 10,
+        each5ValuesLimit: 100,
+        px: true
+    }),
     new CssUnitClassBranch_1["default"]({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),
-    new CssSimpleClassBranch_1["default"]({ classNameCreator: function (mdf) { return "z-index-".concat(mdf); }, property: 'z-index', media: true, values: ['-1', '0', '1', '2', '3'] }),
-    new CssUnitClassBranch_1["default"]({
-        className: 'order',
+    new CssSimpleClassBranch_1["default"]({
+        classNameCreator: function (mdf) { return "z-index-".concat(mdf); },
+        property: 'z-index',
+        media: true,
+        values: ['-1', '0', '1', '2', '3']
+    }),
+    new CssSimpleClassBranch_1["default"]({
+        classNameCreator: function (mdf) { return "order-".concat(mdf); },
         property: 'order',
         media: true,
-        eachValueLimit: 10
+        values: ['-1', '0', '1', '2', '3']
     }),
-    // new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto', media: true }),
-    // new CssSimpleClassBranch({ className: 'ml-a', fast: 'margin-left: auto', media: true }),
-    // new CssSimpleClassBranch({ className: 'mr-a', fast: 'margin-right: auto', media: true }),
     new CssSimpleClassBranch_1["default"]({
         property: 'display',
         classNameCreator: function (mdf) { return "d-".concat(mdf); },
         values: ['none', 'flex', 'inline-flex', 'block', 'inline', 'inline-block']
     }),
     new CssSimpleClassBranch_1["default"]({
-        property: 'visibility',
-        classNameCreator: function (mdf) { return "visibility-".concat(mdf); },
-        values: ['visible', 'hidden']
+        property: 'flex-direction',
+        classNameCreator: function (mdf) { return "flex-".concat(mdf); },
+        values: ['row', 'column', 'row-reverse', 'column-reverse']
     }),
     new CssSimpleClassBranch_1["default"]({
         property: 'align-items',
@@ -262,6 +305,11 @@ var classNames = [
         property: 'overflow',
         classNameCreator: function (mdf) { return "overflow-".concat(mdf); },
         values: ['hidden', 'auto']
+    }),
+    new CssSimpleClassBranch_1["default"]({
+        property: 'visibility',
+        classNameCreator: function (mdf) { return "visibility-".concat(mdf); },
+        values: ['visible', 'hidden']
     }),
     new CssSimpleClassBranch_1["default"]({
         property: 'border-style',
@@ -295,16 +343,11 @@ var classNames = [
         values: ['pre-wrap', 'text-wrap', 'text-no-wrap']
     }),
     new CssSimpleClassBranch_1["default"]({ className: 'flex-wrap', fast: 'flex-wrap: wrap', media: true }),
-    // new CssSimpleClassBranch({ className: 'flex', fast: 'display: flex', media: true }),
-    new CssSimpleClassBranch_1["default"]({ className: 'flex-center', fast: 'display: flex; justify-content: center; align-items: center' }),
-    // new CssSimpleClassBranch({ className: 'pre-wrap', fast: 'white-space: pre-wrap' }),
-    // new CssSimpleClassBranch({ className: 'text-wrap', fast: 'white-space: normal', media: true }),
-    // new CssSimpleClassBranch({ className: 'text-no-wrap', fast: 'white-space: nowrap', media: true }),
-    // new CssSimpleClassBranch({ className: 'bold', fast: 'font-weight: 700' }),
+    new CssSimpleClassBranch_1["default"]({
+        className: 'flex-center',
+        fast: 'display: flex; justify-content: center; align-items: center'
+    }),
     new CssSimpleClassBranch_1["default"]({ className: 'pointer', fast: 'cursor: pointer' }),
-    // new CssSimpleClassBranch({ className: 'fw-bold', fast: 'font-weight: 700' }),
-    // new CssSimpleClassBranch({ className: 'ls-027', fast: 'letter-spacing: 0.27px' }),
-    // new CssSimpleClassBranch({ className: 'ls-05', fast: 'letter-spacing: 0.54px' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-left-top-center', fast: 'transform: translate(-50%, -50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-right-top-center', fast: 'transform: translate(50%, -50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-left-bottom-center', fast: 'transform: translate(-50%, 50%)' }),
@@ -314,33 +357,8 @@ var classNames = [
     new CssSimpleClassBranch_1["default"]({ className: 'transform-top-center', fast: 'transform: translateY(-50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'transform-bottom-center', fast: 'transform: translateY(50%)' }),
     new CssSimpleClassBranch_1["default"]({ className: 'scale-75-p', fast: 'transform: scale(0.75)', media: true }),
-    // new CssSimpleClassBranch({ className: 't-a', fast: 'top: auto' }),
-    // new CssSimpleClassBranch({ className: 'l-a', fast: 'left: auto', media: true }),
-    /* special */
-    // new CssSimpleClassBranch({
-    //   className: 'color-white',
-    //   fast: `color: white`,
-    // }),
-    // new CssSimpleClassBranch({
-    //   className: 'ff-primary',
-    //   fast: `font-family: "Maitree, serif"`,
-    // }),
-    // new CssSimpleClassBranch({
-    //   className: 'ff-secondary',
-    //   fast: `font-family: "Raleway, serif"`,
-    // }),
-    // new CssSimpleClassBranch({
-    //   className: 'ff-thirdly',
-    //   fast: `font-family: "Circe, serif"`,
-    // }),
-    // new CssSimpleClassBranch({
-    //   className: 'black',
-    //   fast: `color: #111`,
-    // }),
-    new CssSimpleClassBranch_1["default"]({
-        className: 'flex-column',
-        fast: 'flex-direction: column'
-    }),
+    new CssSimpleClassBranch_1["default"]({ className: 'rotate-180-deg', fast: 'transform: rotate(180deg)', media: true }),
+    new CssSimpleClassBranch_1["default"]({ className: 'rotate-90-deg', fast: 'transform: rotate(90deg)', media: true }),
     new CssSimpleClassBranch_1["default"]({
         property: "text-transform",
         values: ['capitalize', 'uppercase']
@@ -355,8 +373,3 @@ var classNames = [
     }),
 ];
 exports["default"] = classNames;
-// export {
-//   maxWidthClassNameInstance,
-//   // widthClassNameInstance,
-//   heightClassNameInstance
-// }

@@ -57,7 +57,7 @@ class ClassesStorage {
             range: branch.classes.map(({ name }) => name),
             values: branch.values,
             classes: branch.classes,
-          }
+          };
         }
       }),
     });

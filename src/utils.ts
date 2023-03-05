@@ -31,15 +31,15 @@ export const labelHeight = 26;
 export const labelFontSize = 20;
 export const greenColor = '#449147';
 
-const isNumber = (value: string | number) => !Number.isNaN(+value);
+export const isNumber = (value: any) => Math.abs(value) >= 0;
 
-export const extractNumber = (str: string) =>
-  Number(
-    str
+export const extractNumber = (str: string) => {
+  const potentialNumber = str
       .split('-')
       .filter((i) => isNumber(i))
       .join('')
-  );
+  return isNumber(potentialNumber) && Number(potentialNumber )
+};
 
 export const lastArrayItem = (arr: any[]) => arr[arr.length - 1];
 
@@ -64,6 +64,7 @@ export const findNewClassName = (
 ) => {
   const { classNameRoot, defaultClassName, unit } = classNameInterface;
   const classBranch = styles.classBranches.find((branch) => branch.name === classNameRoot);
+
   if (classBranch) {
     const units = classBranch.units && classBranch.units[unit];
     if (units) {
@@ -182,11 +183,16 @@ export const compileStateToProduction = (state: GlobalState) => {
   `;
 };
 
-
-export const destructTree = (state: Omit<GlobalState , 'template'> & { template: TagNode }, prevNodesMap: NodesMap) => {
+export const destructTree = (state: Omit<GlobalState, 'template'> & { template: TagNode }, prevNodesMap: NodesMap) => {
   const nodesMap: NodesMap = {};
 
-  const recursiveIterator = ( node: TagNode, deepIndex: number, levelIndex: number, xPath: string, parentNode?: TagNode) => {
+  const recursiveIterator = (
+    node: TagNode,
+    deepIndex: number,
+    levelIndex: number,
+    xPath: string,
+    parentNode?: TagNode
+  ) => {
     const extendedNode: ExtendedNode = {
       ...node,
       childrenCollapsed: !!prevNodesMap[node.id]?.childrenCollapsed,
@@ -194,9 +200,11 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
       childIndex: levelIndex,
       deepIndex,
       parentId: parentNode?.id,
-      children: node.children.filter(Boolean).map((childNode, index) =>
-        recursiveIterator(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
-      ),
+      children: node.children
+        .filter(Boolean)
+        .map((childNode, index) =>
+          recursiveIterator(childNode, deepIndex + 1, index, `${xPath}.children[${index}]`, node)
+        ),
     };
 
     // add node to map
@@ -210,5 +218,5 @@ export const destructTree = (state: Omit<GlobalState , 'template'> & { template:
   return { nodesMap, currentState: { ...state, template: updatedTemplate } };
 };
 
-export const isColor = (value: string) => value[0] === '#'
-export const isGradient = (value: string) => !value.split('linear-gradient(')[0]
+export const isColor = (value: string) => value[0] === '#';
+export const isGradient = (value: string) => !value.split('linear-gradient(')[0];

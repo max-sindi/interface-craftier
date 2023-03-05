@@ -12,7 +12,7 @@ $resizeWidth: 120px;
 $green-padding: #86b049;
 $dimensions-resize-color: #00aead;
 $margin-color: #ffc06e;
-$toolbar-width: 400px;
+$toolbar-width: 1000px;
 .scene {
   //padding-right: $toolbar-width;
 }
@@ -156,7 +156,8 @@ $toolbar-width: 400px;
   //background: #fff;
   margin-top: 100px;
   display: flex;
-  max-width: 1000px;
+  max-width: $toolbar-width;
+  min-width: $toolbar-width;
   height: 400px;
   overflow: hidden;
   //width: $toolbar-width - 45px;
@@ -466,7 +467,7 @@ $inter: 'Inter';
   $w: 180px;
   min-width: $w;
   max-width: $w;
-  max-height: 140px;
+  max-height: 200px;
   overflow: auto;
   margin-right: 20px;
 }
@@ -489,4 +490,12 @@ $inter: 'Inter';
   &.active {
     background: #a624d1;
   }
+}
+
+.card {
+  //padding: 3px 5px;
+  box-shadow: 0 0 5px 5px #00000030;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

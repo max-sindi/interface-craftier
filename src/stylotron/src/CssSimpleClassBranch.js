@@ -16,14 +16,13 @@ var CssSimpleClassBranch = /** @class */ (function () {
     }
     CssSimpleClassBranch.prototype.populateEnumerates = function () {
         var _this = this;
-        // if(this.classNameCreator && Array.isArray(this.values)) {
-        this.values.length && this.values.forEach(function (value) {
-            return _this.classes.push(new CssClass_1["default"]({
-                name: _this.classNameCreator(value),
-                value: _this.createValue(value)
-            }));
-        });
-        // }
+        this.values.length &&
+            this.values.forEach(function (value) {
+                return _this.classes.push(new CssClass_1["default"]({
+                    name: _this.classNameCreator(value),
+                    value: _this.createValue(value)
+                }));
+            });
     };
     CssSimpleClassBranch.prototype.populateFast = function () {
         if (this.fast) {

@@ -1,14 +1,19 @@
+
+export const isNumber = (value: string | number) => -Math.abs(value as number) < 0;
+
 export default class CssClass {
   public readonly name: string;
   public readonly value: string;
-  public readonly integer: number;
+  public readonly integer?: number;
   public readonly decoratorAfter: boolean;
   public readonly decoratorBefore: boolean;
 
-  constructor({ name = '!noName!', value = '!noValue!', integer = 0, decoratorAfter = true, decoratorBefore = true }) {
+  constructor({ name = '!noName!', value = '!noValue!', integer = NaN, decoratorAfter = true, decoratorBefore = true }) {
     this.name = name;
     this.value = value;
-    this.integer = integer;
+    if(!Number.isNaN(integer)) {
+      this.integer = integer;
+    }
     this.decoratorAfter = decoratorAfter;
     this.decoratorBefore = decoratorBefore;
   }

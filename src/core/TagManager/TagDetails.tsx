@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import Resizers from 'src/core/TagManager/Resize/Resizers';
+// import Resizers from 'src/core/TagManager/Resize/Resizers';
 import ClassNamesSelector from 'src/core/TagManager/ClassNames/ClassNamesSelector';
 import ObjectEditor from 'src/core/TagManager/ObjectEditor';
 import { attrsExisting, stylesExisting } from 'src/core/TagManager/config';
@@ -8,11 +8,10 @@ import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManage
 import AppManager from 'src/core/AppManager';
 
 const TagDetails = () => {
-  const {
-    nodeApi: { nodeState, createChangeHandler, changeClassNamesList, changeStyles, onMouseEnter },
-  } = useContext(EachTagManagerProviderContext);
-  const nodeId = nodeState.id;
   const [tabIndex, setTabIndex] = useState(0);
+  const {
+    nodeApi: { nodeState, createChangeHandler, onMouseEnter },
+  } = useContext(EachTagManagerProviderContext);
 
   return (
     <Tabs
@@ -34,10 +33,6 @@ const TagDetails = () => {
             {/*  <Resizers changeClassName={changeClassNamesList} classNameRecord={nodeState.className} nodeId={nodeId} />*/}
             {/*</div>*/}
             <ClassNamesSelector
-              changeClassName={changeClassNamesList}
-              classNameRecord={nodeState.className}
-              styleRecord={nodeState.style}
-              changeStyles={changeStyles}
             />
           </div>
         </TabPanel>
