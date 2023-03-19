@@ -8,15 +8,15 @@ import {
 } from 'src/core/store/modules/template/selector';
 import { TagNode } from 'src/core/TagNode';
 import {
-  addChildAction,
-  deleteNodeAction,
-  duplicateNodeAction,
-  highlightInspectedNodeAction,
-  pasteChildrenAction,
-  updateHoveredNodeAction,
-  updateInspectedNodeAction,
-  updateNodeAction,
-  wrapNodeAction,
+  addChildAction ,
+  deleteNodeAction ,
+  duplicateNodeAction ,
+  highlightInspectedNodeAction ,
+  pasteChildrenAction , scrollIntoViewAction ,
+  updateHoveredNodeAction ,
+  updateInspectedNodeAction ,
+  updateNodeAction ,
+  wrapNodeAction
 } from 'src/core/store/modules/template/actions';
 import { tags } from 'src/core/TagManager/config';
 import { createSelector } from 'reselect';
@@ -40,22 +40,23 @@ export const useTagApi = (nodeId: Uuid) => {
   const inspectThisNode = () => dispatch(updateInspectedNodeAction(nodeId));
   const updateInspectedNode = (node?: TagNode) => dispatch(updateInspectedNodeAction(node?.id));
   const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
+  const scrollIntoView = () => dispatch(scrollIntoViewAction(nodeId))
   const unselectCurrentNode = () => dispatch(updateInspectedNodeAction(undefined));
   const highlightThisNode = (event: any) => {
     event.stopPropagation();
     updateHoveredNode(nodeState);
   };
-  const transformField = (field: keyof TagNode, value: any, withTreeDestructing?: boolean) =>
+  const transformField = (field: keyof ExtendedNode, value: any, withTreeDestructing?: boolean) =>
     dispatch(updateNodeAction({ id: nodeId, field, value, withTreeDestructing }));
   // const transformParentField = (field: keyof Node, value: any, withTreeDestructing?: boolean) =>
   //   parentNodeState && dispatch(updateNodeAction({ id: parentNodeState.id, field, value, withTreeDestructing }));
   const selectParent = () => updateInspectedNode(parentNodeState);
   const selectChild = (child: TagNode) => updateInspectedNode(child);
   const onHighlight = (hoveringNode = nodeState) => updateHoveredNode(hoveringNode);
-  const createHtmlChangeHandler = (path: keyof TagNode) => (evt: any) => transformField(path, evt.target.value);
-  function createChangeHandler<Value>(path: keyof TagNode) {
+  const createHtmlChangeHandler = (fieldName: keyof ExtendedNode) => (evt: any) => transformField(fieldName, evt.target.value);
+  function createChangeHandler<Value>(fieldName: keyof ExtendedNode) {
     return (value: Value) => {
-      value instanceof Function ? transformField(path, value(nodeState[path])) : transformField(path, value);
+      value instanceof Function ? transformField(fieldName, value(nodeState[fieldName])) : transformField(fieldName, value);
     };
   }
   const changeClassNames = createChangeHandler<ExtendedNode['className']>('className');
@@ -63,6 +64,7 @@ export const useTagApi = (nodeId: Uuid) => {
   const changeName = createHtmlChangeHandler('name');
   const changeText = createHtmlChangeHandler('text');
   const changeTag = createHtmlChangeHandler('tag');
+  const changeReactComponent = createChangeHandler('reactComponent');
   const deleteChild = (indexToDelete: number) =>
     transformField(
       'children',
@@ -120,6 +122,7 @@ export const useTagApi = (nodeId: Uuid) => {
     createChangeHandler,
     deleteChild,
     changeText,
+    changeReactComponent,
     changeClassNames,
     changeStyles,
     addChild,
@@ -136,6 +139,7 @@ export const useTagApi = (nodeId: Uuid) => {
     wrapNode,
     duplicateNode,
     pasteChildren,
+    scrollIntoView,
   };
 };
 

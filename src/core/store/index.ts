@@ -6,13 +6,17 @@ import {
   actionsToSave ,
   duplicateNodeAction ,
   resetStateAction , updateInspectedNodeAction ,
-  updateNodeAction ,
+  updateNodeAction , updateProjectStateAction ,
   updateVariablesAction ,
-  wrapNodeAction ,
+  wrapNodeAction
 } from 'src/core/store/modules/template/actions';
+import sagaMiddleware , { sagas } from 'src/core/store/middlewares/saga';
+import { debounce } from 'lodash';
+
+const debouncedUpdater = debounce((cb: () => void) => cb(), 500)
 
 function makeStore(preloadedState?: RootReducer) {
-  return configureStore({
+  const store =  configureStore({
     reducer: rootReducer,
     middleware: [
       ...middlewares,
@@ -29,7 +33,8 @@ function makeStore(preloadedState?: RootReducer) {
             ...actionsToSave.map((action) => action.toString()),
           ].includes(action.type)
         ) {
-          localStorage.setItem(StorageMap.State, JSON.stringify(cleanupTree(api.getState().template.currentState)));
+          debouncedUpdater(() => api.dispatch(updateProjectStateAction(cleanupTree(api.getState().template.currentState))))
+          // localStorage.setItem(StorageMap.State, JSON.stringify(cleanupTree(api.getState().template.currentState)));
         }
 
         // save inspected node
@@ -41,6 +46,10 @@ function makeStore(preloadedState?: RootReducer) {
     devTools: true,
     preloadedState,
   });
+
+  sagas.forEach(sagaMiddleware.run);
+
+  return store
 }
 
 export default makeStore;

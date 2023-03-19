@@ -340,7 +340,7 @@ var classNames = [
     new CssSimpleClassBranch_1["default"]({
         property: 'white-space',
         classNameCreator: function (mdf) { return "white-space-".concat(mdf); },
-        values: ['pre-wrap', 'text-wrap', 'text-no-wrap']
+        values: ['pre-wrap', 'text-wrap', 'nowrap']
     }),
     new CssSimpleClassBranch_1["default"]({ className: 'flex-wrap', fast: 'flex-wrap: wrap', media: true }),
     new CssSimpleClassBranch_1["default"]({

@@ -16,6 +16,7 @@ export class TagNode {
   children: TagNode[];
   isText: boolean
   text: string
+  reactComponent: boolean
 
   constructor(params: Partial<TagNode> = {}) {
     this.name = params.name || ''
@@ -27,5 +28,6 @@ export class TagNode {
     this.tag = params.tag || (params.isText ? 'span' : 'div')
     this.isText = params.isText || false
     this.text = params.text || ''
+    this.reactComponent = params.reactComponent || false
   }
 }

@@ -7,7 +7,7 @@ import {
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import Toolbar from './TagManager/Toolbar';
-import { selectRootAction } from "src/core/store/modules/template/actions";
+import { fetchProjectStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
@@ -18,6 +18,7 @@ const HtmlManager = () => {
   const selectRoot = () => dispatch(selectRootAction())
 
   useEffect(() => {
+    dispatch(fetchProjectStateAction())
   // resetState()
   //   selectRoot()
   }, [])

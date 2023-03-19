@@ -4,6 +4,7 @@ import Manager from './StateTreeManager';
 import { useDispatch } from 'react-redux';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import { current } from '@reduxjs/toolkit';
+import axios from 'src/axios';
 
 type IProjectContext = {
   toolbarCollapsed: boolean;
@@ -28,6 +29,8 @@ function Project() {
     window.reduxDispatch = dispatch
     // @ts-ignore
     window.logProxy = current
+    // @ts-ignore
+    window.axios = axios
   })
 
   return (

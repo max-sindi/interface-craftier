@@ -1,6 +1,6 @@
 .group {
-  padding-right: 20px;
-  min-width: 170px;
+  padding-right: 50px;
+  min-width: 180px;
 }
 
 .chooseButtonContainer {
@@ -24,6 +24,10 @@
 .chooseButtonActive {
   background: gold;
   color: #000000;
+}
+
+.chooseButtonNth5:not(.chooseButtonActive) {
+  background: #223355;
 }
 
 .tabButton {

@@ -1,22 +1,23 @@
-import React, { Fragment, useCallback } from 'react';
+import React , { Fragment , useCallback , useEffect , useRef } from 'react';
 import clsx from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  createNodeSelector,
-  hoveredNodeSelector,
-  inspectedNodeSelector,
+  createNodeSelector ,
+  hoveredNodeSelector ,
+  inspectedNodeSelector , scrollIntoViewNodeSelector
 } from 'src/core/store/modules/template/selector';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import {
-  resetHoveredNodeAction,
-  updateHoveredNodeAction,
-  updateInspectedNodeAction,
+  resetHoveredNodeAction , scrollIntoViewAction ,
+  updateHoveredNodeAction ,
+  updateInspectedNodeAction
 } from 'src/core/store/modules/template/actions';
 import { TagNode } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
-import { tagsWithNoChildren } from "src/core/TagManager/config";
-// import Tooltip from 'rc-tooltip';
-// import Toolbar from 'src/core/TagManager/Toolbar';
+import { tagsWithNoChildren } from 'src/core/TagManager/config';
+import LiveTagManager from 'src/core/LiveTagManager';
+import Tooltip from 'rc-tooltip';
+import { useTagApi } from 'src/core/TagManager/useTagApi';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -29,6 +30,7 @@ type Props = {
 function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const hoveredNodeId = useSelector(hoveredNodeSelector);
   const inspectedNodeId = useSelector(inspectedNodeSelector);
+  const scrollIntoViewNodeId = useSelector(scrollIntoViewNodeSelector);
   const isHovered = hoveredNodeId === nodeId || inspectedNodeId === nodeId;
   const isThisInspectingNode = inspectedNodeId === nodeId;
   const canTagHaveChildren = (tag: TagNode['tag']) => !tagsWithNoChildren.includes(tag);
@@ -37,17 +39,21 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const nodeState = useSelector(nodeSelector);
   const { className } = nodeState;
 
-  const updateInspectedNode = (node: TagNode) => dispatch(updateInspectedNodeAction(node.id));
-  const updateHoveredNode = (node: TagNode) => dispatch(updateHoveredNodeAction(node.id));
+  const updateInspectedNode = (nodeId: Uuid) => dispatch(updateInspectedNodeAction(nodeId));
+  const updateHoveredNode = (nodeId: Uuid) => dispatch(updateHoveredNodeAction(nodeId));
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
+
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const recursiveRenderChildren = () => (
     <>
       {!nodeState.isText ? (
         <>
-          {isThisInspectingNode && (
-            <EachTagManagerProvider nodeId={nodeState.id}>{/*<LiveTagManager />*/}</EachTagManagerProvider>
-          )}
+          {/*{(isThisInspectingNode || isHovered) && ref?.current && (*/}
+          {/*  <EachTagManagerProvider nodeId={nodeState.id}>*/}
+          {/*    <LiveTagManager domInterface={ref.current} />*/}
+          {/*  </EachTagManagerProvider>*/}
+          {/*)}*/}
           {nodeState.children.map((child, index) => (
             <Fragment key={child.id}>
               <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
@@ -59,7 +65,11 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       )}
     </>
   );
+
+  // console.log(ref.current);
+
   const attrs = {
+    ref,
     'data-name': nodeState.name || '',
     'data-deep-level': deepLevel + 1,
     'data-index-in-level': indexInLevel,
@@ -68,7 +78,8 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     className: clsx(
       Object.values(className).join(' '),
       isHovered && '_tag_hover',
-      (className.b || className.t || className.r || className.l || isThisInspectingNode) && 'relative'
+      (isHovered || isThisInspectingNode) && 'relative'
+      // (className.b || className.t || className.r || className.l || isThisInspectingNode) && 'relative'
       // nodeState.className.position
       // @todo fix
       // isHovered && nodeState.className.pb && `decor-before-${nodeState.className.pb.slice(1)}`,
@@ -84,42 +95,47 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     },
     onMouseOver: (event: any) => {
       event.stopPropagation();
-      updateHoveredNode(nodeState);
+      if(nodeState.isText && nodeState.parentId) {
+        updateHoveredNode(nodeState.parentId)
+      } else {
+        updateHoveredNode(nodeState.id);
+      }
     },
     onClick: (event: any) => {
       event.preventDefault();
       if (!nodeState.isText) {
         event.stopPropagation();
-        updateInspectedNode(nodeState);
+        updateInspectedNode(nodeState.id);
       }
     },
-    onChange: (undefined as never as (() => void))
+    onChange: undefined as never as () => void,
   };
 
   // disable warning
-  if(nodeState.tag === 'input') {
-    attrs.onChange = () => {}
+  if (nodeState.tag === 'input') {
+    attrs.onChange = () => {};
   }
 
-  // const wrapper = (children?: JSX.Element) =>
-  //   !isThisInspectingNode ? (
-  //     <>{children}</>
-  //   ) : (
-  //     <Tooltip
-  //       visible={true}
-  //       overlay={() => (
-  //         <>
-  //           <EachTagManagerProvider nodeId={nodeState.id}>
-  //             <Toolbar />
-  //           </EachTagManagerProvider>
-  //         </>
-  //       )}
-  //     >
-  //       {children}
-  //     </Tooltip>
-  //   );
+  useEffect(() => {
+    if (scrollIntoViewNodeId === nodeId && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+      dispatch(scrollIntoViewAction(undefined))
+    }
+  }, [scrollIntoViewNodeId]);
 
-  return hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined)
+  return (
+    <Tooltip
+      placement={'top'}
+      visible={isHovered || isThisInspectingNode}
+      overlay={() => (
+        <EachTagManagerProvider nodeId={nodeState.id}>
+          {ref.current ? <LiveTagManager domInterface={ref.current} /> : <></>}
+        </EachTagManagerProvider>
+      )}
+    >
+      {hyperscript(nodeState.tag, attrs, canTagHaveChildren(nodeState.tag) ? recursiveRenderChildren() : undefined)}
+    </Tooltip>
+  );
 }
 
 export default Tag;

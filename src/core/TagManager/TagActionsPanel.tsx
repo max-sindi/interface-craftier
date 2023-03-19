@@ -8,6 +8,8 @@ import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManage
 import WrapIcon from 'src/core/UI/svg/WrapIcon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ExtendedNode } from 'src/core/ExtendedNode';
+import Switch from 'src/core/UI/Switch';
+import { BsBullseye } from 'react-icons/bs';
 
 interface ITagActionsPanelProps {}
 
@@ -20,7 +22,10 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       addBlockNode,
       addTextNode,
       duplicateNode,
-      nodeState: { style, className, deepIndex }, changeStyles, changeClassNames
+      scrollIntoView,
+      nodeState: { style, className, deepIndex, reactComponent },
+      changeStyles,
+      changeClassNames, changeReactComponent,
     },
   } = useContext(EachTagManagerProviderContext);
 
@@ -29,16 +34,19 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
     const data = await navigator.clipboard.readText();
 
     try {
-      const parsedData = JSON.parse(data) as StyleToCopy ;
-      changeClassNames({...className, ...parsedData.className})
-      changeStyles({...style, ...parsedData.style})
+      const parsedData = JSON.parse(data) as StyleToCopy;
+      changeClassNames({ ...className, ...parsedData.className });
+      changeStyles({ ...style, ...parsedData.style });
     } catch (e) {
       console.error('Error while parse');
     }
   };
 
   return (
-    <div className={'ml-a pr-10 d-flex relative '} data-name={'TagActionsPanel'}>
+    <div className={'ml-a pr-10 d-flex flex-wrap relative '} data-name={'TagActionsPanel'}>
+      <IconButton centering onClick={scrollIntoView} title={'Scroll into view'}>
+        <BsBullseye/>
+      </IconButton>
       <IconButton centering>
         <CopyToClipboard
           text={styleToCopy}
@@ -59,7 +67,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       </IconButton>
       {deepIndex > 0 && (
         <>
-          <IconButton centering className={'d-flex flex-center'} title={'Wrap'} onClick={wrapNode}>
+          <IconButton centering title={'Wrap'} onClick={wrapNode}>
             <WrapIcon className={'w-25 h-25'} />
           </IconButton>
           <IconButton centering>
@@ -70,6 +78,7 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       <IconButton centering onClick={pasteStyleFromClipboard}>
         <HiClipboardCopy className={'pointer'} title={'Paste style from clipboard'} />
       </IconButton>
+      <Switch label={'React Component'} value={reactComponent} onChange={changeReactComponent} />
     </div>
   );
 };

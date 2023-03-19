@@ -2,42 +2,22 @@ import React, { useContext } from 'react';
 import styles from 'src/stylotron/src/styles.json';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import classes from 'src/core/TagManager/ClassNames/ClassNames.module.scss';
-import ClassSelector , { UnitsRecord } from "src/core/TagManager/ClassNames/ClassSelector";
+import ClassSelector, { UnitsRecord } from 'src/core/TagManager/ClassNames/ClassSelector';
+import Switch from 'src/core/UI/Switch';
 
 const withIntegers = styles.classBranches.filter((branch) => branch.units);
 const withOptions = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
 const withSingleValue = styles.classBranches.filter((branch) => (branch.range?.length || 0) === 1);
-// const withNumericRanges = styles.classBranches.filter((branch) =>
-//   ['border-width', 'border-radius', 'fz', 'min-w', 'max-w', 'min-h', 'max-h'].includes(branch.name)
-// );
-
-// const defaultValues: Record<any, any> = {
-//   'border-width': 0,
-//   'border-radius': 0,
-//   fz: 16,
-// };
-
-// const colorfulStyles = {
-//   backgroundColor: undefined,
-//   color: undefined,
-//   borderColor: undefined,
-// } as Partial<StyleRecord>;
-//
-// const notColorfulStyles = {
-//   fontFamily: undefined,
-// } as Partial<StyleRecord>;
 
 interface IClassNamesSelectorProps {}
 
-const ClassNamesSelector = ({}: IClassNamesSelectorProps) => {
+const ClassNamesSelector = (props: IClassNamesSelectorProps) => {
   const {
     nodeApi: {
       nodeState: { id, className },
       changeClassNames,
     },
   } = useContext(EachTagManagerProviderContext);
-  // const [tabIndex, setTabIndex] = useState(1);
-  // const variables = useSelector(variablesSelector);
 
   return (
     <div className={`d-flex pr-20`}>
@@ -61,19 +41,21 @@ const ClassNamesSelector = ({}: IClassNamesSelectorProps) => {
 
       <div className={classes.group}>
         withSingleValue: <br />
-        {withSingleValue.map(({ name }, index) => (
-          <div key={id + index + name} className={''}>
-            <label htmlFor={`flag-${name}`}>{name}</label>
-            <input
-              type="checkbox"
-              checked={!!className[name]}
-              value={name}
-              onChange={(evt: any) => {
-                changeClassNames({ ...className, [name]: evt.target.checked ? name : '' });
-              }}
-            />
-          </div>
-        ))}
+        {withSingleValue.map(({ name }, index) => {
+          const value = Boolean(className[name]);
+
+          return (
+            <div key={id + index + name} className={'mt-5'}>
+              <Switch
+                value={value}
+                label={name}
+                onChange={() => {
+                  changeClassNames({ ...className, [name]: !value ? name : undefined });
+                }}
+              />
+            </div>
+          );
+        })}
         {/*{withSingleValue.map(cssBranch => (*/}
         {/*  <ClassSelector>{cssBranch.name}</ClassSelector>*/}
         {/*))}*/}

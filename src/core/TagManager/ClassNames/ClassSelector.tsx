@@ -50,9 +50,9 @@ const ClassSelector = ({ children, values, name }: IClassSelectorProps) => {
   const onDeleteClassName = () => changeClassNames(deleteField(className, name));
 
   return (
-    <div>
+    <div className={'pt-5'}>
       <div>
-        <Tooltip placement={'left'} overlay={() => <ClassSelectorPopup values={values} name={name} />}>
+        <Tooltip placement={'left'} overlay={() => <ClassSelectorPopup values={values} name={name} title={children} />}>
           <div>
             <div>{children}</div>
 

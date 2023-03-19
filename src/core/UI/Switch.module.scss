@@ -1,0 +1,41 @@
+$greyCaced: #caced2;
+
+$aqua-1: #00d2ff;
+
+.label {
+  display: flex;
+  align-items: center;
+}
+
+.labelEnabled {
+  cursor: pointer;
+}
+
+.switch {
+  width: 40px;
+  height: 22px;
+  margin-left: 11px;
+  border-radius: 10px;
+  position: relative;
+  background-color: $greyCaced;
+}
+
+.switchCircle {
+  position: relative;
+  height: 18px;
+  width: 18px;
+  border-radius: 10px;
+  top: 2px;
+  right: auto;
+  left: 2px;
+  background-color: #fff;
+  transition: left 0.3s;
+}
+
+.switchActive {
+  background-color: $aqua-1;
+
+  .switchCircle {
+    left: 20px;
+  }
+}

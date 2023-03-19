@@ -47,7 +47,7 @@ function Toolbar() {
       <div data-name={'Toggle or Expand menu'} className={'absolute r-5 b-0 pointer'} onClick={toggleToolbarVisibility}>
         {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
       </div>
-      <div className={`w-50-p pr-10 d-flex flex-column`}>
+      <div className={`w-500 pr-10 d-flex flex-column`}>
         <div className="d-flex flex-wrap align-center pt-10 h-70">
           <Tooltip
             overlay={
@@ -111,7 +111,7 @@ function Toolbar() {
           <TreeNavigation />
         </div>
       </div>
-      <div className={'w-50-p pl-10'}>{!nodeState.isText && <TagDetails />}</div>
+      <div className={'grow-1 pl-10'}>{!nodeState.isText && <TagDetails />}</div>
     </div>
   );
 }

@@ -345,7 +345,7 @@ const classNames = [
   new CssSimpleClassBranch({
     property: 'white-space',
     classNameCreator: (mdf) => `white-space-${mdf}`,
-    values: ['pre-wrap', 'text-wrap', 'text-no-wrap'],
+    values: ['pre-wrap', 'text-wrap', 'nowrap'],
   }),
   new CssSimpleClassBranch({ className: 'flex-wrap', fast: 'flex-wrap: wrap', media: true }),
   new CssSimpleClassBranch({

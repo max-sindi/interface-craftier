@@ -9,6 +9,7 @@ const globalStateSelector = createSelector(reducerSelector, (store) => store.cur
 const templateSelector = createSelector(globalStateSelector, (state) => state.template);
 const variablesSelector = createSelector(globalStateSelector, (state) => state.variables);
 const inspectedNodeSelector = createSelector(reducerSelector, (state) => state.inspectedNode);
+const scrollIntoViewNodeSelector = createSelector(reducerSelector, (state) => state.scrollIntoViewNode);
 const hoveredNodeSelector = createSelector(reducerSelector, (state) => state.hoveredNode);
 const nodesMapSelector = createSelector(reducerSelector, (state) => state.nodesMap);
 const inspectedNodeStateSelector = createSelector(
@@ -106,6 +107,7 @@ export {
   templateSelector,
   variablesSelector,
   inspectedNodeSelector,
+  scrollIntoViewNodeSelector,
   hoveredNodeSelector,
   createNodeSelector,
   nodesMapSelector,

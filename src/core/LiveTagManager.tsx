@@ -1,24 +1,35 @@
-import React , { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import Resizers from 'src/core/TagManager/Resize/Resizers';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { FaRegWindowClose } from 'react-icons/fa';
+import Tooltip from 'rc-tooltip';
 // import clsx from 'classnames';
 
 interface ILiveTagManagerProps {
+  domInterface: HTMLDivElement;
 }
 
-const LiveTagManager = (props : ILiveTagManagerProps) => {
-  const { nodeApi: { nodeState, changeClassNames, unselectCurrentNode }} = useContext(EachTagManagerProviderContext)
-  const unselect = (evt: any) => {
-    evt.stopPropagation()
-    unselectCurrentNode()
-  }
-  return (
-    <>
-      <Resizers nodeId={nodeState.id} classNameRecord={nodeState.className} changeClassName={changeClassNames}/>
+const LiveTagManager = ({ domInterface }: ILiveTagManagerProps) => {
+  const {
+    nodeApi: { nodeState, changeClassNames, unselectCurrentNode },
+  } = useContext(EachTagManagerProviderContext);
 
-      <FaRegWindowClose onClick={unselect} size={20} className={`absolute r-10 b-120-p z-index-5  pointer`} />
-    </>
+  const unselect = (evt: any) => {
+    evt.stopPropagation();
+    unselectCurrentNode();
+  };
+
+  return (
+    <div>
+      <div className={'d-flex'}>
+        <div>width: </div>
+        <div>{domInterface.clientWidth}</div>
+      </div>
+      <div className={'d-flex'}>
+        <div>height: </div>
+        <div>{domInterface.clientHeight}</div>
+      </div>
+    </div>
   );
 };
 

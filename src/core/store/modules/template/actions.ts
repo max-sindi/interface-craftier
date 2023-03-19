@@ -1,13 +1,15 @@
 import { createAction } from '@reduxjs/toolkit';
-import { IVariables, Uuid } from './reducer';
+import { cleanupTree , GlobalState , IVariables , Uuid } from './reducer';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { TagNode } from 'src/core/TagNode';
 
+const setInitialStateAction = createAction<GlobalState>('setInitialStateAction');
 const updateVariablesAction = createAction<IVariables>('updateVariable');
 const updateHoveredNodeAction = createAction<Uuid>('updateHoveredNode');
 const resetHoveredNodeAction = createAction('resetHoveredNode');
 const highlightInspectedNodeAction = createAction('highlightInspectedNodeAction');
 const updateInspectedNodeAction = createAction<Uuid | undefined>('updateInspectedNodeAction');
+const scrollIntoViewAction = createAction<Uuid | undefined>('scrollIntoViewAction');
 const updateNodeAction = createAction<{ id: Uuid, field: string, value: any, withTreeDestructing?: boolean }>(
   'updateNodeAction'
 );
@@ -20,10 +22,14 @@ const deleteNodeAction = createAction<Uuid>('deleteNodeAction')
 const toggleChildrenCollapsedAction = createAction<Uuid>('toggleChildrenCollapsedAction')
 const pasteChildrenAction = createAction<{ receivingNodeId: Uuid, givenNodeId: Uuid, indexToPaste: number }>('pasteChildrenAction')
 
+const updateProjectStateAction = createAction<ReturnType<typeof cleanupTree>>('updateProjectStateAction')
+const fetchProjectStateAction = createAction('fetchProjectStateAction')
+
 // add new actions here
 export const actionsToSave = [pasteChildrenAction, deleteNodeAction, addChildAction]
 
 export {
+  setInitialStateAction,
   updateVariablesAction,
   updateHoveredNodeAction,
   updateInspectedNodeAction,
@@ -38,4 +44,7 @@ export {
   pasteChildrenAction,
   deleteNodeAction,
   addChildAction,
+  scrollIntoViewAction,
+  updateProjectStateAction,
+  fetchProjectStateAction,
 };

@@ -8,14 +8,14 @@ import {
   highlightInspectedNodeAction ,
   pasteChildrenAction ,
   resetHoveredNodeAction ,
-  resetStateAction ,
-  selectRootAction ,
+  resetStateAction , scrollIntoViewAction ,
+  selectRootAction  , setInitialStateAction ,
   toggleChildrenCollapsedAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
   updateNodeAction ,
   updateVariablesAction ,
-  wrapNodeAction ,
+  wrapNodeAction
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
@@ -45,6 +45,7 @@ interface Reducer {
   currentState: GlobalState;
   hoveredNode?: Uuid;
   inspectedNode?: Uuid;
+  scrollIntoViewNode?: Uuid;
 }
 
 const initialGlobalState: GlobalState = {
@@ -87,6 +88,9 @@ const initialState = (initialGlobalState?: GlobalState): Reducer => {
 
 export default createReducer(initialState(), (builder) => {
   builder
+    .addCase(setInitialStateAction, (state, action) => {
+      return initialState(action.payload)
+    })
     .addCase(updateVariablesAction, (state, action) => {
       state.currentState.variables = action.payload;
     })
@@ -104,6 +108,9 @@ export default createReducer(initialState(), (builder) => {
     })
     .addCase(updateInspectedNodeAction, (state, action) => {
       state.inspectedNode = action.payload;
+    })
+    .addCase(scrollIntoViewAction, (state, action) => {
+      state.scrollIntoViewNode = action.payload;
     })
     .addCase(deleteNodeAction, (state, action) => {
       const node = state.nodesMap[action.payload]
@@ -141,7 +148,7 @@ export default createReducer(initialState(), (builder) => {
         const clone = cloneNode(nodeGiven, state.nodesMap) as ExtendedNode;
         const slotToPaste = nodeReceiving.children[indexToPaste]
 
-        // shift all the items ahead on 1 index and so give a slot for pasting node
+        // shift all items ahead on 1 index and so give a slot for pasting node
         if(slotToPaste) {
           for(let i = nodeReceiving.children.length - 1; i >= indexToPaste; i--) {
             nodeReceiving.children[i + 1] = nodeReceiving.children[i]
