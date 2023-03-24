@@ -6,6 +6,7 @@ import { ExtendedNode } from 'src/core/ExtendedNode';
 const reducerSelector = (state: RootReducer) => state.template;
 
 const globalStateSelector = createSelector(reducerSelector, (store) => store.currentState);
+const filesSelector = createSelector(reducerSelector, (store) => store.currentState.files);
 const templateSelector = createSelector(globalStateSelector, (state) => state.template);
 const variablesSelector = createSelector(globalStateSelector, (state) => state.variables);
 const inspectedNodeSelector = createSelector(reducerSelector, (state) => state.inspectedNode);
@@ -104,6 +105,7 @@ const createNodeSelector = (id: Uuid) => createSelector(reducerSelector, (state)
 
 export {
   globalStateSelector,
+  filesSelector,
   templateSelector,
   variablesSelector,
   inspectedNodeSelector,

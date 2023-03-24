@@ -1,6 +1,7 @@
 import {
+  deleteFileAction ,
   fetchProjectStateAction ,
-  setInitialStateAction ,
+  setInitialStateAction , updateFilesAction ,
   updateProjectStateAction
 } from 'src/core/store/modules/template/actions';
 import { select, takeLatest, put } from 'redux-saga/effects'
@@ -11,6 +12,16 @@ import axios from 'src/axios';
 
 function* updateProjectStateSaga(action: ReturnType<typeof updateProjectStateAction>) {
   yield axios.post('/api/wace', action.payload).then(res => {})
+}
+
+function* updateFilesSaga(action: ReturnType<typeof updateFilesAction>) {
+  yield axios.post('/api/wace/asset', action.payload).then(res => {})
+  yield put(fetchProjectStateAction())
+}
+
+function* deleteFileSaga(action: ReturnType<typeof deleteFileAction>) {
+  yield axios.delete(`/api/wace/asset/${action.payload}`).then(res => {})
+  yield put(fetchProjectStateAction())
 }
 
 function* fetchProjectStateSaga(action: ReturnType<typeof fetchProjectStateAction>) {
@@ -31,4 +42,6 @@ function* fetchProjectStateSaga(action: ReturnType<typeof fetchProjectStateActio
 export default function* saga() {
   yield takeLatest(updateProjectStateAction, updateProjectStateSaga);
   yield takeLatest(fetchProjectStateAction, fetchProjectStateSaga);
+  yield takeLatest(updateFilesAction, updateFilesSaga);
+  yield takeLatest(deleteFileAction, deleteFileSaga);
 }

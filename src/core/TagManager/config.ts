@@ -1,12 +1,12 @@
-import images from '../../project-loaded-images.json'
+import { serverUrl } from 'src/utils';
 
+const fileValueCreator = (fileName: string) => `url("${serverUrl}/${fileName}")`
 
 export const stylesExisting = [
   {
     name: 'backgroundImage',
     withFile: true,
-    suggestions: images,
-    fileValueCreator: (fileName: string) => `url(icons/${fileName})`
+    fileValueCreator 
   },
   {
     name: 'backgroundColor',
@@ -39,8 +39,7 @@ export const attrsExisting = [
   {
     name: 'src',
     withFile: true,
-    suggestions: images,
-    fileValueCreator: (fileName: string) => `icons/${fileName}`
+    fileValueCreator
   },
   {
     name: 'title',

@@ -3,8 +3,9 @@ import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { FaRegWindowClose } from 'react-icons/fa';
 import VariableSelector from './VariableSelector';
-// import { attrsExisting, stylesExisting } from 'src/core/TagManager/config';
-import { lastArrayItem } from 'src/utils';
+import { useSelector } from 'react-redux';
+import { filesSelector } from 'src/core/store/modules/template/selector';
+import Files from 'src/core/Files';
 
 interface IObjectEditorProps {
   fields: Array<{
@@ -18,7 +19,7 @@ interface IObjectEditorProps {
   }>;
   value: Record<string, string>;
   onChange: (arg1: (old: Record<string, string>) => Record<string, string>) => void;
-  title: string;
+  title?: string;
   enableCreating?: boolean;
 }
 
@@ -30,6 +31,7 @@ const ObjectEditor = ({
   enableCreating = false,
 }: IObjectEditorProps) => {
   const [newField, setNewField] = React.useState('');
+  const suggestions = useSelector(filesSelector);
   const onAddFieldClick = () => {
     onChange((old) => ({ ...old, [newField]: '' })); // add field
     setNewField(''); // reset
@@ -56,20 +58,10 @@ const ObjectEditor = ({
           .map(
             ({
               name = '',
-              suggestions,
-              // withFile = false,
-              fileValueCreator = (value) => value,
-              // withVariable = false,
               variableValueCreator = (value) => value,
-              // textable = false,
               custom = false,
             }) => {
               const fieldValue = value[name] || '';
-              // const onFileChange = fileName => onChange({
-              //     ...value,
-              //     [name]: fileValueCreator(fileName)
-              // })
-              // const variableValueCreator = (value: string) => value
               const onVariableChange = (variableName: string) =>
                 onChange((prev) => ({
                   ...prev,
@@ -118,49 +110,25 @@ const ObjectEditor = ({
                     <FaRegWindowClose onClick={() => _delete()} size={20} className={`mr-10 ml-10 min-w-20`} />
 
                     <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-150'} />
-                    {/*{withFile && (*/}
-                    {/*  <Tooltip*/}
-                    {/*    trigger={['hover']}*/}
-                    {/*    overlay={<FileSelector onChange={onFileChange} />}*/}
-                    {/*    placement={`top`}*/}
-                    {/*  >*/}
-                    {/*      <button className={`black ml-20`}> File?</button>*/}
-                    {/*  </Tooltip>*/}
-                    {/*)}*/}
-                    {/*{withVariable && (*/}
-                    {suggestions && (
+
+                    {suggestions.length && (
                       <Tooltip
-                        trigger={['hover']}
                         placement={'top'}
                         overlay={
-                          <div>
-                            {suggestions.map((path) => (
-                              <div
-                                key={path}
-                                className="d-flex justify-space-between pointer"
-                                onClick={() => onFieldChange({ target: { value: fileValueCreator(path) } })}
-                              >
-                                <div className={'mr-10'}>{path}</div>
-                                <div className={`max-w-40`}>
-                                  {['svg', 'png', 'jpeg'].includes(lastArrayItem(path.split('.'))) && (
-                                    <img src={fileValueCreator(path)} alt={path} className={'max-h-40 max-w-100-p'} />
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
+                          <Files onFileSelect={(fileName: string) => onFieldChange({ target: { value: fileName } })} />
                         }
                       >
                         <button className={`black ml-20`}>File?</button>
                       </Tooltip>
                     )}
+
                     <Tooltip
-                      trigger={['hover']}
                       overlay={<VariableSelector onChange={onVariableChange} />}
                       placement={`top`}
                     >
                       <button className={`black ml-20 mr-10`}> Variable?</button>
                     </Tooltip>
+
                   </div>
                 </div>
               );

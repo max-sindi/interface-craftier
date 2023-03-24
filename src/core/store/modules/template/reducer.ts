@@ -28,6 +28,7 @@ export type IVariables = {
 export type GlobalState = {
   template: ExtendedNode;
   variables: IVariables;
+  files: string[]
 };
 
 export enum StorageMap {
@@ -50,6 +51,7 @@ interface Reducer {
 
 const initialGlobalState: GlobalState = {
   variables: {},
+  files: [],
   template: new TagNode({
     name: 'Root',
     children: [

@@ -17,7 +17,7 @@ const template = new TagNode({
     new TagNode({}),
   ],
 });
-const { nodesMap } = destructTree({ template, variables: {} }, {});
+const { nodesMap } = destructTree({ template, variables: {}, files: [] }, {});
 
 test('siblings count', () => {
   expect(collectNodePrependingSiblings(nodesMap['3'], nodesMap).length).toBe(2);

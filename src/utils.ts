@@ -2,7 +2,7 @@ import { UnitName } from 'src/stylotron/src/Unit';
 import { ClassNameRecord, StyleRecord, TagNode } from 'src/core/TagNode';
 import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
 import styles from '../src/stylotron/src/styles.json';
-import { capitalize, cloneDeepWith, flatten } from 'lodash';
+import { cloneDeepWith } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { GlobalState, NodesMap } from 'src/core/store/modules/template/reducer';
 import { ExtendedNode } from 'src/core/ExtendedNode';
@@ -24,6 +24,8 @@ export interface ClassNameInterface {
   changeUnit: (evt: any) => void;
   integer: number;
 }
+
+export const serverUrl = 'http://localhost:8000'
 
 export const levelDeepPx = 15;
 export const labelHeight = 26;

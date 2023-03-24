@@ -1,9 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
 import { cleanupTree , GlobalState , IVariables , Uuid } from './reducer';
-import { ExtendedNode } from 'src/core/ExtendedNode';
 import { TagNode } from 'src/core/TagNode';
 
 const setInitialStateAction = createAction<GlobalState>('setInitialStateAction');
+export const updateFilesAction = createAction<any>('updateFilesAction');
+export const deleteFileAction = createAction<string>('deleteFileAction');
 const updateVariablesAction = createAction<IVariables>('updateVariable');
 const updateHoveredNodeAction = createAction<Uuid>('updateHoveredNode');
 const resetHoveredNodeAction = createAction('resetHoveredNode');

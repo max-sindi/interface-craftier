@@ -47,6 +47,7 @@
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "pngjs": "^6.0.0",
+    "prettier": "^2.8.7",
     "query-string": "^6.4.2",
     "rc-tooltip": "^5.2.2",
     "react": "^18.2.0",
@@ -108,6 +109,7 @@
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-decorators": "^7.14.5",
     "@babel/preset-env": "^7.4.3",
+    "@types/archiver": "^5.3.2",
     "@types/lodash": "^4.14.188",
     "@types/multer": "^1.4.7",
     "@types/pngjs": "^6.0.1",
@@ -123,7 +125,6 @@
     "http": "0.0.0",
     "jest": "^24.7.1",
     "node-sass": "^8.0.0",
-    "prettier": "^2.7.1",
     "react-resizable": "^3.0.4",
     "redux-logger": "^3.0.6"
   }

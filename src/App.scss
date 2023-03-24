@@ -38,11 +38,10 @@ $toolbar-width: 1200px;
   font-weight: 300;
   cursor: pointer;
   &:first-child {
-  border-top-left-radius: 8px;
+    border-top-left-radius: 8px;
   }
   &:last-child {
-  border-top-right-radius: 8px;
-
+    border-top-right-radius: 8px;
   }
 }
 
@@ -52,7 +51,6 @@ $toolbar-width: 1200px;
 }
 
 .toolbar-resizer {
-
 }
 
 ._tag_hover {
@@ -92,10 +90,11 @@ $toolbar-width: 1200px;
     border-radius: 8px;
   }
 
-  input, textarea {
+  input,
+  textarea {
     background: #44914730;
     color: #111111;
-    outline: 2px solid #FF9A00;
+    outline: 2px solid #ff9a00;
   }
 
   .edit-text-input {
@@ -132,7 +131,7 @@ $toolbar-width: 1200px;
 }
 
 .tree-navigation-shadow {
-  background-color: rgba(0,255,255,0.5);
+  background-color: rgba(0, 255, 255, 0.5);
   box-shadow: 0 0 3px 3px rgba(0, 130, 20, 1);
   //box-shadow: 0px 1px 2px rgba(0,255,255,0.5),  0px 2px 4px rgba(0,255,255,0.5),  0px 4px 8px rgba(0,255,255,0.5),  0px 8px 16px rgba(0,255,255,0.5);
   //height: 5px;
@@ -172,19 +171,31 @@ $toolbar-width: 1200px;
   transform: rotate(-90deg);
 }
 
+.tab-list {
+  list-style: none;
+  padding-left: 0px;
+
+  li {
+    cursor: pointer;
+    &.react-tabs__tab--selected {
+      color: $green-padding;
+    }
+  }
+}
+
 .tab-list-container-rotate {
+  @extend .tab-list;
   display: flex;
   align-items: center;
   transform: rotate(90deg);
   transform-origin: top;
   width: 20px;
   height: 20px;
-  list-style: none;
 
   > * {
     min-width: 65px;
     transform: rotate(180deg);
-    text-align: right ;
+    text-align: right;
   }
 }
 
@@ -262,7 +273,7 @@ $toolbar-width: 1200px;
 }
 
 .positioning-resize .resizeBox {
-  @include resizer
+  @include resizer;
 }
 
 .resizeBox {
@@ -420,7 +431,6 @@ $toolbar-width: 1200px;
 //  transform: rotate(-135deg);
 //}
 
-
 $inter: 'Inter';
 
 @font-face {
@@ -436,7 +446,7 @@ $inter: 'Inter';
   src: url('./core/fonts/Inter/static/Inter-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
-  font-display: swap
+  font-display: swap;
 }
 
 @font-face {
@@ -474,7 +484,6 @@ $inter: 'Inter';
   border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
-
 
   &.nthChild5 {
     background: #e83e0f;

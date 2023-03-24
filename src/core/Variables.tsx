@@ -15,7 +15,7 @@ const Variables = () => {
 
   return (
     <div data-name={'variables'} className={``}>
-      <ObjectEditor enableCreating value={variables} onChange={onChange} title={'Variables'} fields={[]} />
+      <ObjectEditor enableCreating value={variables} onChange={onChange} fields={[]} />
     </div>
   );
 };

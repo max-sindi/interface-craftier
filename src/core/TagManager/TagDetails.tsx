@@ -21,10 +21,11 @@ const TagDetails = () => {
       onMouseEnter={onMouseEnter}
       className={`ml-10 d-flex max-h-100-p w-100-p`}
     >
-      <TabList className={`tab-list-container-rotate`}>
+      <TabList className={`tab-list tab-list-container-rotate`}>
         <Tab className={``}>Class</Tab>
         <Tab className={``}>Attrs</Tab>
         <Tab className={``}>App</Tab>
+        {/*<Tab className={``}>Files</Tab>*/}
       </TabList>
       <div className={'overflow-auto'}>
         <TabPanel>
