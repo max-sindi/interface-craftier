@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from 'src/core/UI/Switch.module.scss';
+import classes from './Switch.module.scss';
 import clsx from 'classnames';
 
 interface ISwitchProps {

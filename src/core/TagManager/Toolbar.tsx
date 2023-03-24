@@ -106,7 +106,7 @@ function Toolbar() {
         </div>
 
         <div data-name={'Tree Navigation'} className={'overflow-auto mt-20 relative pt-30 pb-30'}>
-          <div className={`tree-navigation-shadow absolute t-0 l-0 w-100-p`} />
+          {/*<div className={`tree-navigation-shadow absolute t-0 l-0 w-100-p`} />*/}
           {/*<div className={`tree-navigation-shadow absolute b-0 l-0 w-100-p`} />*/}
           <TreeNavigation />
         </div>

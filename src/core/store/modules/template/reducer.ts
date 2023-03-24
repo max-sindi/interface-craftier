@@ -117,11 +117,10 @@ export default createReducer(initialState(), (builder) => {
       if(node.parentId) {
         const parentNode = state.nodesMap[node.parentId]
         const indexToDelete = parentNode.children.findIndex(item => item.id === node.id)
-        console.log(indexToDelete);
+
         parentNode.children = parentNode.children.filter((item, index) => index !== indexToDelete)
         updateNodeInTree(state, parentNode.id, true);
         state.inspectedNode = (parentNode.children[indexToDelete] || parentNode.children[indexToDelete - 1] || parentNode).id
-          // parentNode.children[indexToDelete] ? indexToDelete : (lastArrayItem())]
       }
     })
     .addCase(toggleChildrenCollapsedAction, (state, action) => {
@@ -135,6 +134,7 @@ export default createReducer(initialState(), (builder) => {
       const node = state.nodesMap[action.payload];
       const wrapperNode = new TagNode({ children: [node] });
       const parentNode = state.nodesMap[node.parentId || ''];
+
       if (parentNode) {
         parentNode.children[node.childIndex] = wrapperNode as ExtendedNode;
         updateNodeInTree(state, parentNode.id, true);
@@ -198,7 +198,8 @@ function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolea
 }
 
 function readStorageState() {
-  const currentStateFromStorage = localStorage.getItem(StorageMap.State);
+  const currentStateFromStorage = null
+  // const currentStateFromStorage = localStorage.getItem(StorageMap.State);
   let currentState = initialGlobalState;
 
   if (!currentStateFromStorage) {

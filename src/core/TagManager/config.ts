@@ -1,4 +1,4 @@
-import images from 'src/project-loaded-images.json'
+import images from '../../project-loaded-images.json'
 
 
 export const stylesExisting = [

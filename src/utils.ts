@@ -1,12 +1,11 @@
 import { UnitName } from 'src/stylotron/src/Unit';
-import { ClassNameRecord, TagNode, StyleRecord } from 'src/core/TagNode';
+import { ClassNameRecord, StyleRecord, TagNode } from 'src/core/TagNode';
 import { DefaultClassName } from 'src/core/TagManager/Resize/classNamesConfig';
-import styles from 'src/stylotron/src/styles.json';
+import styles from '../src/stylotron/src/styles.json';
 import { capitalize, cloneDeepWith, flatten } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { GlobalState, NodesMap } from 'src/core/store/modules/template/reducer';
 import { ExtendedNode } from 'src/core/ExtendedNode';
-const hyperscript = require('hyperscript');
 
 export type ClassNameChange = {
   changeClassName: (newClassRecord: ClassNameRecord) => void;
@@ -30,15 +29,16 @@ export const levelDeepPx = 15;
 export const labelHeight = 26;
 export const labelFontSize = 20;
 export const greenColor = '#449147';
+export const compiledProjectArchivePath = 'uploads/compiled_project.zip';
 
 export const isNumber = (value: any) => Math.abs(value) >= 0;
 
 export const extractNumber = (str: string) => {
   const potentialNumber = str
-      .split('-')
-      .filter((i) => isNumber(i))
-      .join('')
-  return isNumber(potentialNumber) && Number(potentialNumber )
+    .split('-')
+    .filter((i) => isNumber(i))
+    .join('');
+  return isNumber(potentialNumber) && Number(potentialNumber);
 };
 
 export const lastArrayItem = (arr: any[]) => arr[arr.length - 1];
@@ -102,88 +102,10 @@ export const cloneNode = (data: TagNode | ExtendedNode, nodesMap: NodesMap): Tag
     children: target.children.map((child) => cloneNode(nodesMap[child.id], nodesMap)),
   }));
 
-interface ClassNameForCompile {
-  name: string;
-  classNamesExisting: ClassNameRecord;
-  classNamesVariabled: StyleRecord;
-}
 
-export const compileStateToProduction = (state: GlobalState) => {
-  const classNamesForCreating: ClassNameForCompile[] = [];
+export const prettifyStateToConsole = (value: string) => value.split('\\n').forEach(line => console.log(line) )
 
-  const tagProcessor = (node: TagNode): ReturnType<typeof hyperscript> => {
-    const classNameConfig = ((): ClassNameForCompile => {
-      const classNamesExisting = node.className;
-      const classNamesVariabled = node.style;
-      const name = !node.name
-        ? ''
-        : node.name
-            .trim()
-            .split(' ')
-            .map((word, index) => (index === 0 ? word.toLowerCase() : capitalize(word)))
-            .join('') || 'id-' + node.id;
-
-      return { name, classNamesExisting, classNamesVariabled };
-    })();
-
-    const attrs = { ...node.attrs };
-
-    if (classNameConfig.name) {
-      classNamesForCreating.push(classNameConfig);
-      attrs.className = classNameConfig.name;
-    }
-
-    return hyperscript(node.tag, attrs, node.isText ? node.text : node.children.map(tagProcessor));
-  };
-
-  const parsedTemplate = tagProcessor(state.template);
-
-  return `
-    ${Object.entries(state.variables).map(([key, value]) => `$${key}: ${value}`).join(`;
-`)}${Object.keys(state.variables).length ? ';' : ''}
-    ${classNamesForCreating
-      .map(
-        (config) => `
-.${config.name} {
-  ${[
-    ...Object.values(config.classNamesExisting).reduce((acc, className) => {
-      if (className) {
-        let classNameValue;
-
-        styles.classBranches.forEach((branch) =>
-          (branch.units ? flatten(Object.values(branch.units)) : branch.classes)?.forEach((classNameConfig) => {
-            if (classNameConfig.name === className) {
-              classNameValue = classNameConfig.value; // set found className
-            }
-          })
-        );
-
-        return !classNameValue ? acc : [...acc, classNameValue];
-      } else {
-        return acc;
-      }
-    }, []),
-    ...Object.entries(config.classNamesVariabled)
-      .filter(([, value]) => !!value)
-      .map(
-        ([key, value]) =>
-          `${key
-            .split('')
-            .map((letter) => (letter.toLowerCase() === letter ? letter : `-${letter.toLowerCase()}`))
-            .join('')}: $${(Object.entries(state.variables).find(([, value2]) => value === value2) || ['unset'])[0]}`
-      ),
-  ].join(`;
-  `)}
-}
-`
-      )
-      .join('')}
-
-    ${parsedTemplate.outerHTML}
-  `;
-};
-
-export const destructTree = (state: Omit<GlobalState, 'template'> & { template: TagNode }, prevNodesMap: NodesMap) => {
+export const destructTree = (state: Omit<GlobalState, 'template'> & { template: TagNode }, prevNodesMap: NodesMap = {}) => {
   const nodesMap: NodesMap = {};
 
   const recursiveIterator = (

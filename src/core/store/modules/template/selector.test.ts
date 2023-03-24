@@ -29,10 +29,10 @@ test('siblings count', () => {
 });
 
 test('children', () => {
-  expect(collectNodeChildrenRecursively(nodesMap['3'], nodesMap).length).toBe(0)
-  expect(collectNodeChildrenRecursively(nodesMap['2'], nodesMap).length).toBe(0)
-  expect(collectNodeChildrenRecursively(nodesMap['1'], nodesMap).length).toBe(4)
-  expect(collectNodeChildrenRecursively(nodesMap['0'], nodesMap).length).toBe(10)
+  expect(collectNodeChildrenRecursively(nodesMap['3']).length).toBe(0)
+  expect(collectNodeChildrenRecursively(nodesMap['2']).length).toBe(0)
+  expect(collectNodeChildrenRecursively(nodesMap['1']).length).toBe(4)
+  expect(collectNodeChildrenRecursively(nodesMap['0']).length).toBe(10)
 })
 
 test('prepending siblings children', () => {

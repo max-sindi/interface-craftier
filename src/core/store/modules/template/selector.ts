@@ -36,9 +36,9 @@ export const collectsNodeParents = (node: ExtendedNode, nodesMap: NodesMap) => {
   return parents;
 };
 
-export const collectNodeChildrenRecursively = (node: ExtendedNode, nodesMap: NodesMap, ignoreClosed?: boolean) => {
+export const collectNodeChildrenRecursively = (node: ExtendedNode,  excludeClosed?: boolean) => {
   const reducer = (acc: ExtendedNode[], cur: ExtendedNode): ExtendedNode[] =>
-    !ignoreClosed && cur.childrenCollapsed ? acc : [...acc, cur, ...cur.children.reduce(reducer, [])];
+    excludeClosed && cur.childrenCollapsed ? acc : [...acc, cur, ...cur.children.reduce(reducer, [])];
   return node.children.reduce(reducer, []);
 };
 
@@ -74,7 +74,7 @@ export const collectNodeSiblingsChildren = (
 ) => {
   return siblingsCollector(node, nodesMap)
     // .filter(({ childrenCollapsed }) => childrenCollapsed)
-    .reduce((acc, cur) => [...acc, ...collectNodeChildrenRecursively(cur, nodesMap)], [] as ExtendedNode[]);
+    .reduce((acc, cur) => [...acc, ...collectNodeChildrenRecursively(cur)], [] as ExtendedNode[]);
 };
 
 export const nodeDeepnessSelector = (inspectedNodeState: ExtendedNode | undefined, nodesMap: NodesMap): number => {

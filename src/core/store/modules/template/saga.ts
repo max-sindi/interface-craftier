@@ -10,14 +10,14 @@ import { GlobalState } from 'src/core/store/modules/template/reducer';
 import axios from 'src/axios';
 
 function* updateProjectStateSaga(action: ReturnType<typeof updateProjectStateAction>) {
-  yield axios.post('/wace', action.payload).then(res => {})
+  yield axios.post('/api/wace', action.payload).then(res => {})
 }
 
 function* fetchProjectStateSaga(action: ReturnType<typeof fetchProjectStateAction>) {
   const globalState: GlobalState = yield select(globalStateSelector);
 
   try {
-    const { data }: AxiosResponse<GlobalState> = yield axios.get('/wace')
+    const { data }: AxiosResponse<GlobalState> = yield axios.get('/api/wace')
       if(data) {
         yield put(setInitialStateAction(data))
       } else {

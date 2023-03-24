@@ -261,7 +261,7 @@ var classNames = [
         property: 'border-radius',
         eachValueLimit: 10,
         each5ValuesLimit: 100,
-        px: true
+        px: true, percent: 100
     }),
     new CssUnitClassBranch_1["default"]({ className: 'border-width', property: 'border-width', eachValueLimit: 10, px: true }),
     new CssUnitClassBranch_1["default"]({ className: 'lh', property: 'line-height', eachValueLimit: 100, px: true }),

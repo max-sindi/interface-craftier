@@ -1,4 +1,4 @@
-import React , { useEffect , useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RenderState from './MarkupRenderer';
 import Manager from './StateTreeManager';
 import { useDispatch } from 'react-redux';
@@ -9,29 +9,29 @@ import axios from 'src/axios';
 type IProjectContext = {
   toolbarCollapsed: boolean;
   toggleToolbarVisibility: () => void;
-  nodeDragging?: Uuid
-  setNodeDragging: (nodeId?: Uuid) => void
-  nodeHoveredDragging?: Uuid
-  setNodeHoveredDragging: (nodeId?: Uuid) => void
+  nodeDragging?: Uuid;
+  setNodeDragging: (nodeId?: Uuid) => void;
+  nodeHoveredDragging?: Uuid;
+  setNodeHoveredDragging: (nodeId?: Uuid) => void;
 };
 
 export const ProjectContext = React.createContext<IProjectContext>({} as IProjectContext);
 
 function Project() {
-  const [nodeDragging, setNodeDragging] = useState<Uuid>()
-  const [nodeHoveredDragging, setNodeHoveredDragging] = useState<Uuid>()
+  const [nodeDragging, setNodeDragging] = useState<Uuid>();
+  const [nodeHoveredDragging, setNodeHoveredDragging] = useState<Uuid>();
   const [toolbarCollapsed, setToolbarCollapsed] = useState(false);
   const toggleToolbarVisibility = () => setToolbarCollapsed((prev) => !prev);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // @ts-ignore
-    window.reduxDispatch = dispatch
+    window.reduxDispatch = dispatch;
     // @ts-ignore
-    window.logProxy = current
+    window.logProxy = current;
     // @ts-ignore
-    window.axios = axios
-  })
+    window.axios = axios;
+  });
 
   return (
     <ProjectContext.Provider

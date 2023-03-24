@@ -7,7 +7,7 @@ import VariableSelector from './VariableSelector';
 import { lastArrayItem } from 'src/utils';
 
 interface IObjectEditorProps {
-  fields: {
+  fields: Array<{
     name: string;
     withFile?: boolean;
     fileValueCreator?: (value: string) => string;
@@ -15,7 +15,7 @@ interface IObjectEditorProps {
     variableValueCreator?: (value: string) => string;
     textable?: boolean;
     suggestions?: string[];
-  }[];
+  }>;
   value: Record<string, string>;
   onChange: (arg1: (old: Record<string, string>) => Record<string, string>) => void;
   title: string;

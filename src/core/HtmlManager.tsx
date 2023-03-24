@@ -1,13 +1,19 @@
-import React , { useCallback , useEffect } from 'react';
-import { useDispatch , useSelector } from "react-redux";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  createNodeSelector ,
-  inspectedNodeSelector
+  createNodeSelector,
+  globalStateSelector,
+  inspectedNodeSelector,
 } from 'src/core/store/modules/template/selector';
 import CopyToClipboardToolbar from 'src/core/CopyToClipboardToolbar';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import Toolbar from './TagManager/Toolbar';
-import { fetchProjectStateAction , selectRootAction } from 'src/core/store/modules/template/actions';
+import { fetchProjectStateAction, selectRootAction } from 'src/core/store/modules/template/actions';
+import axios from 'src/axios';
+import { compiledProjectArchivePath , prettifyStateToConsole } from 'src/utils';
+import { AiOutlineDownload, AiOutlineEye } from 'react-icons/ai';
+import IconButton from 'src/core/TagManager/IconButton';
+import { compileStateToProduction } from 'src/utils/compileStateToProduction';
 
 const HtmlManager = () => {
   const inspectedNodeId = useSelector(inspectedNodeSelector);
@@ -15,14 +21,44 @@ const HtmlManager = () => {
   const nodeState = useSelector(nodeSelector);
   const dispatch = useDispatch();
   // const resetState = () => dispatch(resetStateAction());
-  const selectRoot = () => dispatch(selectRootAction())
+  const selectRoot = () => dispatch(selectRootAction());
+  const [online, setOnline] = useState(false);
+  const globalState = useSelector(globalStateSelector);
+  const [shouldDownload, setShouldDownload] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
+  const readyState = useMemo(() => ((shouldDownload || shouldShow) ? compileStateToProduction(globalState) : ''), [shouldDownload, shouldShow]);
 
   useEffect(() => {
-    dispatch(fetchProjectStateAction())
-  // resetState()
-  //   selectRoot()
-  }, [])
+    const donwload = async () => {
+      await axios.get('/api/wace/compile');
+      window.open('http://localhost:8000/' + compiledProjectArchivePath);
+    };
 
+    if (shouldShow) {
+      prettifyStateToConsole(JSON.stringify(readyState))
+      // console.log();
+      setShouldShow(false);
+    }
+
+    if (shouldDownload) {
+      donwload();
+      setShouldDownload(false);
+    }
+
+  }, [shouldDownload, shouldShow]);
+
+  useEffect(() => {
+    dispatch(fetchProjectStateAction());
+
+    const ping = () => {
+      axios
+        .get('/api/services/ping')
+        .then(() => setOnline(true))
+        .catch(() => setOnline(false));
+    };
+    ping();
+    setInterval(ping, 30000);
+  }, []);
 
   return (
     <div className={'html-manager'}>
@@ -44,12 +80,38 @@ const HtmlManager = () => {
       {/*      /!*</div>*!/*/}
       {/*    </div>*/}
       {/*  ) : (*/}
+
+      {/* Online indicator */}
+      <div className={'absolute t-2 r-2 d-flex'}>
+
+          <IconButton
+            style={{ background: online ? 'green ' : 'red' }}
+            title={'Download result'}
+            centering
+            onClick={() => setShouldDownload(true)}
+            className={'w-20 h-30  border-radius-50-p '}
+          >
+            <AiOutlineDownload color={'#fff'} />
+          </IconButton>
+          <IconButton
+            style={{ background: online ? 'green ' : 'red' }}
+            title={'Show result'}
+            centering={true}
+            onClick={() => setShouldShow(true)}
+            className={'w-20 h-30  border-radius-50-p '}
+          >
+            <AiOutlineEye color={'#fff'} />
+          </IconButton>
+      </div>
+
       {inspectedNodeId && nodeState ? (
         <EachTagManagerProvider nodeId={nodeState.id}>
           <Toolbar />
         </EachTagManagerProvider>
       ) : (
-        <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>Select Root</div>
+        <div className={` text-center pointer pt-10 pb-10`} onClick={selectRoot}>
+          Select Root
+        </div>
       )}
       {/*  )}*/}
       {/*</div>*/}

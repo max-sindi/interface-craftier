@@ -12,7 +12,6 @@ function App() {
     <Provider store={store}>
       <div className="App" style={{ whiteSpace: 'pre-wrap' }}>
         <Project />
-        {/*{stringify(styles)}*/}
       </div>
     </Provider>
   );
