@@ -4,7 +4,7 @@ import {
   setInitialStateAction , updateFilesAction ,
   updateProjectStateAction
 } from 'src/core/store/modules/template/actions';
-import { select, takeLatest, put } from 'redux-saga/effects'
+import { select, takeLatest, put, takeEvery } from 'redux-saga/effects'
 import  { AxiosResponse } from 'axios';
 import { globalStateSelector } from 'src/core/store/modules/template/selector';
 import { GlobalState } from 'src/core/store/modules/template/reducer';
@@ -43,5 +43,5 @@ export default function* saga() {
   yield takeLatest(updateProjectStateAction, updateProjectStateSaga);
   yield takeLatest(fetchProjectStateAction, fetchProjectStateSaga);
   yield takeLatest(updateFilesAction, updateFilesSaga);
-  yield takeLatest(deleteFileAction, deleteFileSaga);
+  yield takeEvery(deleteFileAction, deleteFileSaga);
 }

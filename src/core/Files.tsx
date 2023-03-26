@@ -5,7 +5,7 @@ import { filesSelector } from 'src/core/store/modules/template/selector';
 import { deleteFileAction } from 'src/core/store/modules/template/actions';
 import IconButton from 'src/core/TagManager/IconButton';
 import { FaRegWindowClose } from 'react-icons/fa';
-import { lastArrayItem, serverUrl } from 'src/utils';
+import { getFileNamePromPath , serverUrl } from 'src/utils';
 import clsx from 'classnames';
 
 interface IFilesProps {
@@ -17,7 +17,7 @@ const Files = ({ onFileSelect }: IFilesProps) => {
 
   const dispatch = useDispatch();
 
-  const onDeleteFile = (fileName: string) => dispatch(deleteFileAction(lastArrayItem(fileName.split('/'))));
+  const onDeleteFile = (fileName: string) => dispatch(deleteFileAction(getFileNamePromPath(fileName)));
 
   return (
     <div>
@@ -26,15 +26,15 @@ const Files = ({ onFileSelect }: IFilesProps) => {
         const onSelect = onFileSelect ? () => onFileSelect(fileName) : () => {};
 
         return (
-          <div className={'d-flex mt-5'}>
+          <div key={path} className={'d-flex mt-5'}>
             <Tooltip
               overlay={() => (
                 <div>
-                  <img src={path} className={'max-w-300 max-h-300 mr-10'} />
+                  <img alt={'enlarged image'} src={path} className={'max-w-300 max-h-300 mr-10'} />
                 </div>
               )}
             >
-              <img src={path} className={'w-30 h-30 mr-10'} />
+              <img alt={'thumb image'} src={path} className={'w-30 h-30 mr-10'} />
             </Tooltip>
             <div
               className={clsx(['max-w-200 overflow-auto', onFileSelect && 'pointer'])}

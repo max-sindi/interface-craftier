@@ -1,45 +1,54 @@
-import { serverUrl } from 'src/utils';
+import { getFileNamePromPath, serverUrl } from '../../utils';
 
-const fileValueCreator = (fileName: string) => `url("${serverUrl}/${fileName}")`
+const fileValueCreatorDev = (fileName: string) => `url("${serverUrl}/${fileName}")`;
+const fileValueCreatorProd = (fileName: string) => `url("./files/${getFileNamePromPath(fileName)}")`;
 
-export const stylesExisting = [
+export const stylesExisting: {
+  name: string;
+  withVariable?: boolean;
+  withFile?: boolean;
+  fileValueCreatorProd?: (name: string) => string;
+  fileValueCreatorDev?: (name: string) => string;
+}[] = [
   {
     name: 'backgroundImage',
     withFile: true,
-    fileValueCreator 
+    fileValueCreatorDev,
+    fileValueCreatorProd,
   },
   {
     name: 'backgroundColor',
-    withVariable: true
+    withVariable: true,
   },
   {
     name: 'borderColor',
-    withVariable: true
+    withVariable: true,
   },
   {
     name: 'color',
-    withVariable: true
+    withVariable: true,
   },
   {
     name: 'lineHeight',
-    withVariable: true
+    withVariable: true,
   },
   {
-    name: 'fontFamily'
+    name: 'fontFamily',
   },
   {
-    name: 'boxShadow'
+    name: 'boxShadow',
   },
   {
-    name: 'fontSize'
+    name: 'fontSize',
   },
-]
+];
 
 export const attrsExisting = [
   {
     name: 'src',
     withFile: true,
-    fileValueCreator
+    fileValueCreatorDev,
+    fileValueCreatorProd,
   },
   {
     name: 'title',
@@ -53,7 +62,7 @@ export const attrsExisting = [
   {
     name: 'value',
   },
-]
+];
 
-export const tags = ['div', 'span', 'input', 'img', 'a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'br']
-export const tagsWithNoChildren = ['input', 'img', 'br']
+export const tags = ['div', 'span', 'input', 'img', 'a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'br'];
+export const tagsWithNoChildren = ['input', 'img', 'br'];

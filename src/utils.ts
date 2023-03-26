@@ -25,7 +25,8 @@ export interface ClassNameInterface {
   integer: number;
 }
 
-export const serverUrl = 'http://localhost:8000'
+export const serverUrl = 'http://localhost:8000';
+export const getFileNamePromPath = (filePath: string) => lastArrayItem(filePath.split('/'))
 
 export const levelDeepPx = 15;
 export const labelHeight = 26;
@@ -104,10 +105,12 @@ export const cloneNode = (data: TagNode | ExtendedNode, nodesMap: NodesMap): Tag
     children: target.children.map((child) => cloneNode(nodesMap[child.id], nodesMap)),
   }));
 
+export const prettifyStateToConsole = (value: string) => value.split('\\n').forEach((line) => console.log(line));
 
-export const prettifyStateToConsole = (value: string) => value.split('\\n').forEach(line => console.log(line) )
-
-export const destructTree = (state: Omit<GlobalState, 'template'> & { template: TagNode }, prevNodesMap: NodesMap = {}) => {
+export const destructTree = (
+  state: Omit<GlobalState, 'template'> & { template: TagNode },
+  prevNodesMap: NodesMap = {}
+) => {
   const nodesMap: NodesMap = {};
 
   const recursiveIterator = (

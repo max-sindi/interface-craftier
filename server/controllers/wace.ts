@@ -1,13 +1,13 @@
 import multer from 'multer';
-import fs  from 'fs';
+import fs from 'fs';
 import { compiledProjectArchivePath } from '../../src/utils';
 import archiver from 'archiver';
-import express, { Response, Request, NextFunction } from 'express';
-import prettier from 'prettier'
+import { Response, Request } from 'express';
+import prettier from 'prettier';
 import { compileStateToProduction } from '../../src/utils/compileStateToProduction';
+import { GlobalState } from '../../src/core/store/modules/template/reducer';
 
-const current = 'current';
-// const current = 'current';
+const current = 'current2';
 
 const redis = require('redis');
 const client = redis.createClient();
@@ -25,26 +25,31 @@ const upload = require('multer')({
   }),
 });
 
-const uploadsDirName = `server/public/uploads/${current}`
+const uploadsDirName = `server/public/uploads/${current}`;
 
-export const getState = async (request: Request, response: Response) => {
+const getState = async (): Promise<GlobalState> => {
   let files: string[];
-  if(fs.existsSync(uploadsDirName)) {
-    files = fs.readdirSync(uploadsDirName).map((path) => `/uploads/${current}/` + path)
+  if (fs.existsSync(uploadsDirName)) {
+    files = fs.readdirSync(uploadsDirName);
   } else {
-    fs.mkdirSync(uploadsDirName, { recursive: true })
-    files = []
+    fs.mkdirSync(uploadsDirName, { recursive: true });
+    files = [];
   }
 
-  response.json({
+  return {
     ...JSON.parse(await getAsync(current)),
-    files
-  })
+    files,
+  };
+};
+
+export const getStateController = async (request: Request, response: Response) => {
+  const state = await getState();
+  response.json({ ...state, files: state.files.map((path) => `uploads/${current}/` + path) });
 };
 
 export const compile = async (request: Request, response: Response) => {
   try {
-    const state = JSON.parse(await getAsync(current));
+    const state = await getState();
     const fileName = (name: string) => `project/${name}`;
     const archivePath = __dirname + `/../public/${compiledProjectArchivePath}`;
     const output = fs.createWriteStream(archivePath);
@@ -61,6 +66,15 @@ export const compile = async (request: Request, response: Response) => {
     // iteratively write all files to the archive
     Object.entries(pages).forEach(([key, value]) => archive.append(value, { name: fileName(key) }));
 
+    // inject files which are using in project
+    const files = state.files;
+
+    if (files.length) {
+      files.forEach((name) => {
+        archive.append(fs.readFileSync(`${uploadsDirName}/${name}`), { name: fileName(`files/${name}`) });
+      });
+    }
+
     // send archive and finish
     await archive.finalize();
     response.send(200);
@@ -75,9 +89,8 @@ export const getFiles = async (request: Request, response: Response) => {
 };
 
 export const deleteFile = async (request: Request, response: Response) => {
-  fs.rmSync(`${uploadsDirName}/${request.params.fileName}`)
-  response.json({ ok: true })
-  // response.json(fs.readdirSync(`public/uploads/${current}`).map((path) => `uploads/${current}` + path));
+  fs.rmSync(`${uploadsDirName}/${request.params.fileName}`);
+  response.json({ ok: true });
 };
 
 export const deleteState = async (request: Request, response: Response) => {
@@ -86,7 +99,6 @@ export const deleteState = async (request: Request, response: Response) => {
 
 export const update = async (request: Request, response: Response) => {
   try {
-    // console.log('im in update, data:', request.body)
     client.set(current, JSON.stringify(request.body));
     response.json(JSON.parse(await getAsync(current)));
   } catch (e) {
@@ -97,6 +109,6 @@ export const update = async (request: Request, response: Response) => {
 export const uploadAssets = [
   upload.array('asset'),
   async (request: Request, response: Response) => {
-    response.send(200)
+    response.send(200);
   },
 ];

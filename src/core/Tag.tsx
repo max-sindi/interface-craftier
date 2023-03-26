@@ -17,7 +17,7 @@ import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import { tagsWithNoChildren } from 'src/core/TagManager/config';
 import LiveTagManager from 'src/core/LiveTagManager';
 import Tooltip from 'rc-tooltip';
-import { useTagApi } from 'src/core/TagManager/useTagApi';
+import { alignStyles } from 'src/utils/createComponentFiles';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -49,11 +49,6 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     <>
       {!nodeState.isText ? (
         <>
-          {/*{(isThisInspectingNode || isHovered) && ref?.current && (*/}
-          {/*  <EachTagManagerProvider nodeId={nodeState.id}>*/}
-          {/*    <LiveTagManager domInterface={ref.current} />*/}
-          {/*  </EachTagManagerProvider>*/}
-          {/*)}*/}
           {nodeState.children.map((child, index) => (
             <Fragment key={child.id}>
               <Tag nodeId={child.id} deepLevel={deepLevel + 1} indexInLevel={index} />
@@ -65,8 +60,6 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       )}
     </>
   );
-
-  // console.log(ref.current);
 
   const attrs = {
     ref,
@@ -88,7 +81,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       // isHovered && nodeState.className.pr && `decor-before-${nodeState.className.pr.slice(1)}`,
     ),
     ...(nodeState.attrs || {}),
-    style: nodeState.style || {},
+    style: alignStyles(nodeState.style || {}, 'dev'),
     onMouseOut: (event: any) => {
       event.stopPropagation();
       resetHoveredNode();

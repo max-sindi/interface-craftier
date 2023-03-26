@@ -33,7 +33,7 @@ module.exports = (app) => {
 
   /* wace */
   router.post('/api/wace', wace.update)
-  router.get('/api/wace', wace.getState)
+  router.get('/api/wace', wace.getStateController)
   router.get('/api/wace/files', wace.getFiles)
   router.delete('/api/wace', wace.deleteState)
   router.post('/api/wace/asset', ...wace.uploadAssets)

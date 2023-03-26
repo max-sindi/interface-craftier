@@ -16,16 +16,16 @@ function main() {
   );
 
   app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
-    // pre-api declaring errorHandler
+    // pre-api error handler
     console.log('Error before api declaring: ', err.message)
   })
 
   require('./routes')(app);
 
   app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
-    // api errorHandler
+    // api error handler
     console.log('Error in response', err)
-    response.status(500).json(err)
+    response.status(500).json(err.message || err)
   })
 
   console.log('Server runned at port 8000');

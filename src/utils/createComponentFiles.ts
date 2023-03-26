@@ -1,7 +1,7 @@
 import { ClassNameRecord, StyleRecord } from 'src/core/TagNode';
 import { capitalize, flatten } from 'lodash';
 import { GlobalState } from 'src/core/store/modules/template/reducer';
-import { tagsWithNoChildren } from '../core/TagManager/config';
+import { stylesExisting, tagsWithNoChildren } from '../core/TagManager/config';
 import styles from '../stylotron/src/styles.json';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 
@@ -13,23 +13,33 @@ interface ClassNameForCompile {
   classNamesVariabled: StyleRecord;
 }
 
+const importScssFileAs = 'classes';
 export const getComponentName = (name: string): string => name.split(' ').map(capitalize).join('');
 export const componentNameToJSXPrependingPart = '$%^*';
 export const componentNameToJSXAppendingPart = `*^%$`;
 export const componentNameToJSX = (value: string) =>
   componentNameToJSXPrependingPart + value + componentNameToJSXAppendingPart;
-const importScssFileAs = 'classes';
+
+export const alignStyles = (styleRecord: StyleRecord, env: 'dev' | 'prod') =>
+  Object.entries(styleRecord).reduce((acc, [key, value]) => {
+    const foundStyleConfig = stylesExisting.find((config) => config.name === key);
+    const fileValueCreator =
+      foundStyleConfig &&
+      (env === 'dev' ? foundStyleConfig.fileValueCreatorDev : foundStyleConfig.fileValueCreatorProd);
+
+    return { ...acc, [key]: fileValueCreator ? fileValueCreator(value) : value };
+  }, {} as StyleRecord);
 
 const replaceClassField = (html: string) =>
   html
     .replaceAll('class="', 'className="')
     .split('className="')
-    .map((piece, index, arr) =>
+    .map((piece, index) =>
       index === 0
         ? piece
         : piece
             .split('"')
-            .map((piece2, index2, arr2) => (index2 !== 0 ? piece2 : `${importScssFileAs}.${piece2}`))
+            .map((piece2, index2) => (index2 !== 0 ? piece2 : `${importScssFileAs}.${piece2}`))
             .join('"')
             .replace('"', '}')
     )
@@ -106,7 +116,7 @@ export function createReactComponent(node: ExtendedNode): { file: string; cssCla
   const tagProcessor = (node: ExtendedNode, initialNode: boolean): ReturnType<typeof hyperscript> => {
     const classNameConfig = ((): ClassNameForCompile => {
       const classNamesExisting = node.className;
-      const classNamesVariabled = node.style;
+      const classNamesVariabled = alignStyles(node.style, 'prod');
       const name = !node.name
         ? ''
         : node.name
