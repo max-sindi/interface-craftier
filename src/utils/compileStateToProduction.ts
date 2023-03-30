@@ -15,7 +15,7 @@ export const compileStateToProduction = (
   result[variablesFileName] = Object.entries(state.variables).map(([key, value]) => `$${key}: ${value}`).join(`;
 `);
 
-  [extendedTemplate, ...collectNodeChildrenRecursively(extendedTemplate)].forEach((node) => {
+  collectNodeChildrenRecursively(extendedTemplate, true).forEach((node) => {
     if (node.reactComponent && node.name) {
       // create each react component file
       const bunchOfFiles = createComponentFiles(state, node);

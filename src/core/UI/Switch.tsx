@@ -5,7 +5,7 @@ import clsx from 'classnames';
 interface ISwitchProps {
   value: boolean;
   onChange: (newValue: boolean) => void;
-  label: string;
+  label: string | JSX.Element;
   disabled?: boolean;
 }
 

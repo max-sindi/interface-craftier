@@ -2,6 +2,8 @@
 $app-bg: #fff;
 $blue-dark-main: #005f92;
 $blue-middle-main: #4682b4;
+$fontColor: #4488a8;
+$toolbarBgColor: #fecda9;
 
 html {
   //background: #7d9707;
@@ -149,8 +151,9 @@ $toolbar-width: 1200px;
   border-radius: 5px;
   box-shadow: 3px 3px 10px 5px #a3bce350;
   padding: 5px;
-  z-index: 100;
-  background: $app-bg;
+  z-index: 1200;
+  background: $toolbarBgColor;
+  color: $fontColor;
 
   .label-focus {
     outline: 0;
@@ -172,10 +175,12 @@ $toolbar-width: 1200px;
 }
 
 .tab-list {
+  margin: 0;
   list-style: none;
   padding-left: 0px;
 
   li {
+    padding: 5px 15px;
     cursor: pointer;
     &.react-tabs__tab--selected {
       color: $green-padding;

@@ -38,7 +38,7 @@ const maxWidthClassNameInstance = new CssUnitClassBranch({
 const classNames = [
   new CssSimpleClassBranch({
     className: 'container',
-    fast: 'max-width: 1500px; box-sizing: border-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px',
+    fast: 'max-width: 1110px; box-sizing: content-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px',
   }),
   widthClassNameInstance,
   // new CssUnitClassBranch({

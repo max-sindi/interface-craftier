@@ -2,18 +2,24 @@ import React, { useContext } from 'react';
 import IconButton from 'src/core/TagManager/IconButton';
 import { IoMdAdd } from 'react-icons/io';
 import { IoDuplicateOutline } from 'react-icons/io5';
-import { MdCopyright } from 'react-icons/md';
+import { MdCopyright, MdSettingsOverscan } from 'react-icons/md';
 import { HiClipboardCopy } from 'react-icons/hi';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
-import WrapIcon from 'src/core/UI/svg/WrapIcon';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import Switch from 'src/core/UI/Switch';
 import { BsBullseye } from 'react-icons/bs';
+import { CgErase } from 'react-icons/cg';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { FaReact, FaRegWindowClose } from 'react-icons/fa';
+import { AiOutlinePlusSquare } from 'react-icons/ai';
+import { TbSquareLetterA } from 'react-icons/tb';
 
 interface ITagActionsPanelProps {}
 
 type StyleToCopy = Pick<ExtendedNode, 'style' | 'className'>;
+
+export const aquaColor = '#00d2ff';
 
 const TagActionsPanel = (props: ITagActionsPanelProps) => {
   const {
@@ -23,9 +29,14 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       addTextNode,
       duplicateNode,
       scrollIntoView,
+      toggleReactComponent,
       nodeState: { style, className, deepIndex, reactComponent },
       changeStyles,
-      changeClassNames, changeReactComponent,
+      changeClassNames,
+      changeReactComponent,
+      unselectCurrentNode,
+      deleteThisNode,
+      eraseStyling,
     },
   } = useContext(EachTagManagerProviderContext);
 
@@ -43,9 +54,9 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
   };
 
   return (
-    <div className={'ml-a pr-10 d-flex flex-wrap relative '} data-name={'TagActionsPanel'}>
+    <div className={'ml-a pr-10 pt-5 d-flex flex-wrap relative '} data-name={'TagActionsPanel'}>
       <IconButton centering onClick={scrollIntoView} title={'Scroll into view'}>
-        <BsBullseye/>
+        <BsBullseye />
       </IconButton>
       <IconButton centering>
         <CopyToClipboard
@@ -58,17 +69,15 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
         </CopyToClipboard>
       </IconButton>
       <IconButton centering>
-        <IoMdAdd className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
+        <AiOutlinePlusSquare className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
       </IconButton>
-      <IconButton centering>
-        <div className={'pointer'} onClick={addTextNode} title={'Add text child'}>
-          +A
-        </div>
+      <IconButton centering onClick={addTextNode} title={'Add text child'}>
+        <TbSquareLetterA />
       </IconButton>
       {deepIndex > 0 && (
         <>
           <IconButton centering title={'Wrap'} onClick={wrapNode}>
-            <WrapIcon className={'w-25 h-25'} />
+            <MdSettingsOverscan className={'w-25 h-25'} />
           </IconButton>
           <IconButton centering>
             <IoDuplicateOutline title={'Duplicate'} className={'pointer'} onClick={duplicateNode} />
@@ -78,7 +87,25 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       <IconButton centering onClick={pasteStyleFromClipboard}>
         <HiClipboardCopy className={'pointer'} title={'Paste style from clipboard'} />
       </IconButton>
-      <Switch label={'React Component'} value={reactComponent} onChange={changeReactComponent} />
+
+      <IconButton centering onClick={toggleReactComponent} title={'React component'}>
+        <FaReact color={reactComponent ? aquaColor : ''} />
+      </IconButton>
+      {deepIndex > 0 && (
+        <IconButton centering onClick={deleteThisNode} title={'Delete this node'}>
+          <RiDeleteBin6Line size={16} />
+        </IconButton>
+      )}
+      <IconButton
+        centering
+        onClick={(evt) => {
+          evt.stopPropagation();
+          unselectCurrentNode();
+        }}
+        title={'Close Popup '}
+      >
+        <FaRegWindowClose size={20} />
+      </IconButton>
     </div>
   );
 };

@@ -21,6 +21,8 @@ const inspectedNodeStateSelector = createSelector(
   }
 );
 
+const allNodesSelector = createSelector(templateSelector, template => collectNodeChildrenRecursively(template, true))
+
 export const collectsNodeParents = (node: ExtendedNode, nodesMap: NodesMap) => {
   const limit = 10000; // fow now at least not Infinity
   let parents = [];
@@ -37,10 +39,10 @@ export const collectsNodeParents = (node: ExtendedNode, nodesMap: NodesMap) => {
   return parents;
 };
 
-export const collectNodeChildrenRecursively = (node: ExtendedNode,  excludeClosed?: boolean) => {
+export const collectNodeChildrenRecursively = (node: ExtendedNode, includeStartNode: boolean,  excludeClosed?: boolean) => {
   const reducer = (acc: ExtendedNode[], cur: ExtendedNode): ExtendedNode[] =>
     excludeClosed && cur.childrenCollapsed ? acc : [...acc, cur, ...cur.children.reduce(reducer, [])];
-  return node.children.reduce(reducer, []);
+  return node.children.reduce(reducer, includeStartNode ? [node] : []);
 };
 
 const collectNodeSiblings = (node: ExtendedNode, nodesMap: NodesMap, countDirection: 1 | -1 = -1) => {
@@ -75,7 +77,7 @@ export const collectNodeSiblingsChildren = (
 ) => {
   return siblingsCollector(node, nodesMap)
     // .filter(({ childrenCollapsed }) => childrenCollapsed)
-    .reduce((acc, cur) => [...acc, ...collectNodeChildrenRecursively(cur)], [] as ExtendedNode[]);
+    .reduce((acc, cur) => [...acc, ...collectNodeChildrenRecursively(cur, false)], [] as ExtendedNode[]);
 };
 
 export const nodeDeepnessSelector = (inspectedNodeState: ExtendedNode | undefined, nodesMap: NodesMap): number => {
@@ -115,4 +117,5 @@ export {
   nodesMapSelector,
   inspectedNodeStateSelector,
   inspectedNodeDeepnessSelector,
+  allNodesSelector,
 };

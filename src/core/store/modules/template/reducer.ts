@@ -3,13 +3,17 @@ import { v4 as uuid } from 'uuid';
 import { TagNode } from 'src/core/TagNode';
 import {
   addChildAction ,
+  collapseAllAction ,
   deleteNodeAction ,
   duplicateNodeAction ,
-  highlightInspectedNodeAction ,
+  expandAllAction ,
+  highlightInspectedNodeAction , nodeTreeNavigationAction ,
   pasteChildrenAction ,
   resetHoveredNodeAction ,
-  resetStateAction , scrollIntoViewAction ,
-  selectRootAction  , setInitialStateAction ,
+  resetStateAction ,
+  scrollIntoViewAction ,
+  selectRootAction ,
+  setInitialStateAction ,
   toggleChildrenCollapsedAction ,
   updateHoveredNodeAction ,
   updateInspectedNodeAction ,
@@ -19,7 +23,8 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
-import { cloneNode , destructTree } from "src/utils";
+import { cloneNode, destructTree } from 'src/utils';
+import { collectNodeAllSiblings, collectNodeChildrenRecursively } from 'src/core/store/modules/template/selector';
 
 export type IVariables = {
   [key: string]: string;
@@ -28,7 +33,7 @@ export type IVariables = {
 export type GlobalState = {
   template: ExtendedNode;
   variables: IVariables;
-  files: string[]
+  files: string[];
 };
 
 export enum StorageMap {
@@ -82,16 +87,17 @@ const initialState = (initialGlobalState?: GlobalState): Reducer => {
   const currentState = initialGlobalState || readStorageState();
 
   return {
-    ...destructTree(currentState,{}),
+    ...destructTree(currentState, {}),
     hoveredNode: undefined,
     inspectedNode: localStorage.getItem(StorageMap.InspectedNode) || undefined,
   };
 };
 
+// @tip for updating node use state.nodesMap then use updateNodeInTree()
 export default createReducer(initialState(), (builder) => {
   builder
     .addCase(setInitialStateAction, (state, action) => {
-      return initialState(action.payload)
+      return initialState(action.payload);
     })
     .addCase(updateVariablesAction, (state, action) => {
       state.currentState.variables = action.payload;
@@ -115,14 +121,18 @@ export default createReducer(initialState(), (builder) => {
       state.scrollIntoViewNode = action.payload;
     })
     .addCase(deleteNodeAction, (state, action) => {
-      const node = state.nodesMap[action.payload]
-      if(node.parentId) {
-        const parentNode = state.nodesMap[node.parentId]
-        const indexToDelete = parentNode.children.findIndex(item => item.id === node.id)
+      const node = state.nodesMap[action.payload];
+      if (node.parentId) {
+        const parentNode = state.nodesMap[node.parentId];
+        const indexToDelete = parentNode.children.findIndex((item) => item.id === node.id);
 
-        parentNode.children = parentNode.children.filter((item, index) => index !== indexToDelete)
+        parentNode.children = parentNode.children.filter((item, index) => index !== indexToDelete);
         updateNodeInTree(state, parentNode.id, true);
-        state.inspectedNode = (parentNode.children[indexToDelete] || parentNode.children[indexToDelete - 1] || parentNode).id
+        state.inspectedNode = (
+          parentNode.children[indexToDelete] ||
+          parentNode.children[indexToDelete - 1] ||
+          parentNode
+        ).id;
       }
     })
     .addCase(toggleChildrenCollapsedAction, (state, action) => {
@@ -146,20 +156,20 @@ export default createReducer(initialState(), (builder) => {
       const nodeReceiving = state.nodesMap[receivingNodeId];
       const nodeGiven = state.nodesMap[givenNodeId];
 
-      if(nodeGiven.parentId) {
+      if (nodeGiven.parentId) {
         const clone = cloneNode(nodeGiven, state.nodesMap) as ExtendedNode;
-        const slotToPaste = nodeReceiving.children[indexToPaste]
+        const slotToPaste = nodeReceiving.children[indexToPaste];
 
         // shift all items ahead on 1 index and so give a slot for pasting node
-        if(slotToPaste) {
-          for(let i = nodeReceiving.children.length - 1; i >= indexToPaste; i--) {
-            nodeReceiving.children[i + 1] = nodeReceiving.children[i]
+        if (slotToPaste) {
+          for (let i = nodeReceiving.children.length - 1; i >= indexToPaste; i--) {
+            nodeReceiving.children[i + 1] = nodeReceiving.children[i];
           }
         }
 
-        nodeReceiving.children[indexToPaste] = clone
-        updateNodeInTree(state, nodeReceiving.id, true)
-        state.inspectedNode = clone.id
+        nodeReceiving.children[indexToPaste] = clone;
+        updateNodeInTree(state, nodeReceiving.id, true);
+        state.inspectedNode = clone.id;
       }
     })
     .addCase(duplicateNodeAction, (state, action) => {
@@ -172,19 +182,68 @@ export default createReducer(initialState(), (builder) => {
           [] as ExtendedNode[]
         );
         updateNodeInTree(state, node.parentId, true);
-        state.inspectedNode = clone.id
+        state.inspectedNode = clone.id;
       }
     })
     .addCase(addChildAction, (state, { payload: { id, child } }) => {
       const node = state.nodesMap[id];
-      node.children.push(child as ExtendedNode)
-      updateNodeInTree(state, node.id, true)
-      state.inspectedNode = child.id
+      node.children.push(child as ExtendedNode);
+      updateNodeInTree(state, node.id, true);
+      state.inspectedNode = child.id;
     })
     .addCase(updateNodeAction, (state, { payload: { id, field, value, withTreeDestructing } }) => {
       (state.nodesMap[id] as any)[field] = value;
       updateNodeInTree(state, id, withTreeDestructing);
-    });
+    })
+    .addCase(expandAllAction, (state) => {
+      collectNodeChildrenRecursively(state.currentState.template, true).forEach((node) => {
+        state.nodesMap[node.id].childrenCollapsed = false;
+        updateNodeInTree(state, node.id, false)
+      });
+    })
+    .addCase(collapseAllAction, (state) => {
+      collectNodeChildrenRecursively(state.currentState.template, true).forEach((node) => {
+        state.nodesMap[node.id].childrenCollapsed = true
+        updateNodeInTree(state, node.id, false)
+      });
+    })
+    .addCase(nodeTreeNavigationAction, (state, action) => {
+      if(!state.inspectedNode) {
+        state.inspectedNode = state.currentState.template.id
+      } else {
+        const inspectedNodeId = state.inspectedNode
+        const inspectedNode = state.nodesMap[inspectedNodeId]
+        const { children, childIndex } = inspectedNode
+        const parentNode = inspectedNode.parentId && state.nodesMap[inspectedNode.parentId]
+
+        if(action.payload === 'ArrowUp') {
+          if(parentNode) {
+            if(childIndex > 0) {
+              state.inspectedNode = parentNode.children[childIndex - 1].id
+            } else {
+              state.inspectedNode = parentNode.id
+            }
+          }
+        } else if(action.payload === 'ArrowDown') {
+          if(parentNode && childIndex < parentNode.children.length - 1) {
+            state.inspectedNode = parentNode.children[childIndex + 1].id
+          } else {
+            if(children.length) {
+              state.inspectedNode = children[0].id
+            }
+          }
+        } else if(action.payload === 'ArrowRight') {
+          if(children.length) {
+            state.inspectedNode = children[0].id
+          }
+        } else if(action.payload === 'ArrowLeft') {
+          if(parentNode) {
+            state.inspectedNode = parentNode.id
+          }
+        }
+      }
+
+    })
 });
 
 function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolean, nodeState?: ExtendedNode) {
@@ -193,14 +252,14 @@ function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolea
 
   //  @todo performance
   // if (withTreeDestructing) {
-    const destructed = destructTree(state.currentState, state.nodesMap);
-    state.nodesMap = destructed.nodesMap;
-    state.currentState = destructed.currentState;
+  const destructed = destructTree(state.currentState, state.nodesMap);
+  state.nodesMap = destructed.nodesMap;
+  state.currentState = destructed.currentState;
   // }
 }
 
 function readStorageState() {
-  const currentStateFromStorage = null
+  const currentStateFromStorage = null;
   // const currentStateFromStorage = localStorage.getItem(StorageMap.State);
   let currentState = initialGlobalState;
 

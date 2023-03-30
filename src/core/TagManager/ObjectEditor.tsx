@@ -120,7 +120,7 @@ const ObjectEditor = ({
                       >
                         <button className={`black ml-20`}>File?</button>
                       </Tooltip>
-                    )}
+                    ) || null}
 
                     <Tooltip
                       overlay={<VariableSelector onChange={onVariableChange} />}

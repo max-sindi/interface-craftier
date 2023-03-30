@@ -7,7 +7,7 @@ import prettier from 'prettier';
 import { compileStateToProduction } from '../../src/utils/compileStateToProduction';
 import { GlobalState } from '../../src/core/store/modules/template/reducer';
 
-const current = 'current2';
+const current = 'hotelbooking';
 
 const redis = require('redis');
 const client = redis.createClient();

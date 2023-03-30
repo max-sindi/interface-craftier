@@ -1,0 +1,27 @@
+.inputWrapper {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  //color: $text-grey;
+  resize: none;
+  //font-family: $inter;
+
+  &::placeholder {
+    //color: $dark-grey;
+  }
+
+  &:focus {
+    //border-color: $dolphin;
+  }
+}

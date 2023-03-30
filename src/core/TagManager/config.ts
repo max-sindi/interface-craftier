@@ -1,7 +1,9 @@
 import { getFileNamePromPath, serverUrl } from '../../utils';
 
-const fileValueCreatorDev = (fileName: string) => `url("${serverUrl}/${fileName}")`;
-const fileValueCreatorProd = (fileName: string) => `url("./files/${getFileNamePromPath(fileName)}")`;
+const cssFileValueCreatorDev = (fileName: string) => `url("${serverUrl}/${fileName}")`;
+const cssFileValueCreatorProd = (fileName: string) => `url("./files/${getFileNamePromPath(fileName)}")`;
+const htmlFileValueCreatorDev = (fileName: string) => `${serverUrl}/${fileName}`;
+const htmlFileValueCreatorProd = (fileName: string) => `/files/${getFileNamePromPath(fileName)}`;
 
 export const stylesExisting: {
   name: string;
@@ -13,8 +15,8 @@ export const stylesExisting: {
   {
     name: 'backgroundImage',
     withFile: true,
-    fileValueCreatorDev,
-    fileValueCreatorProd,
+    fileValueCreatorDev: cssFileValueCreatorDev,
+    fileValueCreatorProd: cssFileValueCreatorProd,
   },
   {
     name: 'backgroundColor',
@@ -47,8 +49,8 @@ export const attrsExisting = [
   {
     name: 'src',
     withFile: true,
-    fileValueCreatorDev,
-    fileValueCreatorProd,
+    fileValueCreatorDev: htmlFileValueCreatorDev,
+    fileValueCreatorProd: htmlFileValueCreatorProd,
   },
   {
     name: 'title',

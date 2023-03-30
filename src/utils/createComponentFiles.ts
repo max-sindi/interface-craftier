@@ -1,7 +1,7 @@
-import { ClassNameRecord, StyleRecord } from 'src/core/TagNode';
+import { Attrs, ClassNameRecord, StyleRecord } from 'src/core/TagNode';
 import { capitalize, flatten } from 'lodash';
 import { GlobalState } from 'src/core/store/modules/template/reducer';
-import { stylesExisting, tagsWithNoChildren } from '../core/TagManager/config';
+import { attrsExisting, stylesExisting, tagsWithNoChildren } from '../core/TagManager/config';
 import styles from '../stylotron/src/styles.json';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 
@@ -29,6 +29,16 @@ export const alignStyles = (styleRecord: StyleRecord, env: 'dev' | 'prod') =>
 
     return { ...acc, [key]: fileValueCreator ? fileValueCreator(value) : value };
   }, {} as StyleRecord);
+
+export const alignAttrs = (attrs: Attrs, env: 'dev' | 'prod') =>
+  Object.entries(attrs).reduce((acc, [key, value]) => {
+    const foundAttrsConfig = attrsExisting.find((config) => config.name === key);
+    const fileValueCreator =
+      foundAttrsConfig &&
+      (env === 'dev' ? foundAttrsConfig.fileValueCreatorDev : foundAttrsConfig.fileValueCreatorProd);
+
+    return { ...acc, [key]: fileValueCreator ? fileValueCreator(value) : value };
+  }, {} as Attrs);
 
 const replaceClassField = (html: string) =>
   html
@@ -128,7 +138,7 @@ export function createReactComponent(node: ExtendedNode): { file: string; cssCla
       return { name, classNamesExisting, classNamesVariabled };
     })();
 
-    const attrs = { ...node.attrs };
+    const attrs = alignAttrs(node.attrs, 'prod');
 
     if (classNameConfig.name) {
       cssClassesList.push(classNameConfig);

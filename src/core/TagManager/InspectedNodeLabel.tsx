@@ -19,7 +19,7 @@ const InspectedNodeLabel = () => {
       {!nodeState.isText && (
         <div className="d-flex">
           <div>
-            <div data-name={'Name '} className="d-flex fz-18">
+            <div data-name={'Name '} className="d-flex fz-18 max-w-250 min-w-250">
               <div>{'Name: '}</div>
               <EditableField initiallyEditable={nameInitiallyEditable}
                 notEditElement={nodeState.name || '-'}
@@ -38,7 +38,9 @@ const InspectedNodeLabel = () => {
             </div>
             <div className="fz-18">Tag: {`< ${nodeState.tag} />`}</div>
           </div>
-          <TagActionsPanel />
+          <div className='min-w-250 max-w-250'>
+            <TagActionsPanel />
+          </div>
         </div>
       )}
       {/* Children */}

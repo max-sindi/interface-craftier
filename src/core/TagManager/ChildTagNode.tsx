@@ -17,7 +17,7 @@ const ChildTagNode = () => {
   const {
     nodeApi: {
       nodeState,
-      nodeState: { id },
+      nodeState: { id, childrenCollapsed },
     },
   } = useContext(EachTagManagerProviderContext);
   const inspectedNodeState = useSelector(inspectedNodeStateSelector);
@@ -62,12 +62,12 @@ const ChildTagNode = () => {
         {!nodeState.isText && !!nodeState.children.length ? (
           <div
             data-name={'Tag collapser button'}
-            className={`w-0 z-index-1`}
+            className={`w-0 z-index-1 pr-5`}
             style={{ position: 'relative', left: nodeState.deepIndex * levelDeepPx - 10 }}
           >
-            <AiFillCaretRight
+            <AiFillCaretRight size={15}
               className={'pointer p-3 ml-5'}
-              style={{ transform: `rotate(${nodeState.childrenCollapsed ? 0 : 45}deg)`, transition: 'all 0.4s' }}
+              style={{ transform: `rotate(${childrenCollapsed ? 0 : 90}deg)`, transition: 'all 0.4s' }}
               onClick={toggleChildrenCollapsed}
             />
           </div>
@@ -78,8 +78,8 @@ const ChildTagNode = () => {
           className={clsx(['relative overflow-hidden w-100-p', isInspected && 'label'])}
           style={{
             fontSize,
-            color: isInspected ? '#fff' : '#444',
-            minHeight: (isInspected ? labelHeight + 10 : labelHeight) + (isHovered ? 70 : 0),
+            color: isInspected ? '#fff' : undefined,
+            minHeight: (isInspected ? labelHeight + 30 : labelHeight) + (isHovered ? 70 : 0),
             transition: `all 0.${3 + levelDifferenceToInspectedNode}s`,
             background: isInspected ? greenColor : 'transparent',
             marginLeft: !isInspected ? 0 : nodeState.deepIndex * levelDeepPx + 10 + 7,
@@ -89,7 +89,7 @@ const ChildTagNode = () => {
           <ChildDropZone/>
         </div>
       </div>
-      {!!nodeState.children.length && !nodeState.childrenCollapsed && (
+      {!!nodeState.children.length && !childrenCollapsed && (
         <div className={`w-100-p`}>
           <RecursivelyRenderTagLabels children={nodeState.children} />
         </div>

@@ -65,6 +65,7 @@ export const useTagApi = (nodeId: Uuid) => {
   const changeText = createHtmlChangeHandler('text');
   const changeTag = createHtmlChangeHandler('tag');
   const changeReactComponent = createChangeHandler('reactComponent');
+  const toggleReactComponent = () => changeReactComponent(!nodeState.reactComponent)
   const deleteChild = (indexToDelete: number) =>
     transformField(
       'children',
@@ -140,6 +141,7 @@ export const useTagApi = (nodeId: Uuid) => {
     duplicateNode,
     pasteChildren,
     scrollIntoView,
+    toggleReactComponent,
   };
 };
 

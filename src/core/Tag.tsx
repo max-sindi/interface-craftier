@@ -17,7 +17,7 @@ import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import { tagsWithNoChildren } from 'src/core/TagManager/config';
 import LiveTagManager from 'src/core/LiveTagManager';
 import Tooltip from 'rc-tooltip';
-import { alignStyles } from 'src/utils/createComponentFiles';
+import { alignAttrs , alignStyles } from 'src/utils/createComponentFiles';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -80,7 +80,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
       // isHovered && nodeState.className.pl && `decor-before-${nodeState.className.pl.slice(1)}`,
       // isHovered && nodeState.className.pr && `decor-before-${nodeState.className.pr.slice(1)}`,
     ),
-    ...(nodeState.attrs || {}),
+    ...alignAttrs(nodeState.attrs, 'dev'),
     style: alignStyles(nodeState.style || {}, 'dev'),
     onMouseOut: (event: any) => {
       event.stopPropagation();

@@ -6,6 +6,9 @@ import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManage
 import { levelDeepPx } from 'src/utils';
 import { useSelector } from 'react-redux';
 import { inspectedNodeDeepnessSelector } from 'src/core/store/modules/template/selector';
+import { FaReact } from 'react-icons/fa';
+import { aquaColor } from 'src/core/TagManager/TagActionsPanel';
+import { RiReactjsLine } from 'react-icons/ri';
 
 const TagLabel = () => {
   const {
@@ -29,12 +32,16 @@ const TagLabel = () => {
       onMouseEnter={highlightThisNode}
       onMouseLeave={highlightInspectedNodeAction}
     >
-      {nodeState.isText ? <BsFillPenFill /> : <IoMdSquareOutline className={'mr-5'} />}
+      {nodeState.isText ? <BsFillPenFill /> : null}
+        {/*<IoMdSquareOutline className={'mr-5'} />*/}
       {
         nodeState.isText
           ? nodeState.text?.slice(0, 216) + (nodeState.text.length < 216 ? '' : '...') // Tag text
           : `${nodeState.tag} (${capitalize(nodeState.name.slice(0, 50))})` // Text tag
       }
+      {nodeState.reactComponent && (
+        <RiReactjsLine color={aquaColor} size={30}/>
+      )}
     </div>
   );
 };

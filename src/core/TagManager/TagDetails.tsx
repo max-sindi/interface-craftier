@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-// import Resizers from 'src/core/TagManager/Resize/Resizers';
 import ClassNamesSelector from 'src/core/TagManager/ClassNames/ClassNamesSelector';
 import ObjectEditor from 'src/core/TagManager/ObjectEditor';
 import { attrsExisting, stylesExisting } from 'src/core/TagManager/config';
@@ -19,20 +18,16 @@ const TagDetails = () => {
       onSelect={(index) => setTabIndex(index)}
       forceRenderTabPanel
       onMouseEnter={onMouseEnter}
-      className={`ml-10 d-flex max-h-100-p w-100-p`}
+      className={`ml-10 max-h-100-p w-100-p overflow-auto`}
     >
-      <TabList className={`tab-list tab-list-container-rotate`}>
-        <Tab className={``}>Class</Tab>
-        <Tab className={``}>Attrs</Tab>
-        <Tab className={``}>App</Tab>
-        {/*<Tab className={``}>Files</Tab>*/}
+      <TabList className={`tab-list d-flex`}>
+        <Tab className={`mr-20`}>Class</Tab>
+        <Tab className={`mr-20`}>Attrs</Tab>
+        <Tab className={`mr-20`}>App</Tab>
       </TabList>
-      <div className={'overflow-auto'}>
+      <div className={''}>
         <TabPanel>
           <div data-name={'Classes'} className={'tabPanel'}>
-            {/*<div className="w-400 mb-20 relative toolbar-resizer">*/}
-            {/*  <Resizers changeClassName={changeClassNamesList} classNameRecord={nodeState.className} nodeId={nodeId} />*/}
-            {/*</div>*/}
             <ClassNamesSelector
             />
           </div>
