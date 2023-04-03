@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import classes from 'src/core/TagManager/ClassNames/ClassNames.module.scss';
 import clsx from 'classnames';
 import { IClassSelectorProps } from 'src/core/TagManager/ClassNames/ClassSelector';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { UnitName } from 'src/stylotron/src/Unit';
-import { detectUnit } from 'src/utils';
+import { detectUnit, isNumber } from 'src/utils';
 
 interface IClassSelectorPopupProps extends Omit<IClassSelectorProps, 'children'> {
-  title: string
+  title: string;
 }
 
 const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) => {
@@ -20,10 +20,16 @@ const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) =
 
   const classNameValue = className[name];
   const [currentlyDisplayedUnitTab, setCurrentlyDisplayedUnitTab] = useState<UnitName>(
-    (Array.isArray(values) || !classNameValue) ? 'px' : detectUnit(classNameValue)
+    Array.isArray(values) || !classNameValue ? 'px' : detectUnit(classNameValue)
   );
 
-  const valuesToDisplay = Array.isArray(values) ? values : values[currentlyDisplayedUnitTab];
+  const valuesToDisplay = useMemo(
+    () =>
+      (Array.isArray(values) ? values : values[currentlyDisplayedUnitTab]).sort((a, b) =>
+        typeof a.integer === 'number' && typeof b.integer === 'number' ? (a.integer >= 0 ? a.integer - b.integer : b.integer - a.integer) : 0
+      ),
+    [values, currentlyDisplayedUnitTab]
+  );
 
   return (
     <div className={classes.chooseButtonContainer}>
@@ -31,7 +37,11 @@ const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) =
       {!Array.isArray(values) && (
         <div className={'d-flex flex-center mb-5 '}>
           {(['px', '%', 'vh'] as UnitName[]).map((unit) => (
-            <div key={unit} className={clsx([classes.tabButton, currentlyDisplayedUnitTab === unit && classes.tabButtonActive])} onClick={() => setCurrentlyDisplayedUnitTab(unit)}>
+            <div
+              key={unit}
+              className={clsx([classes.tabButton, currentlyDisplayedUnitTab === unit && classes.tabButtonActive])}
+              onClick={() => setCurrentlyDisplayedUnitTab(unit)}
+            >
               {unit}
             </div>
           ))}
@@ -40,13 +50,17 @@ const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) =
       {valuesToDisplay.map((classNameConfig) => {
         const onClick = () => changeClassNames({ ...className, [name]: classNameConfig.name });
         const isSelected = classNameValue === classNameConfig.name;
-        const isNumeric = typeof classNameConfig.integer === 'number'
-        const isNumericNth5 = isNumeric && classNameConfig.integer as number % 5 === 0
+        const isNumeric = typeof classNameConfig.integer === 'number';
+        const isNumericNth5 = isNumeric && (classNameConfig.integer as number) % 5 === 0;
 
         return (
           <div
             key={classNameConfig.name}
-            className={clsx([classes.chooseButton, isSelected && classes.chooseButtonActive, isNumericNth5 && classes.chooseButtonNth5])}
+            className={clsx([
+              classes.chooseButton,
+              isSelected && classes.chooseButtonActive,
+              isNumericNth5 && classes.chooseButtonNth5,
+            ])}
             onClick={onClick}
           >
             {isNumeric ? classNameConfig.integer : classNameConfig.name}

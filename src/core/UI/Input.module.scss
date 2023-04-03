@@ -18,6 +18,8 @@
   //font-family: $inter;
 
   &::placeholder {
+    color: inherit;
+    opacity: 0.5;
     //color: $dark-grey;
   }
 

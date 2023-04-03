@@ -112,3 +112,10 @@ export const uploadAssets = [
     response.send(200);
   },
 ];
+
+export const readFigma = async (request: Request, response: Response) => {
+    const data = request.body
+    console.log(data);
+    const res = JSON.stringify({ hellooo: 'Heyyyy'})
+    response.json(res);
+};

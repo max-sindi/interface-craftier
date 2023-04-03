@@ -1,0 +1,12 @@
+{
+  "name": "wace",
+  "id": "1224342183616060161",
+  "api": "1.0.0",
+  "main": "src/code.js",
+  "capabilities": [],
+  "enableProposedApi": false,
+  "editorType": [
+    "figma",
+    "figjam"
+  ]
+}

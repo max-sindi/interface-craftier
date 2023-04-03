@@ -18,18 +18,17 @@ const TagDetails = () => {
       onSelect={(index) => setTabIndex(index)}
       forceRenderTabPanel
       onMouseEnter={onMouseEnter}
-      className={`ml-10 max-h-100-p w-100-p overflow-auto`}
+      className={`max-h-100-p w-100-p`}
     >
       <TabList className={`tab-list d-flex`}>
-        <Tab className={`mr-20`}>Class</Tab>
-        <Tab className={`mr-20`}>Attrs</Tab>
-        <Tab className={`mr-20`}>App</Tab>
+        <Tab>Class</Tab>
+        <Tab>Attrs</Tab>
+        <Tab>App</Tab>
       </TabList>
-      <div className={''}>
+      <div>
         <TabPanel>
           <div data-name={'Classes'} className={'tabPanel'}>
-            <ClassNamesSelector
-            />
+            <ClassNamesSelector />
           </div>
         </TabPanel>
 

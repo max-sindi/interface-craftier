@@ -55,85 +55,80 @@ const ObjectEditor = ({
               custom,
             };
           })
-          .map(
-            ({
-              name = '',
-              variableValueCreator = (value) => value,
-              custom = false,
-            }) => {
-              const fieldValue = value[name] || '';
-              const onVariableChange = (variableName: string) =>
-                onChange((prev) => ({
-                  ...prev,
-                  [name]: variableValueCreator(variableName),
-                }));
+          .map(({ name = '', variableValueCreator = (value) => value, custom = false }) => {
+            const fieldValue = value[name] || '';
+            const onVariableChange = (variableName: string) =>
+              onChange((prev) => ({
+                ...prev,
+                [name]: variableValueCreator(variableName),
+              }));
 
-              const onFieldChange = ({ target: { value: fieldValue } }: any) =>
-                onChange((prev) => ({ ...prev, [name]: fieldValue }));
+            const onFieldChange = ({ target: { value: fieldValue } }: any) =>
+              onChange((prev) => ({ ...prev, [name]: fieldValue }));
 
-              const onFieldNameChange = (evt: any) => {
-                const value = evt.target.value;
-                onChange((prev) => {
-                  const freshState = { ...prev };
-                  const oldValue = prev[name];
-                  delete freshState[name];
-                  return { ...freshState, [value]: oldValue };
-                });
-              };
+            const onFieldNameChange = (evt: any) => {
+              const value = evt.target.value;
+              onChange((prev) => {
+                const freshState = { ...prev };
+                const oldValue = prev[name];
+                delete freshState[name];
+                return { ...freshState, [value]: oldValue };
+              });
+            };
 
-              const _delete = () => {
-                const clone = { ...value };
-                delete clone[name];
-                onChange(() => clone);
-              };
+            const _delete = () => {
+              const clone = { ...value };
+              delete clone[name];
+              onChange(() => clone);
+            };
 
-              const onFieldSelect = ({ target: { value: fieldName } }: any) => {
-                const clone = { ...value };
-                clone[fieldName] = clone[name];
-                delete clone[name];
-                onChange(() => clone);
-              };
+            const onFieldSelect = ({ target: { value: fieldName } }: any) => {
+              const clone = { ...value };
+              clone[fieldName] = clone[name];
+              delete clone[name];
+              onChange(() => clone);
+            };
 
-              return (
-                <div key={name} className={`d-flex align-center pt-5 pb-5`}>
-                  <div className={`d-flex align-center w-100-p`}>
-                    {custom ? (
-                      <textarea rows={1} value={name} onChange={onFieldNameChange} className={'w-80'} />
-                    ) : (
-                      <select value={name} className={`ml-10`} onChange={onFieldSelect}>
-                        {fields.map(({ name: fieldName }) => (
-                          <option value={fieldName} label={fieldName} key={fieldName} />
-                        ))}
-                      </select>
-                    )}
+            return (
+              <div key={name} className={`d-flex align-center pt-5 pb-5`}>
+                <div className={`d-flex align-center w-100-p`}>
+                  {custom ? (
+                    <textarea rows={1} value={name} onChange={onFieldNameChange} className={'w-80'} />
+                  ) : (
+                    <select value={name} className={`ml-10`} onChange={onFieldSelect}>
+                      {fields.map(({ name: fieldName }) => (
+                        <option value={fieldName} label={fieldName} key={fieldName} />
+                      ))}
+                    </select>
+                  )}
 
-                    <FaRegWindowClose onClick={() => _delete()} size={20} className={`mr-10 ml-10 min-w-20`} />
+                  <FaRegWindowClose onClick={() => _delete()} size={20} className={`mr-10 ml-10 min-w-20`} />
 
-                    <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-150'} />
+                  <textarea rows={1} value={fieldValue} onChange={onFieldChange} className={'w-150'} />
 
-                    {suggestions.length && (
-                      <Tooltip
-                        placement={'top'}
-                        overlay={
-                          <Files onFileSelect={(fileName: string) => onFieldChange({ target: { value: fileName } })} />
-                        }
-                      >
-                        <button className={`black ml-20`}>File?</button>
-                      </Tooltip>
-                    ) || null}
-
+                  {(suggestions.length && (
                     <Tooltip
-                      overlay={<VariableSelector onChange={onVariableChange} />}
-                      placement={`top`}
-                    >
-                      <button className={`black ml-20 mr-10`}> Variable?</button>
-                    </Tooltip>
+                      overlayStyle={{ zIndex: 2000 }}
+                      placement={'top'}
+                      overlay={
+                        <div className={'max-h-400 overflow-auto'}>
 
-                  </div>
+                          <Files onFileSelect={(fileName: string) => onFieldChange({ target: { value: fileName } })} />
+                        </div>
+                      }
+                    >
+                      <button className={`black ml-20`}>File?</button>
+                    </Tooltip>
+                  )) ||
+                    null}
+
+                  <Tooltip overlay={<VariableSelector onChange={onVariableChange} />} placement={`top`}>
+                    <button className={`black ml-20 mr-10`}> Variable?</button>
+                  </Tooltip>
                 </div>
-              );
-            }
-          )}
+              </div>
+            );
+          })}
 
         {fields.length ? (
           <div className={`w-100-p`}>

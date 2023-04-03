@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import express, { Response, Request, NextFunction } from 'express';
+import * as bodyParser from 'body-parser';
 
 dotenv.config()
 const app = require('express')();
@@ -9,11 +10,12 @@ function main() {
 
   app.use(
     require('morgan')('dev'), // logger
-    express.json(),
-    express.urlencoded({extended: false}),
     require('cookie-parser')(),
     require('cors')(),
   );
+
+  app.use(bodyParser.urlencoded({ limit: '50mb',extended: false }))
+  app.use(bodyParser.json({limit: '50mb'}))
 
   app.use((err: Error, request: Request, response: Response, next: NextFunction) => {
     // pre-api error handler

@@ -4,6 +4,7 @@ import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManage
 import classes from 'src/core/TagManager/ClassNames/ClassNames.module.scss';
 import ClassSelector, { UnitsRecord } from 'src/core/TagManager/ClassNames/ClassSelector';
 import Switch from 'src/core/UI/Switch';
+import clsx from 'classnames';
 
 const withIntegers = styles.classBranches.filter((branch) => branch.units);
 const withOptions = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
@@ -20,7 +21,7 @@ const ClassNamesSelector = (props: IClassNamesSelectorProps) => {
   } = useContext(EachTagManagerProviderContext);
 
   return (
-    <div className={`d-flex pr-20`}>
+    <div className={`d-flex`}>
       <div className={classes.group}>
         sizes: <br />
         {withIntegers.map((cssBranch) => (
@@ -45,10 +46,10 @@ const ClassNamesSelector = (props: IClassNamesSelectorProps) => {
           const value = Boolean(className[name]);
 
           return (
-            <div key={id + index + name} className={'mt-5'}>
+            <div key={id + index + name} className={clsx([classes.selectorWrapper, 'mt-10'])}>
               <Switch
                 value={value}
-                label={name}
+                label={<div className={'w-100'}>{name}</div>}
                 onChange={() => {
                   changeClassNames({ ...className, [name]: !value ? name : undefined });
                 }}

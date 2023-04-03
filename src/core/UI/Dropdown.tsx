@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import classes from './Dropdown.module.scss';
-// import { ReactComponent as CaretIcon } from 'images/caret.svg';
-// import { ReactComponent as CheckmarkIcon } from 'images/checkmark.svg';
 import Tooltip from 'rc-tooltip';
 import clsx from 'classnames';
+import OutClickHandler from 'src/core/UI/OutClickHandler';
 
 export interface IDropdownProps {
   children: string | JSX.Element;
@@ -26,7 +25,7 @@ const Dropdown = ({ title, options, keepOpenOnClick, children, inputWrapperClass
 
   return (
     <>
-      {!!options.length && active && <div className={classes.outClickHandler} onClick={setInactive} />}
+      {!!options.length && active && <OutClickHandler onClick={setInactive}/>}
       <Tooltip
         overlayInnerStyle={{ padding: 0 }}
         visible={!!options.length && active}

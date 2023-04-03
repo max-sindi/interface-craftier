@@ -20,7 +20,7 @@ const Files = ({ onFileSelect }: IFilesProps) => {
   const onDeleteFile = (fileName: string) => dispatch(deleteFileAction(getFileNamePromPath(fileName)));
 
   return (
-    <div>
+    <div style={{ background: '#178'}} className={'border-radius-5 p-3'}>
       {files.map((fileName) => {
         const path = `${serverUrl}/${fileName}`;
         const onSelect = onFileSelect ? () => onFileSelect(fileName) : () => {};
@@ -37,7 +37,7 @@ const Files = ({ onFileSelect }: IFilesProps) => {
               <img alt={'thumb image'} src={path} className={'w-30 h-30 mr-10'} />
             </Tooltip>
             <div
-              className={clsx(['max-w-200 overflow-auto', onFileSelect && 'pointer'])}
+              className={clsx(['max-w-200 white fw-500', onFileSelect && 'pointer'])}
               title={onFileSelect && 'Select file'}
               onClick={onSelect}
             >

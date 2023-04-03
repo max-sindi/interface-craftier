@@ -62,7 +62,7 @@ const ChildTagNode = () => {
         {!nodeState.isText && !!nodeState.children.length ? (
           <div
             data-name={'Tag collapser button'}
-            className={`w-0 z-index-1 pr-5`}
+            className={`w-0 z-index-1 pr-8`}
             style={{ position: 'relative', left: nodeState.deepIndex * levelDeepPx - 10 }}
           >
             <AiFillCaretRight size={15}
@@ -80,9 +80,9 @@ const ChildTagNode = () => {
             fontSize,
             color: isInspected ? '#fff' : undefined,
             minHeight: (isInspected ? labelHeight + 30 : labelHeight) + (isHovered ? 70 : 0),
-            transition: `all 0.${3 + levelDifferenceToInspectedNode}s`,
+            // transition: `all 0.${3 + levelDifferenceToInspectedNode}s`,
             background: isInspected ? greenColor : 'transparent',
-            marginLeft: !isInspected ? 0 : nodeState.deepIndex * levelDeepPx + 10 + 7,
+            marginLeft: !isInspected ? 0 : nodeState.deepIndex * levelDeepPx,
           }}
         >
           {isInspected ? <InspectedNodeLabel /> : <TagLabel />}

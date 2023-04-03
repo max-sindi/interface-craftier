@@ -42,6 +42,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const updateInspectedNode = (nodeId: Uuid) => dispatch(updateInspectedNodeAction(nodeId));
   const updateHoveredNode = (nodeId: Uuid) => dispatch(updateHoveredNodeAction(nodeId));
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
+  const shouldDisplayToolbar = isHovered || isThisInspectingNode
 
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -71,7 +72,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     className: clsx(
       Object.values(className).join(' '),
       isHovered && '_tag_hover',
-      (isHovered || isThisInspectingNode) && 'relative'
+      shouldDisplayToolbar && 'relative'
       // (className.b || className.t || className.r || className.l || isThisInspectingNode) && 'relative'
       // nodeState.className.position
       // @todo fix
@@ -119,7 +120,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   return (
     <Tooltip
       placement={'top'}
-      visible={isHovered || isThisInspectingNode}
+      visible={shouldDisplayToolbar}
       overlay={() => (
         <EachTagManagerProvider nodeId={nodeState.id}>
           {ref.current ? <LiveTagManager domInterface={ref.current} /> : <></>}

@@ -13,8 +13,8 @@ const TreeNavigation = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    window.addEventListener('keydown', ({ key }) => {
-      if(key === 'ArrowDown' || key === 'ArrowUp' || key === 'ArrowLeft' || key === 'ArrowRight') {
+    window.addEventListener('keydown', ({ key, altKey, shiftKey }) => {
+      if(!shiftKey && !altKey && (key === 'ArrowDown' || key === 'ArrowUp' || key === 'ArrowLeft' || key === 'ArrowRight')) {
         dispatch(nodeTreeNavigationAction(key))
       }
     })
@@ -23,11 +23,14 @@ const TreeNavigation = () => {
   return (
     <>
       <TreeNavigationActionsPanel/>
-      <DndProvider backend={HTML5Backend}>
-        <EachTagManagerProvider nodeId={template.id}>
-          <RecursivelyRenderTagLabels children={[template]} />
-        </EachTagManagerProvider>
-      </DndProvider>
+      <div className={'h-290 overflow-auto'}>
+
+        <DndProvider backend={HTML5Backend}>
+          <EachTagManagerProvider nodeId={template.id}>
+            <RecursivelyRenderTagLabels children={[template]} />
+          </EachTagManagerProvider>
+        </DndProvider>
+      </div>
     </>
   );
 };

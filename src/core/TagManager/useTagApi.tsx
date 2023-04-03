@@ -61,8 +61,8 @@ export const useTagApi = (nodeId: Uuid) => {
   }
   const changeClassNames = createChangeHandler<ExtendedNode['className']>('className');
   const changeStyles = createChangeHandler<ExtendedNode['style']>('style');
-  const changeName = createHtmlChangeHandler('name');
-  const changeText = createHtmlChangeHandler('text');
+  const changeName = createChangeHandler('name');
+  const changeText = createChangeHandler('text');
   const changeTag = createHtmlChangeHandler('tag');
   const changeReactComponent = createChangeHandler('reactComponent');
   const toggleReactComponent = () => changeReactComponent(!nodeState.reactComponent)

@@ -32,6 +32,7 @@ var maxWidthClassNameInstance = new CssUnitClassBranch_1["default"]({
     vh: 100
 });
 var classNames = [
+    new CssSimpleClassBranch_1["default"]({ className: 'flex', fast: 'display: flex' }),
     new CssSimpleClassBranch_1["default"]({
         className: 'container',
         fast: 'max-width: 1110px; box-sizing: content-box; width: 100%; margin-left: auto; margin-right: auto; padding-left: 30px; padding-right: 30px'

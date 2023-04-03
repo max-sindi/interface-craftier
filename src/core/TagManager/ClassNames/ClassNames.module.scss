@@ -1,6 +1,23 @@
 .group {
-  padding-right: 50px;
-  min-width: 180px;
+  &:not(:last-child) {
+    padding-right: 50px;
+  }
+  &:last-child {
+    padding-right: 20px;
+  }
+  min-width: 140px;
+}
+
+.selectorWrapper {
+  background: #9ecda9;
+  color: #9e0da9;
+  font-weight: 400;
+  cursor: crosshair;
+  padding-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 5px;
+  padding-bottom: 3px;
+  border-radius: 5px;
 }
 
 .chooseButtonContainer {
@@ -8,7 +25,6 @@
   height: 200px;
   overflow: auto;
   position: relative;
-
 }
 
 .chooseButton {

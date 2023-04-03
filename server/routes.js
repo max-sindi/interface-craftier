@@ -39,6 +39,7 @@ module.exports = (app) => {
   router.post('/api/wace/asset', ...wace.uploadAssets)
   router.delete(`/api/wace/asset/:fileName`, wace.deleteFile)
   router.get('/api/wace/compile', wace.compile)
+  router.post('/api/wace/readFigma', wace.readFigma)
 
   /* USE ROUTER */
   app.use('/', router)

@@ -1,9 +1,9 @@
-import React, { InputHTMLAttributes, useMemo } from 'react';
+import React , { InputHTMLAttributes , TextareaHTMLAttributes , useMemo } from 'react';
 import classes from './Input.module.scss';
 import clsx from 'classnames';
 import { GiTireIronCross } from 'react-icons/gi';
 
-interface IInputProps extends Omit<Partial<InputHTMLAttributes<any>>, 'onChange'> {
+interface IInputProps extends Omit<Partial<InputHTMLAttributes<any> & TextareaHTMLAttributes<any>>, 'onChange'> {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -53,12 +53,13 @@ const Input = (props: IInputProps) => {
         />
       ) : (
         <textarea
+          {...attrs}
           value={value}
           disabled={disabled}
           onChange={handleChange}
           className={classes.input}
           placeholder={placeholder}
-          rows={8}
+          rows={attrs.rows || 8}
         ></textarea>
       )}
     </div>
