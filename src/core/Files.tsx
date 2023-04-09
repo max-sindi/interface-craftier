@@ -5,7 +5,7 @@ import { filesSelector } from 'src/core/store/modules/template/selector';
 import { deleteFileAction } from 'src/core/store/modules/template/actions';
 import IconButton from 'src/core/TagManager/IconButton';
 import { FaRegWindowClose } from 'react-icons/fa';
-import { getFileNamePromPath , serverUrl } from 'src/utils';
+import { getFileNamePromPath , lastArrayItem , serverUrl } from 'src/utils';
 import clsx from 'classnames';
 
 interface IFilesProps {
@@ -24,6 +24,7 @@ const Files = ({ onFileSelect }: IFilesProps) => {
       {files.map((fileName) => {
         const path = `${serverUrl}/${fileName}`;
         const onSelect = onFileSelect ? () => onFileSelect(fileName) : () => {};
+        const displayName = lastArrayItem(fileName.split('/'))
 
         return (
           <div key={path} className={'d-flex mt-5'}>
@@ -37,11 +38,11 @@ const Files = ({ onFileSelect }: IFilesProps) => {
               <img alt={'thumb image'} src={path} className={'w-30 h-30 mr-10'} />
             </Tooltip>
             <div
-              className={clsx(['max-w-200 white fw-500', onFileSelect && 'pointer'])}
+              className={clsx(['max-w-200 white fw-500 fz-16', onFileSelect && 'pointer'])}
               title={onFileSelect && 'Select file'}
               onClick={onSelect}
             >
-              {fileName}
+              {displayName}
             </div>
             <IconButton centering title={'Delete file'} onClick={() => onDeleteFile(fileName)}>
               <FaRegWindowClose/>

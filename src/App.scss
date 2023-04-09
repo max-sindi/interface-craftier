@@ -56,7 +56,7 @@ $toolbar-width: 1200px;
 }
 
 ._tag_hover {
-  box-shadow: 0 0 5px 5px #00000030;
+  box-shadow: 0 0 5px 5px #00000010;
   cursor: pointer;
 }
 
@@ -84,10 +84,10 @@ $toolbar-width: 1200px;
   select,
   button,
   textarea {
-    background: #449147;
-    color: #fff;
+    background: #9ecda9;
+    color: #3e0da9;
     border: 0 solid #fff;
-    font-weight: 300;
+    font-weight: 700;
     padding: 7px;
     border-radius: 8px;
   }
@@ -95,8 +95,8 @@ $toolbar-width: 1200px;
   input,
   textarea {
     background: #44914730;
-    color: #111111;
-    outline: 2px solid #ff9a00;
+    color: #f13131;
+    outline: 2px solid orange;
   }
 
   .edit-text-input {

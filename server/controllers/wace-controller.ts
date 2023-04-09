@@ -6,8 +6,9 @@ import { Response, Request } from 'express';
 import prettier from 'prettier';
 import { compileStateToProduction } from '../../src/utils/compileStateToProduction';
 import { GlobalState } from '../../src/core/store/modules/template/reducer';
+import { compileFigmaProject } from '../compileFigmaProject';
 
-const current = 'hotelbooking';
+const current = 'travel_data';
 
 const redis = require('redis');
 const client = redis.createClient();
@@ -114,8 +115,13 @@ export const uploadAssets = [
 ];
 
 export const readFigma = async (request: Request, response: Response) => {
-    const data = request.body
-    console.log(data);
-    const res = JSON.stringify({ hellooo: 'Heyyyy'})
-    response.json(res);
+  const res = JSON.stringify(request.body);
+  response.json(res);
+
+  fs.writeFileSync('./figma-content.json', res);
+  console.log('Ok written');
+  console.log(figma);
+  compileFigmaProject()
 };
+
+compileFigmaProject()

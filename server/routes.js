@@ -3,7 +3,7 @@ import checkToken from "./middlewares/checkToken"
 import * as usersController from "./controllers/user"
 import * as authController from './controllers/auth'
 import * as weatherController from './controllers/weather'
-import * as wace from './controllers/wace'
+import * as wace from './controllers/wace-controller'
 
 const router = require('express-promise-router')()
 

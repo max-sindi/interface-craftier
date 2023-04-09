@@ -31,7 +31,7 @@ export const getFileNamePromPath = (filePath: string) => lastArrayItem(filePath.
 export const levelDeepPx = 15;
 export const labelHeight = 26;
 export const labelFontSize = 20;
-export const greenColor = '#449147';
+export const greenColor = '#9ecda9';
 export const compiledProjectArchivePath = 'uploads/compiled_project.zip';
 
 export const isNumber = (value: any) => Math.abs(value) >= 0;

@@ -2,12 +2,15 @@
   "name": "wace",
   "version": "1.0.0",
   "description": "Your Figma Plugin",
-  "main": "src/code.js",
+  "main": "src/figma-plugin.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "watch-plugin": "npm run build -- --watch"
   },
   "author": "",
   "license": "",
-  "devDependencies": {}
+  "dependencies": {
+    "@figma/plugin-typings": "*",
+    "typescript": "*"
+  }
 }

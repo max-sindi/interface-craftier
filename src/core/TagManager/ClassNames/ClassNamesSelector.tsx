@@ -6,9 +6,13 @@ import ClassSelector, { UnitsRecord } from 'src/core/TagManager/ClassNames/Class
 import Switch from 'src/core/UI/Switch';
 import clsx from 'classnames';
 
-const withIntegers = styles.classBranches.filter((branch) => branch.units);
-const withOptions = styles.classBranches.filter((branch) => (branch.range?.length || 0) > 1);
-const withSingleValue = styles.classBranches.filter((branch) => (branch.range?.length || 0) === 1);
+const sortedClassBranches = styles.classBranches.sort((a, b) =>
+  a.property && b.property ? (a.property < b.property ? -1 : 1) : a.name < b.name ? -1 : 1
+);
+
+const withIntegers = sortedClassBranches.filter((branch) => branch.units);
+const withOptions = sortedClassBranches.filter((branch) => (branch.range?.length || 0) > 1);
+const withSingleValue = sortedClassBranches.filter((branch) => (branch.range?.length || 0) === 1);
 
 interface IClassNamesSelectorProps {}
 

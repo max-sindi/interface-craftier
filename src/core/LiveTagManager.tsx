@@ -3,6 +3,7 @@ import Resizers from 'src/core/TagManager/Resize/Resizers';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { FaRegWindowClose } from 'react-icons/fa';
 import Tooltip from 'rc-tooltip';
+import { capitalize } from 'lodash';
 // import clsx from 'classnames';
 
 interface ILiveTagManagerProps {
@@ -11,16 +12,14 @@ interface ILiveTagManagerProps {
 
 const LiveTagManager = ({ domInterface }: ILiveTagManagerProps) => {
   const {
-    nodeApi: { nodeState, changeClassNames, unselectCurrentNode },
+    nodeApi: { nodeState },
   } = useContext(EachTagManagerProviderContext);
-
-  const unselect = (evt: any) => {
-    evt.stopPropagation();
-    unselectCurrentNode();
-  };
 
   return (
     <div>
+      <div className={'fz-17 fw-500 mb-3'}>
+        {capitalize(nodeState.name)}
+      </div>
       <div className={'d-flex'}>
         <div>width: </div>
         <div>{domInterface.clientWidth}</div>

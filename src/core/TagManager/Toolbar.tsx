@@ -24,18 +24,18 @@ function Toolbar() {
     parentNodeApi,
     nodeApi: { nodeState, unselectCurrentNode, selectParent, deleteThisNode, rendererTagSelect, eraseStyling },
   } = useContext(EachTagManagerProviderContext);
-  const [activeModule, setActiveModule] = useState<'TREE_NAVIGATION' | 'TAG_DETAILS'>('TREE_NAVIGATION');
+  // const [activeModule, setActiveModule] = useState<'TREE_NAVIGATION' | 'TAG_DETAILS'>('TREE_NAVIGATION');
 
-  const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
+  // const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
 
-  const onSelectTreeNavigation = () => activeModule !== 'TREE_NAVIGATION' && setActiveModule('TREE_NAVIGATION');
-  const onSelectTagDetails = () => activeModule !== 'TAG_DETAILS' && setActiveModule('TAG_DETAILS');
+  // const onSelectTreeNavigation = () => activeModule !== 'TREE_NAVIGATION' && setActiveModule('TREE_NAVIGATION');
+  // const onSelectTagDetails = () => activeModule !== 'TAG_DETAILS' && setActiveModule('TAG_DETAILS');
 
   return (
     <div id={'toolbar'}>
-      <IconButton centering title={'Toggle or Expand menu'} className={'absolute r-5 t-5 pointer z-index-3'} onClick={toggleToolbarVisibility}>
-        {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}
-      </IconButton>
+      {/*<IconButton centering title={'Toggle or Expand menu'} className={'absolute r-5 t-5 pointer z-index-3'} onClick={toggleToolbarVisibility}>*/}
+      {/*  {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}*/}
+      {/*</IconButton>*/}
       <div
         data-name={'Tree navigation module'}
         className={clsx([

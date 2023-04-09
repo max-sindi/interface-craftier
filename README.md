@@ -1,3 +1,12 @@
+// @todo
+
+- size styles - add combined vertical and horizontal selectors
+- (done) comfortable nodes copy & paste
+- (done) add sibling button
+- optional : maybe improve tree navigation via down
+- improve react components functionality 
+      e.g. add directive for component tree, encapsulating template, add props
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

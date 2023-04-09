@@ -1,10 +1,3 @@
 #localhost:8000/api/wace
 #localhost:8000/uploads/compiled_project.zip
-#localhost:8000/api/wace/compile
-POST localhost:8000/api/wace/readFigma
-Content-Type: application/json
-
-{
-  "id": 999,
-  "value": "content"
-}
+localhost:8000/api/wace/compile

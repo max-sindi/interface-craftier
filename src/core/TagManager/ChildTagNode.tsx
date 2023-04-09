@@ -30,9 +30,9 @@ const ChildTagNode = () => {
     inspectedNodeState ? -inspectedNodeState.deepIndex + nodeState.deepIndex : 0
   );
   const fontSize = labelFontSize - levelDifferenceToInspectedNode * 0.12;
+
   const toggleChildrenCollapsed = () => {
     dispatch(toggleChildrenCollapsedAction(id));
-    // dispatch(updateInspectedNodeAction(id));
   };
 
   const [, dragRef] = useDrag(
@@ -78,7 +78,7 @@ const ChildTagNode = () => {
           className={clsx(['relative overflow-hidden w-100-p', isInspected && 'label'])}
           style={{
             fontSize,
-            color: isInspected ? '#fff' : undefined,
+            color: isInspected ? '#5e0da9' : undefined,
             minHeight: (isInspected ? labelHeight + 30 : labelHeight) + (isHovered ? 70 : 0),
             // transition: `all 0.${3 + levelDifferenceToInspectedNode}s`,
             background: isInspected ? greenColor : 'transparent',

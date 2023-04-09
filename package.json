@@ -80,7 +80,9 @@
     "eject": "react-scripts eject",
     "generate-images": "ts-node env-utils.ts",
     "ss": "ts-node ss.ts",
-    "start-server": "nodemon ./server/bin/www --exec ts-node"
+    "start-server": "nodemon ./server/bin/www --exec ts-node",
+    "build-plugin": "tsc  -p tsconfig.json",
+    "watch-plugin": "npm run build -- --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -110,7 +112,6 @@
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-decorators": "^7.14.5",
     "@babel/preset-env": "^7.4.3",
-    "@figma/plugin-typings": "^1.62.0",
     "@types/archiver": "^5.3.2",
     "@types/lodash": "^4.14.188",
     "@types/multer": "^1.4.7",

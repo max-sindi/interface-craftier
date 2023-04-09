@@ -51,25 +51,23 @@ const ClassSelector = ({ children, values, name }: IClassSelectorProps) => {
 
   return (
     <div className={clsx([classes.selectorWrapper])}>
-        <Tooltip
-          zIndex={2000}
-          mouseEnterDelay={0.4}
-          placement={'left'}
-          overlay={() => <ClassSelectorPopup values={values} name={name} title={children} />}
-        >
-          <div>
-            <div>{children}</div>
+      <Tooltip
+        zIndex={2000}
+        mouseEnterDelay={0.4}
+        placement={'left'}
+        overlay={() => <ClassSelectorPopup values={values} name={name} title={children} />}
+      >
+        <div>
+          <div>{children}</div>
 
-            {(value || classNameValue) && (
-              <div className={'d-flex align-center'}>
-                <div className={clsx([classes.chooseButton, classes.chooseButtonActive])}>
-                  {value || classNameValue}
-                </div>
-                <RiDeleteBin6Line onClick={onDeleteClassName} className={'pointer'} />
-              </div>
-            )}
-          </div>
-        </Tooltip>
+          {(value || classNameValue) && (
+            <div className={'d-flex align-center'}>
+              <div className={clsx([classes.chooseButton, classes.chooseButtonActive])}>{value || classNameValue}</div>
+              <RiDeleteBin6Line onClick={onDeleteClassName} className={'pointer'} />
+            </div>
+          )}
+        </div>
+      </Tooltip>
     </div>
   );
 };

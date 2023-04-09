@@ -114,14 +114,19 @@ export default createReducer(initialState(), (builder) => {
     .addCase(highlightInspectedNodeAction, (state) => {
       state.hoveredNode = state.inspectedNode;
     })
-    .addCase(updateInspectedNodeAction, (state, action) => {
-      state.inspectedNode = action.payload;
+    .addCase(updateInspectedNodeAction, (state, { payload: id }) => {
+      state.inspectedNode = id;
+
+      if(id) {
+        expandNode(state, state.nodesMap[id])
+      }
     })
     .addCase(scrollIntoViewAction, (state, action) => {
       state.scrollIntoViewNode = action.payload;
     })
     .addCase(deleteNodeAction, (state, action) => {
       const node = state.nodesMap[action.payload];
+
       if (node.parentId) {
         const parentNode = state.nodesMap[node.parentId];
         const indexToDelete = parentNode.children.findIndex((item) => item.id === node.id);
@@ -134,10 +139,6 @@ export default createReducer(initialState(), (builder) => {
           parentNode
         ).id;
       }
-    })
-    .addCase(toggleChildrenCollapsedAction, (state, action) => {
-      state.nodesMap[action.payload].childrenCollapsed = !state.nodesMap[action.payload].childrenCollapsed;
-      updateNodeInTree(state, action.payload, false);
     })
     .addCase(selectRootAction, (state) => {
       state.inspectedNode = state.currentState.template.id;
@@ -185,15 +186,29 @@ export default createReducer(initialState(), (builder) => {
         state.inspectedNode = clone.id;
       }
     })
-    .addCase(addChildAction, (state, { payload: { id, child } }) => {
+    // .addCase(pasteNodeAction, (state, { payload: { id, node: pastedNode }}) => {
+    //   const node = state.nodesMap[id];
+    //   node.children.push(cloneNode(new TagNode(pastedNode), state.nodesMap));
+    // })
+    .addCase(addChildAction, (state, { payload: { id, child, deepClone } }) => {
       const node = state.nodesMap[id];
-      node.children.push(child as ExtendedNode);
+      node.children.push((deepClone ? cloneNode(child, state.nodesMap) : child) as ExtendedNode);
       updateNodeInTree(state, node.id, true);
       state.inspectedNode = child.id;
     })
     .addCase(updateNodeAction, (state, { payload: { id, field, value, withTreeDestructing } }) => {
       (state.nodesMap[id] as any)[field] = value;
       updateNodeInTree(state, id, withTreeDestructing);
+    })
+    .addCase(toggleChildrenCollapsedAction, (state, { payload: id }) => {
+      const node = state.nodesMap[id]
+
+      if(node.childrenCollapsed) {
+        expandNode(state, node)
+      } else {
+        collapseNode(state, node)
+      }
+
     })
     .addCase(expandAllAction, (state) => {
       collectNodeChildrenRecursively(state.currentState.template, true).forEach((node) => {
@@ -245,6 +260,25 @@ export default createReducer(initialState(), (builder) => {
 
     })
 });
+
+const expandNode = (state: Reducer, node: ExtendedNode) => {
+  for(let i = node.id; i !== undefined;) {
+    const iNode = state.nodesMap[i]
+
+    if(iNode.childrenCollapsed) {
+      state.nodesMap[i].childrenCollapsed = false
+      updateNodeInTree(state, i, false);
+    }
+
+    i = iNode.parentId as string
+  }
+
+}
+
+const collapseNode = (state: Reducer, node: ExtendedNode) => {
+  state.nodesMap[node.id].childrenCollapsed = true
+  updateNodeInTree(state, node.id, false);
+}
 
 function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolean, nodeState?: ExtendedNode) {
   const updatedNode = nodeState || state.nodesMap[id];

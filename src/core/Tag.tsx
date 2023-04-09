@@ -1,23 +1,25 @@
-import React , { Fragment , useCallback , useEffect , useRef } from 'react';
+import React, { Fragment, useCallback, useEffect, useRef } from 'react';
 import clsx from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  createNodeSelector ,
-  hoveredNodeSelector ,
-  inspectedNodeSelector , scrollIntoViewNodeSelector
+  createNodeSelector,
+  hoveredNodeSelector,
+  inspectedNodeSelector,
+  scrollIntoViewNodeSelector,
 } from 'src/core/store/modules/template/selector';
 import { Uuid } from 'src/core/store/modules/template/reducer';
 import {
-  resetHoveredNodeAction , scrollIntoViewAction ,
-  updateHoveredNodeAction ,
-  updateInspectedNodeAction
+  resetHoveredNodeAction,
+  scrollIntoViewAction,
+  updateHoveredNodeAction,
+  updateInspectedNodeAction,
 } from 'src/core/store/modules/template/actions';
 import { TagNode } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
 import { tagsWithNoChildren } from 'src/core/TagManager/config';
 import LiveTagManager from 'src/core/LiveTagManager';
 import Tooltip from 'rc-tooltip';
-import { alignAttrs , alignStyles } from 'src/utils/createComponentFiles';
+import { alignAttrs, alignStyles } from 'src/utils/createComponentFiles';
 const hyperscript = require('react-hyperscript');
 
 type Props = {
@@ -39,10 +41,10 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const nodeState = useSelector(nodeSelector);
   const { className } = nodeState;
 
-  const updateInspectedNode = (nodeId: Uuid) => dispatch(updateInspectedNodeAction(nodeId));
+  const updateInspectedNode = (nodeId?: Uuid) => dispatch(updateInspectedNodeAction(nodeId));
   const updateHoveredNode = (nodeId: Uuid) => dispatch(updateHoveredNodeAction(nodeId));
   const resetHoveredNode = () => dispatch(resetHoveredNodeAction());
-  const shouldDisplayToolbar = isHovered || isThisInspectingNode
+  const shouldDisplayToolbar = isHovered || isThisInspectingNode;
 
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -89,17 +91,23 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
     },
     onMouseOver: (event: any) => {
       event.stopPropagation();
-      if(nodeState.isText && nodeState.parentId) {
-        updateHoveredNode(nodeState.parentId)
+      if (nodeState.isText && nodeState.parentId) {
+        updateHoveredNode(nodeState.parentId);
       } else {
         updateHoveredNode(nodeState.id);
       }
     },
     onClick: (event: any) => {
       event.preventDefault();
+
       if (!nodeState.isText) {
         event.stopPropagation();
-        updateInspectedNode(nodeState.id);
+
+        if (inspectedNodeId !== nodeState.id) {
+          updateInspectedNode(nodeState.id);
+        } else {
+          updateInspectedNode(undefined);
+        }
       }
     },
     onChange: undefined as never as () => void,
@@ -113,7 +121,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   useEffect(() => {
     if (scrollIntoViewNodeId === nodeId && ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' });
-      dispatch(scrollIntoViewAction(undefined))
+      dispatch(scrollIntoViewAction(undefined));
     }
   }, [scrollIntoViewNodeId]);
 

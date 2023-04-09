@@ -112,7 +112,6 @@ const ObjectEditor = ({
                       placement={'top'}
                       overlay={
                         <div className={'max-h-400 overflow-auto'}>
-
                           <Files onFileSelect={(fileName: string) => onFieldChange({ target: { value: fileName } })} />
                         </div>
                       }
@@ -122,7 +121,11 @@ const ObjectEditor = ({
                   )) ||
                     null}
 
-                  <Tooltip overlay={<VariableSelector onChange={onVariableChange} />} placement={`top`}>
+                  <Tooltip
+                    overlayStyle={{ zIndex: 2000 }}
+                    overlay={<VariableSelector onChange={onVariableChange} />}
+                    placement={`top`}
+                  >
                     <button className={`black ml-20 mr-10`}> Variable?</button>
                   </Tooltip>
                 </div>

@@ -1,28 +1,26 @@
 import React, { useContext } from 'react';
 import IconButton from 'src/core/TagManager/IconButton';
-import { IoMdAdd } from 'react-icons/io';
 import { IoDuplicateOutline } from 'react-icons/io5';
 import { MdCopyright, MdSettingsOverscan } from 'react-icons/md';
 import { HiClipboardCopy } from 'react-icons/hi';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ExtendedNode } from 'src/core/ExtendedNode';
-import Switch from 'src/core/UI/Switch';
-import { BsBullseye } from 'react-icons/bs';
-import { CgErase } from 'react-icons/cg';
+import { BsBullseye, BsFillEraserFill } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { FaReact, FaRegWindowClose } from 'react-icons/fa';
-import { AiOutlinePlusSquare } from 'react-icons/ai';
+import { AiFillCopy, AiOutlinePlusSquare, AiOutlineUsergroupAdd } from 'react-icons/ai';
 import { TbSquareLetterA } from 'react-icons/tb';
+import { StyleToCopy } from 'src/core/TagManager/useTagApi';
+import { GiPlatform } from 'react-icons/gi';
 
 interface ITagActionsPanelProps {}
-
-type StyleToCopy = Pick<ExtendedNode, 'style' | 'className'>;
 
 export const aquaColor = '#00d2ff';
 
 const TagActionsPanel = (props: ITagActionsPanelProps) => {
   const {
+    parentNodeApi,
     nodeApi: {
       wrapNode,
       addBlockNode,
@@ -30,10 +28,10 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       duplicateNode,
       scrollIntoView,
       toggleReactComponent,
+      nodeState,
       nodeState: { style, className, deepIndex, reactComponent },
-      changeStyles,
-      changeClassNames,
-      changeReactComponent,
+      pasteStyleFromClipboard,
+      pasteNodeFromClipboard,
       unselectCurrentNode,
       deleteThisNode,
       eraseStyling,
@@ -41,35 +39,46 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
   } = useContext(EachTagManagerProviderContext);
 
   const styleToCopy = JSON.stringify({ className, style } as StyleToCopy);
-  const pasteStyleFromClipboard = async () => {
-    const data = await navigator.clipboard.readText();
-
-    try {
-      const parsedData = JSON.parse(data) as StyleToCopy;
-      changeClassNames({ ...className, ...parsedData.className });
-      changeStyles({ ...style, ...parsedData.style });
-    } catch (e) {
-      console.error('Error while parse');
-    }
-  };
+  const nodeToCopy = JSON.stringify(nodeState as ExtendedNode);
 
   return (
     <div className={'ml-a pr-10 pt-5 d-flex flex-wrap relative '} data-name={'TagActionsPanel'}>
       <IconButton centering onClick={scrollIntoView} title={'Scroll into view'}>
         <BsBullseye />
       </IconButton>
-      <IconButton centering>
+      <IconButton centering title={'Copy style'}>
         <CopyToClipboard
           text={styleToCopy}
           onCopy={async () => {
             console.log(await navigator.clipboard.readText());
           }}
         >
-          <MdCopyright className={'pointer'} title={'Copy style'} />
+          <MdCopyright />
         </CopyToClipboard>
       </IconButton>
-      <IconButton centering>
-        <AiOutlinePlusSquare className={'pointer'} onClick={addBlockNode} title={'Add block child'} />
+      <IconButton centering onClick={pasteStyleFromClipboard} title={'Paste style from clipboard'}>
+        <HiClipboardCopy />
+      </IconButton>
+      <IconButton centering title={'Copy node'}>
+        <CopyToClipboard
+          text={nodeToCopy}
+          onCopy={async () => {
+            console.log(await navigator.clipboard.readText());
+          }}
+        >
+          <AiFillCopy />
+        </CopyToClipboard>
+      </IconButton>
+      <IconButton centering title={'Paste node from clipboard'} onClick={pasteNodeFromClipboard}>
+        <GiPlatform />
+      </IconButton>
+      {parentNodeApi && (
+        <IconButton centering title={'Add sibling'} onClick={() => parentNodeApi.addChild()}>
+          <AiOutlineUsergroupAdd />
+        </IconButton>
+      )}
+      <IconButton centering onClick={addBlockNode} title={'Add block child'} >
+        <AiOutlinePlusSquare/>
       </IconButton>
       <IconButton centering onClick={addTextNode} title={'Add text child'}>
         <TbSquareLetterA />
@@ -77,17 +86,13 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       {deepIndex > 0 && (
         <>
           <IconButton centering title={'Wrap'} onClick={wrapNode}>
-            <MdSettingsOverscan className={'w-25 h-25'} />
+            <MdSettingsOverscan size={25} />
           </IconButton>
-          <IconButton centering>
-            <IoDuplicateOutline title={'Duplicate'} className={'pointer'} onClick={duplicateNode} />
+          <IconButton centering title={'Duplicate'} onClick={duplicateNode} >
+            <IoDuplicateOutline/>
           </IconButton>
         </>
       )}
-      <IconButton centering onClick={pasteStyleFromClipboard}>
-        <HiClipboardCopy className={'pointer'} title={'Paste style from clipboard'} />
-      </IconButton>
-
       <IconButton centering onClick={toggleReactComponent} title={'React component'}>
         <FaReact color={reactComponent ? aquaColor : ''} />
       </IconButton>
@@ -98,13 +103,16 @@ const TagActionsPanel = (props: ITagActionsPanelProps) => {
       )}
       <IconButton
         centering
+        title={'Close Popup'}
         onClick={(evt) => {
           evt.stopPropagation();
           unselectCurrentNode();
         }}
-        title={'Close Popup '}
       >
         <FaRegWindowClose size={20} />
+      </IconButton>
+      <IconButton centering title={'Erase styling'} onClick={eraseStyling}>
+        <BsFillEraserFill/>
       </IconButton>
     </div>
   );

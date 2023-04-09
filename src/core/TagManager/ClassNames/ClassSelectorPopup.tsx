@@ -23,12 +23,12 @@ const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) =
     Array.isArray(values) || !classNameValue ? 'px' : detectUnit(classNameValue)
   );
 
-  const valuesToDisplay = useMemo(
-    () =>
-      (Array.isArray(values) ? values : values[currentlyDisplayedUnitTab]).sort((a, b) =>
-        typeof a.integer === 'number' && typeof b.integer === 'number' ? (a.integer >= 0 ? a.integer - b.integer : b.integer - a.integer) : 0
-      ),
-    [values, currentlyDisplayedUnitTab]
+  const valuesToDisplay = (Array.isArray(values) ? values : values[currentlyDisplayedUnitTab]).sort((a, b) =>
+    typeof a.integer === 'number' && typeof b.integer === 'number'
+      ? a.integer > 0 && b.integer > 0
+        ? a.integer - b.integer
+        : -1
+      : 0
   );
 
   return (
