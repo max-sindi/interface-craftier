@@ -15,11 +15,11 @@ const logObjectFields = async (root: DocumentNode) => {
       console.log(node.type);
 
       if ('visible' in node && !node.visible) {
-        if (!node.visible) continue;
+        continue;
       }
 
       for (let key in node) {
-        if (key !== 'fillGeometry' && key !== 'vectorNetwork') {
+        if (key !== 'fillGeometry' && key !== 'vectorNetwork' && key !== 'vectorPaths') {
           result[key] = (node as Record<string, any>)[key];
         }
 

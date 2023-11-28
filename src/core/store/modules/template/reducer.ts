@@ -2,29 +2,30 @@ import { createReducer } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { TagNode } from 'src/core/TagNode';
 import {
-  addChildAction ,
-  collapseAllAction ,
-  deleteNodeAction ,
-  duplicateNodeAction ,
-  expandAllAction ,
-  highlightInspectedNodeAction , nodeTreeNavigationAction ,
-  pasteChildrenAction ,
-  resetHoveredNodeAction ,
-  resetStateAction ,
-  scrollIntoViewAction ,
-  selectRootAction ,
-  setInitialStateAction ,
-  toggleChildrenCollapsedAction ,
-  updateHoveredNodeAction ,
-  updateInspectedNodeAction ,
-  updateNodeAction ,
-  updateVariablesAction ,
-  wrapNodeAction
+  addChildAction,
+  collapseAllAction,
+  deleteNodeAction,
+  duplicateNodeAction,
+  expandAllAction,
+  highlightInspectedNodeAction,
+  nodeTreeNavigationAction,
+  pasteChildrenAction,
+  resetHoveredNodeAction,
+  resetStateAction,
+  scrollIntoViewAction,
+  selectRootAction,
+  setInitialStateAction,
+  toggleChildrenCollapsedAction,
+  updateHoveredNodeAction,
+  updateInspectedNodeAction,
+  updateNodeAction,
+  updateVariablesAction,
+  wrapNodeAction,
 } from 'src/core/store/modules/template/actions';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { setWith } from 'lodash';
 import { cloneNode, destructTree } from 'src/utils';
-import { collectNodeAllSiblings, collectNodeChildrenRecursively } from 'src/core/store/modules/template/selector';
+import { collectNodeChildrenRecursively } from 'src/core/store/modules/template/selector';
 
 export type IVariables = {
   [key: string]: string;
@@ -37,9 +38,7 @@ export type GlobalState = {
 };
 
 export enum StorageMap {
-  // State = 'state.Shopka',
   State = 'state.thebox',
-  // State = 'state.hrsLanguages',
   InspectedNode = 'inspectedNode',
 }
 
@@ -54,20 +53,20 @@ interface Reducer {
   scrollIntoViewNode?: Uuid;
 }
 
-const initialGlobalState: GlobalState = {
+export const initialGlobalState: GlobalState = {
   variables: {},
   files: [],
   template: new TagNode({
     name: 'Root',
     children: [
       new TagNode({
-        name: 'Tratata Father',
+        name: 'New template\'s parent',
         children: [
           new TagNode({
             tag: 'span',
             isText: true,
-            name: 'tratatata',
-            text: 'tratatat',
+            name: 'New template',
+            text: 'New template',
           }),
         ],
       }),
@@ -93,7 +92,7 @@ const initialState = (initialGlobalState?: GlobalState): Reducer => {
   };
 };
 
-// @tip for updating node use state.nodesMap then use updateNodeInTree()
+// @tip for updating Node use state.nodesMap then use updateNodeInTree()
 export default createReducer(initialState(), (builder) => {
   builder
     .addCase(setInitialStateAction, (state, action) => {
@@ -117,8 +116,8 @@ export default createReducer(initialState(), (builder) => {
     .addCase(updateInspectedNodeAction, (state, { payload: id }) => {
       state.inspectedNode = id;
 
-      if(id) {
-        expandNode(state, state.nodesMap[id])
+      if (id) {
+        expandNode(state, state.nodesMap[id]);
       }
     })
     .addCase(scrollIntoViewAction, (state, action) => {
@@ -201,84 +200,83 @@ export default createReducer(initialState(), (builder) => {
       updateNodeInTree(state, id, withTreeDestructing);
     })
     .addCase(toggleChildrenCollapsedAction, (state, { payload: id }) => {
-      const node = state.nodesMap[id]
+      const node = state.nodesMap[id];
 
-      if(node.childrenCollapsed) {
-        expandNode(state, node)
+      if (node.childrenCollapsed) {
+        expandNode(state, node);
       } else {
-        collapseNode(state, node)
+        collapseNode(state, node);
       }
-
     })
     .addCase(expandAllAction, (state) => {
       collectNodeChildrenRecursively(state.currentState.template, true).forEach((node) => {
         state.nodesMap[node.id].childrenCollapsed = false;
-        updateNodeInTree(state, node.id, false)
+        updateNodeInTree(state, node.id, false);
       });
     })
     .addCase(collapseAllAction, (state) => {
       collectNodeChildrenRecursively(state.currentState.template, true).forEach((node) => {
-        state.nodesMap[node.id].childrenCollapsed = true
-        updateNodeInTree(state, node.id, false)
+        state.nodesMap[node.id].childrenCollapsed = true;
+        updateNodeInTree(state, node.id, false);
       });
     })
     .addCase(nodeTreeNavigationAction, (state, action) => {
-      if(!state.inspectedNode) {
-        state.inspectedNode = state.currentState.template.id
+      if (!state.inspectedNode) {
+        state.inspectedNode = state.currentState.template.id;
       } else {
-        const inspectedNodeId = state.inspectedNode
-        const inspectedNode = state.nodesMap[inspectedNodeId]
-        const { children, childIndex } = inspectedNode
-        const parentNode = inspectedNode.parentId && state.nodesMap[inspectedNode.parentId]
+        const inspectedNodeId = state.inspectedNode;
+        const inspectedNode = state.nodesMap[inspectedNodeId];
+        const { children, childIndex } = inspectedNode;
+        const parentNode = inspectedNode.parentId && state.nodesMap[inspectedNode.parentId];
 
-        if(action.payload === 'ArrowUp') {
-          if(parentNode) {
-            if(childIndex > 0) {
-              state.inspectedNode = parentNode.children[childIndex - 1].id
+        if (action.payload === 'ArrowUp') {
+          if (parentNode) {
+            if (childIndex > 0) {
+              state.inspectedNode = parentNode.children[childIndex - 1].id;
             } else {
-              state.inspectedNode = parentNode.id
+              state.inspectedNode = parentNode.id;
             }
           }
-        } else if(action.payload === 'ArrowDown') {
-          if(parentNode && childIndex < parentNode.children.length - 1) {
-            state.inspectedNode = parentNode.children[childIndex + 1].id
-          } else {
-            if(children.length) {
-              state.inspectedNode = children[0].id
-            }
+        } else if (action.payload === 'ArrowDown') {
+          if (children.length && !inspectedNode.childrenCollapsed) {
+            state.inspectedNode = children[0].id;
+          } else if (parentNode && childIndex < parentNode.children.length - 1) {
+            state.inspectedNode = parentNode.children[childIndex + 1].id;
           }
-        } else if(action.payload === 'ArrowRight') {
-          if(children.length) {
-            state.inspectedNode = children[0].id
+          // else {
+          //   if(children.length) {
+          //   }
+          // }
+        } else if (action.payload === 'ArrowRight') {
+          if (children.length) {
+            state.inspectedNode = children[0].id;
           }
-        } else if(action.payload === 'ArrowLeft') {
-          if(parentNode) {
-            state.inspectedNode = parentNode.id
+        } else if (action.payload === 'ArrowLeft') {
+          if (parentNode) {
+            state.inspectedNode = parentNode.id;
           }
         }
       }
-
-    })
+    });
 });
 
 const expandNode = (state: Reducer, node: ExtendedNode) => {
-  for(let i = node.id; i !== undefined;) {
-    const iNode = state.nodesMap[i]
+  for (let i = node.id; i !== undefined; ) {
+    const iNode = state.nodesMap[i];
 
-    if(iNode.childrenCollapsed) {
-      state.nodesMap[i].childrenCollapsed = false
+    if (iNode.childrenCollapsed) {
+      state.nodesMap[i].childrenCollapsed = false;
       updateNodeInTree(state, i, false);
     }
 
-    i = iNode.parentId as string
+    i = iNode.parentId as string;
   }
-
-}
+};
 
 const collapseNode = (state: Reducer, node: ExtendedNode) => {
-  state.nodesMap[node.id].childrenCollapsed = true
+  state.nodesMap[node.id].childrenCollapsed = true;
   updateNodeInTree(state, node.id, false);
-}
+};
 
 function updateNodeInTree(state: Reducer, id: Uuid, withTreeDestructing?: boolean, nodeState?: ExtendedNode) {
   const updatedNode = nodeState || state.nodesMap[id];

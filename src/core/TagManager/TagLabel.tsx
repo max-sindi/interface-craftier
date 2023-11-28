@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
 import { BsFillPenFill } from 'react-icons/bs';
-import { IoMdSquareOutline } from 'react-icons/io';
 import { capitalize } from 'lodash';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import { levelDeepPx } from 'src/utils';
 import { useSelector } from 'react-redux';
 import { inspectedNodeDeepnessSelector } from 'src/core/store/modules/template/selector';
-import { FaReact } from 'react-icons/fa';
 import { aquaColor } from 'src/core/TagManager/TagActionsPanel';
 import { RiReactjsLine } from 'react-icons/ri';
 
@@ -30,10 +28,9 @@ const TagLabel = () => {
         inspectThisNode()
       }}
       onMouseEnter={highlightThisNode}
-      onMouseLeave={highlightInspectedNodeAction}
+      onMouseLeave={() => highlightInspectedNodeAction()}
     >
       {nodeState.isText ? <BsFillPenFill /> : null}
-        {/*<IoMdSquareOutline className={'mr-5'} />*/}
       {
         nodeState.isText
           ? nodeState.text?.slice(0, 216) + (nodeState.text.length < 216 ? '' : '...') // Tag text

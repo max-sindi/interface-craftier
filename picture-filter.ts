@@ -16,12 +16,6 @@ fs.createReadStream('test.png')
         // if (y <= 5 && x <= 5) {
           var idx = (width * y + x) << 2;
           data[idx + 8] = 255
-
-          // console.log(idx);
-          // console.log(data[idx]);
-          // console.log(data[idx + 1]);
-          // console.log(data[idx + 2]);
-          // console.log(data[idx + 3]);
           // data[idx] = 0
         // }
       }

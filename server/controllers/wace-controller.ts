@@ -6,7 +6,7 @@ import { Response, Request } from 'express';
 import prettier from 'prettier';
 import { compileStateToProduction } from '../../src/utils/compileStateToProduction';
 import { GlobalState } from '../../src/core/store/modules/template/reducer';
-import { compileFigmaProject } from '../compileFigmaProject';
+// import { compileFigmaProject } from '../compileFigmaProject';
 
 const current = 'travel_data';
 
@@ -51,7 +51,7 @@ export const getStateController = async (request: Request, response: Response) =
 export const compile = async (request: Request, response: Response) => {
   try {
     const state = await getState();
-    const fileName = (name: string) => `project/${name}`;
+    const fileName = (name: string) => `DataAnalysis/${name}`;
     const archivePath = __dirname + `/../public/${compiledProjectArchivePath}`;
     const output = fs.createWriteStream(archivePath);
     const archive = archiver('zip', {
@@ -67,7 +67,7 @@ export const compile = async (request: Request, response: Response) => {
     // iteratively write all files to the archive
     Object.entries(pages).forEach(([key, value]) => archive.append(value, { name: fileName(key) }));
 
-    // inject files which are using in project
+    // inject files using in project
     const files = state.files;
 
     if (files.length) {
@@ -117,11 +117,9 @@ export const uploadAssets = [
 export const readFigma = async (request: Request, response: Response) => {
   const res = JSON.stringify(request.body);
   response.json(res);
-
-  fs.writeFileSync('./figma-content.json', res);
+  const name = request.body.children[0].children[0].name
+  fs.writeFileSync(`./figma-${name}.json`, res);
   console.log('Ok written');
-  console.log(figma);
-  compileFigmaProject()
 };
 
-compileFigmaProject()
+// compileFigmaProject('CountriesTable')

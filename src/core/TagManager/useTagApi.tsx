@@ -2,7 +2,7 @@ import { Uuid } from 'src/core/store/modules/template/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback, useMemo } from 'react';
 import { createNodeSelector, nodeDeepnessSelector, nodesMapSelector } from 'src/core/store/modules/template/selector';
-import { TagNode } from 'src/core/TagNode';
+import { TagNode , tags } from 'src/core/TagNode';
 import {
   addChildAction,
   deleteNodeAction,
@@ -15,7 +15,6 @@ import {
   updateNodeAction,
   wrapNodeAction,
 } from 'src/core/store/modules/template/actions';
-import { tags } from 'src/core/TagManager/config';
 import { createSelector } from 'reselect';
 import { ExtendedNode } from 'src/core/ExtendedNode';
 import { cloneNode } from 'src/utils';

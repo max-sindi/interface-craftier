@@ -7,7 +7,7 @@
       "typeRoots": [
         "./node_modules/@types",
         "./node_modules/@figma",
-        "./node_modules/@jest"
+//        "./node_modules/@jest"
       ]
     }
   },
@@ -31,10 +31,10 @@
     "isolatedModules": false,
     "noEmit": true,
     "jsx": "react-jsx", "baseUrl": ".",
-//    "typeRoots": [
+    "typeRoots": [
 //      "./node_modules/@figma",
 //      "./node_modules/@jest"
-//    ]
+    ]
   },
   "include": [
     "src"

@@ -1,4 +1,5 @@
 import { getFileNamePromPath, serverUrl } from '../../utils';
+import { AttrName } from 'src/core/TagNode';
 
 const cssFileValueCreatorDev = (fileName: string) => `url("${serverUrl}/${fileName}")`;
 const cssFileValueCreatorProd = (fileName: string) => `url("./files/${getFileNamePromPath(fileName)}")`;
@@ -45,7 +46,12 @@ export const stylesExisting: {
   },
 ];
 
-export const attrsExisting = [
+export const attrsExisting: {
+  name: AttrName;
+  withFile?: boolean;
+  fileValueCreatorDev?: (val: string) => string;
+  fileValueCreatorProd?: (val: string) => string;
+}[] = [
   {
     name: 'src',
     withFile: true,
@@ -64,7 +70,22 @@ export const attrsExisting = [
   {
     name: 'value',
   },
+  {
+    name: 'd',
+  },
+  {
+    name: 'x',
+  },
+  {
+    name: 'y',
+  },
+  {
+    name: 'stroke',
+  },
+  {
+    name: 'strokeWidth',
+  },
+  {
+    name: 'width',
+  },
 ];
-
-export const tags = ['div', 'span', 'input', 'img', 'a', 'button', 'h1', 'h2', 'h3', 'h4', 'h5', 'br'];
-export const tagsWithNoChildren = ['input', 'img', 'br'];

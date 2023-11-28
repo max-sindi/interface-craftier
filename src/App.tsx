@@ -4,12 +4,14 @@ import './stylotron/src/styles.css';
 import Project from './core';
 import { Provider } from 'react-redux';
 import makeStore from 'src/core/store';
+import Root from './project'
 
 const store = makeStore();
 
 function App() {
   return (
     <Provider store={store}>
+      {/*<Root/>*/}
       <div className="App" style={{ whiteSpace: 'pre-wrap' }}>
         <Project />
       </div>

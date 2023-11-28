@@ -14,9 +14,8 @@ import {
   updateHoveredNodeAction,
   updateInspectedNodeAction,
 } from 'src/core/store/modules/template/actions';
-import { TagNode } from 'src/core/TagNode';
+import { TagName , TagNode , tagsWithNoChildren } from 'src/core/TagNode';
 import EachTagManagerProvider from 'src/core/TagManager/EachTagManagerProvider';
-import { tagsWithNoChildren } from 'src/core/TagManager/config';
 import LiveTagManager from 'src/core/LiveTagManager';
 import Tooltip from 'rc-tooltip';
 import { alignAttrs, alignStyles } from 'src/utils/createComponentFiles';
@@ -35,7 +34,7 @@ function Tag({ deepLevel, indexInLevel, nodeId }: Props) {
   const scrollIntoViewNodeId = useSelector(scrollIntoViewNodeSelector);
   const isHovered = hoveredNodeId === nodeId || inspectedNodeId === nodeId;
   const isThisInspectingNode = inspectedNodeId === nodeId;
-  const canTagHaveChildren = (tag: TagNode['tag']) => !tagsWithNoChildren.includes(tag);
+  const canTagHaveChildren = (tag: TagName) => !tagsWithNoChildren.includes(tag);
   const dispatch = useDispatch();
   const nodeSelector = useCallback(createNodeSelector(nodeId), [nodeId]);
   const nodeState = useSelector(nodeSelector);

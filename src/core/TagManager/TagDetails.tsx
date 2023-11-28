@@ -42,7 +42,7 @@ const TagDetails = () => {
             />
             <ObjectEditor
               onChange={createChangeHandler('attrs')}
-              value={nodeState.attrs}
+              value={nodeState.attrs as Record<string , string>}
               fields={attrsExisting}
               title={'Attributes: '}
             />

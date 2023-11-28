@@ -1,9 +1,9 @@
-import { Attrs, ClassNameRecord, StyleRecord } from 'src/core/TagNode';
+import { Attrs , ClassNameRecord , StyleRecord , tagsWithNoChildren } from '../../src/core/TagNode';
 import { capitalize, flatten } from 'lodash';
 import { GlobalState } from 'src/core/store/modules/template/reducer';
-import { attrsExisting, stylesExisting, tagsWithNoChildren } from '../core/TagManager/config';
+import { attrsExisting, stylesExisting } from '../core/TagManager/config';
 import styles from '../stylotron/src/styles.json';
-import { ExtendedNode } from 'src/core/ExtendedNode';
+import { ExtendedNode } from '../../src/core/ExtendedNode';
 
 const hyperscript = require('hyperscript');
 
@@ -37,7 +37,7 @@ export const alignAttrs = (attrs: Attrs, env: 'dev' | 'prod') =>
       foundAttrsConfig &&
       (env === 'dev' ? foundAttrsConfig.fileValueCreatorDev : foundAttrsConfig.fileValueCreatorProd);
 
-    return { ...acc, [key]: fileValueCreator ? fileValueCreator(value) : value };
+    return { ...acc, [key]: fileValueCreator ? fileValueCreator(value as string) : value };
   }, {} as Attrs);
 
 const replaceClassField = (html: string) =>
@@ -75,7 +75,8 @@ export const createScssComponent = (
   node: ExtendedNode,
   cssClassesList: ClassNameForCompile[]
 ): string =>
-  `@import '${variablesFileName}';
+  `// @import "styles/index";
+
           ${cssClassesList
             .map(
               (config) => `
@@ -120,14 +121,21 @@ export const createScssComponent = (
 export function createReactComponent(node: ExtendedNode): { file: string; cssClassesList: ClassNameForCompile[] } {
   const componentName = getComponentName(node.name);
   const importedComponents: string[] = [];
-  const cssClassesList: ClassNameForCompile[] = [];
   const addImportedComponent = (name: string) => importedComponents.push(name);
+  const cssClassesList: ClassNameForCompile[] = [];
+  const addClass = (cssClass: ClassNameForCompile) => cssClassesList.push(cssClass);
 
   const tagProcessor = (node: ExtendedNode, initialNode: boolean): ReturnType<typeof hyperscript> => {
-    const classNameConfig = ((): ClassNameForCompile => {
+    const classNameConfig = ((): undefined | ClassNameForCompile => {
+      if(node.reactComponent && !initialNode) {
+        return undefined;
+      }
+
       const classNamesExisting = node.className;
       const classNamesVariabled = alignStyles(node.style, 'prod');
-      const name = !node.name
+      const name = initialNode
+        ? 'container'
+        : !node.name
         ? ''
         : node.name
             .trim()
@@ -140,8 +148,8 @@ export function createReactComponent(node: ExtendedNode): { file: string; cssCla
 
     const attrs = alignAttrs(node.attrs, 'prod');
 
-    if (classNameConfig.name) {
-      cssClassesList.push(classNameConfig);
+    if (classNameConfig?.name) {
+      addClass(classNameConfig);
       attrs.className = classNameConfig.name;
     }
 
@@ -149,10 +157,15 @@ export function createReactComponent(node: ExtendedNode): { file: string; cssCla
       ? hyperscript(node.tag, attrs, node.isText ? node.text : node.children.map((ch) => tagProcessor(ch, false)))
       : (() => {
           const name = getComponentName(node.name);
+
           if (!name) {
             throw Error(`There is component without name, ${node.xPath}`);
           }
-          addImportedComponent(name);
+
+          if (!importedComponents.includes(name)) {
+            addImportedComponent(name);
+          }
+
           return componentNameToJSX(name);
         })();
   };
@@ -162,20 +175,16 @@ export function createReactComponent(node: ExtendedNode): { file: string; cssCla
 
   const jsxContent = adaptTemplateToJSX(tagProcessor(node, true).outerHTML);
 
-  const file = `import React from 'react';
-import ${importScssFileAs} from './${componentName}.module.scss'
-${importedComponents.map((name) => `import ${name} from './${name}'`).join(`
+  const file = `import React from 'react'
+import ${importScssFileAs} from './styles.module.scss'
+${importedComponents.map((name) => `import ${name} from '${node.deepIndex === 0 ? '.' : '..'}/${name}'`).join(`
 `)}
 
-interface I${componentName}Props {}
-
-const ${componentName} = (props: I${componentName}Props) => {
+export const View = () => {
   return (
     ${jsxContent}
   )
 }
-
-export default ${componentName}
 `;
 
   return { file, cssClassesList };
@@ -184,16 +193,17 @@ export default ${componentName}
 export function createComponentFiles(globalState: GlobalState, node: ExtendedNode): Record<string, string> {
   const filesMap: Record<string, string> = {};
   const name = getComponentName(node.name);
+  const folderName = node.deepIndex === 0 ? '' : name + '/'
 
-  try {
-    const { file: reactFile, cssClassesList } = createReactComponent(node);
+  const { file: reactFile, cssClassesList } = createReactComponent(node);
 
-    filesMap[name + '.tsx'] = reactFile;
-    filesMap[name + '.module.scss'] = createScssComponent(globalState, node, cssClassesList);
-  } catch (e: any) {
-    alert(e.message);
-    console.error(e.message);
-  }
+  filesMap[folderName + 'view.tsx'] = reactFile;
+  filesMap[folderName + 'index.ts'] = `
+import { View } from "./view"
+
+export default View
+`;
+  filesMap[folderName + 'styles.module.scss'] = createScssComponent(globalState, node, cssClassesList);
 
   return filesMap;
 }
