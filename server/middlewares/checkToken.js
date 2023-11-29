@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken')
 const secret = process.env.JWT_SECRET_KEY
 
 const checkToken = (request, response, next) => {
-  // next()
   const token = request.headers['authorization']
   const errorMessage = 'Permission denied'
 

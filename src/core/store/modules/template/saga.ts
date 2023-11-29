@@ -11,16 +11,16 @@ import { GlobalState } from 'src/core/store/modules/template/reducer';
 import axios from 'src/axios';
 
 function* updateProjectStateSaga(action: ReturnType<typeof updateProjectStateAction>) {
-  yield axios.post('/api/wace', action.payload).then(res => {})
+  yield axios.post('/api/wace', action.payload)
 }
 
 function* updateFilesSaga(action: ReturnType<typeof updateFilesAction>) {
-  yield axios.post('/api/wace/asset', action.payload).then(res => {})
+  yield axios.post('/api/wace/asset', action.payload)
   yield put(fetchProjectStateAction())
 }
 
 function* deleteFileSaga(action: ReturnType<typeof deleteFileAction>) {
-  yield axios.delete(`/api/wace/asset/${action.payload}`).then(res => {})
+  yield axios.delete(`/api/wace/asset/${action.payload}`)
   yield put(fetchProjectStateAction())
 }
 

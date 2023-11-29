@@ -31,8 +31,8 @@ const ClassSelectorPopup = ({ values, name, title }: IClassSelectorPopupProps) =
       : 0
   );
 
-  const units: UnitName[] = ['px', '%', 'vh']
-  const availableUnits = !Array.isArray(values) ? units.filter(unit => !!values[unit]) : units
+  const units: UnitName[] = ['px', '%', 'vh'];
+  const availableUnits = !Array.isArray(values) ? units.filter((unit) => !!values[unit]) : units;
 
   return (
     <div className={classes.chooseButtonContainer}>

@@ -1,49 +1,30 @@
-import React, { useContext, useState } from 'react';
-import { FaRegWindowClose } from 'react-icons/fa';
+import React, { useContext } from 'react';
 import Tooltip from 'rc-tooltip';
-import { ProjectContext } from '../Project';
 import cc from 'classnames';
-import { BsArrowsCollapse, BsArrowsExpand } from 'react-icons/bs';
 import { BiLayer } from 'react-icons/bi';
-import { RiDeleteBin6Line } from 'react-icons/ri';
 import { IoMdReturnLeft } from 'react-icons/io';
-import { CgErase } from 'react-icons/cg';
 import 'react-tabs/style/react-tabs.css';
 import TreeNavigation from 'src/core/TagManager/TreeNavigation';
 import { EachTagManagerProviderContext } from 'src/core/TagManager/EachTagManagerProvider';
 import TagDetails from 'src/core/TagManager/TagDetails';
 import { capitalize } from 'lodash';
 import TagActionsPanel from 'src/core/TagManager/TagActionsPanel';
-import IconButton from 'src/core/TagManager/IconButton';
 import Search from './Search';
 import clsx from 'classnames';
-import OutClickHandler from 'src/core/UI/OutClickHandler';
 
 function Toolbar() {
   const {
     parentNodeApi,
-    nodeApi: { nodeState, unselectCurrentNode, selectParent, deleteThisNode, rendererTagSelect, eraseStyling },
+    nodeApi: { nodeState, selectParent, rendererTagSelect },
   } = useContext(EachTagManagerProviderContext);
-  // const [activeModule, setActiveModule] = useState<'TREE_NAVIGATION' | 'TAG_DETAILS'>('TREE_NAVIGATION');
-
-  // const { toggleToolbarVisibility, toolbarCollapsed } = useContext(ProjectContext);
-
-  // const onSelectTreeNavigation = () => activeModule !== 'TREE_NAVIGATION' && setActiveModule('TREE_NAVIGATION');
-  // const onSelectTagDetails = () => activeModule !== 'TAG_DETAILS' && setActiveModule('TAG_DETAILS');
-
   return (
     <div id={'toolbar'}>
-      {/*<IconButton centering title={'Toggle or Expand menu'} className={'absolute r-5 t-5 pointer z-index-3'} onClick={toggleToolbarVisibility}>*/}
-      {/*  {toolbarCollapsed ? <BsArrowsExpand /> : <BsArrowsCollapse />}*/}
-      {/*</IconButton>*/}
       <div
         data-name={'Tree navigation module'}
         className={clsx([
           `w-50-p relative pr-10 d-flex flex-column`,
-          // activeModule === 'TREE_NAVIGATION' ? 'w-60-p' : 'w-40-p',
         ])}
       >
-        {/*{ activeModule !== 'TREE_NAVIGATION' && <OutClickHandler onClick={ onSelectTreeNavigation } /> }*/}
         <div className="w-100-p pt-10 h-70">
           <div className={'d-flex justify-space-between'}>
             <div className={'d-flex'}>
@@ -92,7 +73,6 @@ function Toolbar() {
         data-name={'Tag details module'}
         className={clsx(['relative grow-1 overflow-auto pl-20 w-50-p', /*activeModule === 'TAG_DETAILS' ? 'w-60-p' : 'w-40-p'*/])}
       >
-        {/*{ activeModule !== 'TAG_DETAILS' && <OutClickHandler onClick={ onSelectTagDetails } /> }*/}
         {!nodeState.isText && <TagDetails />}
       </div>
     </div>

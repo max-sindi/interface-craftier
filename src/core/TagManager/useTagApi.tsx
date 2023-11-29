@@ -17,7 +17,6 @@ import {
 } from 'src/core/store/modules/template/actions';
 import { createSelector } from 'reselect';
 import { ExtendedNode } from 'src/core/ExtendedNode';
-import { cloneNode } from 'src/utils';
 
 export type StyleToCopy = Pick<ExtendedNode, 'style' | 'className'>;
 
